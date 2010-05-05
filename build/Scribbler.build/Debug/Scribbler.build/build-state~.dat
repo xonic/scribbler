@@ -1,0 +1,226 @@
+TScribbler
+v7
+r0
+t293556989.003167
+cCheck dependencies
+cProcessInfoPlistFile /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Info.plist Scribbler-Info.plist
+cCopyStringsFile /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
+cCompileXIB /Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib
+cProcessPCH /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch.gch Scribbler_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/main.o /Users/brnas/Documents/Cocoa/Scribbler/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/ScribblerAppDelegate.o /Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/GlassPane.o /Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cLd /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler normal x86_64
+cTouch /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app
+
+N/Developer/SDKs/MacOSX10.6.sdk
+c000000004B50402C00000000000000EE
+t1263550508
+s238
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h
+c0000000040C4AA6800000000000001E5
+t1086630504
+s485
+
+N/System/Library/Frameworks/Cocoa.framework/Cocoa
+c000000004A1F2D63000000000000A5E0
+t1243557219
+s42464
+
+N/Users/brnas/Documents/Cocoa/Scribbler/English.lproj/InfoPlist.strings
+c000000004BCF0E93000000000000002D
+t1271860883
+s45
+
+N/Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib
+c000000004BCF1B55000000000002BD30
+t1271864149
+s179504
+
+N/Users/brnas/Documents/Cocoa/Scribbler/GlassPane.h
+c000000004BCF150300000000000000CF
+t1271862531
+s207
+i<Cocoa/Cocoa.h>
+
+N/Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m
+c000000004BCF184F0000000000000259
+t1271863375
+s601
+i"GlassPane.h"
+
+N/Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.h
+c000000004BCF0E930000000000000140
+t1271860883
+s320
+i<Cocoa/Cocoa.h>
+
+N/Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m
+c000000004BCF0E930000000000000177
+t1271860883
+s375
+i"ScribblerAppDelegate.h"
+
+N/Users/brnas/Documents/Cocoa/Scribbler/Scribbler_Prefix.pch
+c000000004BCF0E930000000000000095
+t1271860883
+s149
+i<Cocoa/Cocoa.h>
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app
+t1271864189
+s102
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Info.plist
+t1271864153
+s892
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler
+t1271864188
+s15672
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/PkgInfo
+t1271864153
+s8
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/InfoPlist.strings
+t1271864155
+s92
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/MainMenu.nib
+t1271864155
+s34414
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/GlassPane.o
+t1271864188
+s14896
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/Scribbler.LinkFileList
+c000000004BCF1B590000000000000165
+t1271864153
+s357
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/ScribblerAppDelegate.o
+t1271864187
+s21152
+
+N/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/main.o
+t1271864187
+s4992
+
+N/Users/brnas/Documents/Cocoa/Scribbler/main.m
+c000000004BCF0E9300000000000000FE
+t1271860883
+s254
+i<Cocoa/Cocoa.h>
+
+N/var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch.gch
+t1271864185
+s54208272
+
+NScribbler-Info.plist
+c000000004BCF0E9300000000000003EA
+t1271860883
+s1002
+
+CCheck dependencies
+r0
+lSLF07#2@18"Check dependencies293556953#293556953#0(0"0(0#1#0"4300903632#0"0#
+
+CCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/GlassPane.o /Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s293556987.780832
+e293556988.077332
+r1
+xCompileC
+xbuild/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/GlassPane.o
+x/Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@58"Compile /Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m293556987#293556988#0(0"0(0#0#50"/Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m4300903632#1500"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-generated-files.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-own-target-headers.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-all-target-headers.hmap -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-project-headers.hmap -F/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -I/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/include -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources/x86_64 -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources -include /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch -c /Users/brnas/Documents/Cocoa/Scribbler/GlassPane.m -o /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/GlassPane.o0#
+
+CCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/ScribblerAppDelegate.o /Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s293556987.507523
+e293556987.780511
+r1
+xCompileC
+xbuild/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/ScribblerAppDelegate.o
+x/Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@69"Compile /Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m293556987#293556987#0(0"0(0#0#61"/Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m4300903632#1522"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-generated-files.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-own-target-headers.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-all-target-headers.hmap -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-project-headers.hmap -F/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -I/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/include -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources/x86_64 -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources -include /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch -c /Users/brnas/Documents/Cocoa/Scribbler/ScribblerAppDelegate.m -o /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/ScribblerAppDelegate.o0#
+
+CCompileC build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/main.o /Users/brnas/Documents/Cocoa/Scribbler/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s293556986.079993
+e293556987.507393
+r1
+xCompileC
+xbuild/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/main.o
+x/Users/brnas/Documents/Cocoa/Scribbler/main.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@53"Compile /Users/brnas/Documents/Cocoa/Scribbler/main.m293556986#293556987#0(0"0(0#0#45"/Users/brnas/Documents/Cocoa/Scribbler/main.m4300903632#1490"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-generated-files.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-own-target-headers.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-all-target-headers.hmap -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-project-headers.hmap -F/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -I/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/include -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources/x86_64 -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources -include /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch -c /Users/brnas/Documents/Cocoa/Scribbler/main.m -o /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/main.o0#
+
+CCompileXIB /Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib
+s293556953.410054
+e293556955.980535
+r1
+xCompileXIB
+x/Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib
+lSLF07#2@37"CompileXIB English.lproj/MainMenu.xib293556953#293556955#0(0"0(0#0#65"/Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib4300903632#329"    cd /Users/brnas/Documents/Cocoa/Scribbler    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/MainMenu.nib /Users/brnas/Documents/Cocoa/Scribbler/English.lproj/MainMenu.xib0#
+
+CCopyStringsFile /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
+s293556953.361879
+e293556955.112242
+r1
+xCopyStringsFile
+x/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj/InfoPlist.strings
+xEnglish.lproj/InfoPlist.strings
+lSLF07#2@36"Copy English.lproj/InfoPlist.strings293556953#293556955#0(0"0(0#0#70"/Users/brnas/Documents/Cocoa/Scribbler/English.lproj/InfoPlist.strings4300903632#367"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv ICONV /usr/bin/iconv    /Developer/Library/Xcode/Plug-ins/CoreBuildTasks.xcplugin/Contents/Resources/copystrings --validate --inputencoding utf-8 --outputencoding UTF-16 English.lproj/InfoPlist.strings --outdir /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Resources/English.lproj0#
+
+CLd /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler normal x86_64
+s293556988.077454
+e293556988.986744
+r1
+xLd
+x/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler
+xnormal
+xx86_64
+lSLF07#2@94"Link /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler293556988#293556988#0(0"0(0#0#0"4300903632#552"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -F/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -filelist /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Objects-normal/x86_64/Scribbler.LinkFileList -mmacosx-version-min=10.6 -framework Cocoa -o /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/MacOS/Scribbler0#
+
+CProcessInfoPlistFile /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Info.plist Scribbler-Info.plist
+s293556953.335529
+e293556953.361740
+r1
+xProcessInfoPlistFile
+x/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Info.plist
+xScribbler-Info.plist
+lSLF07#2@28"Process Scribbler-Info.plist293556953#293556953#0(0"0(0#0#59"/Users/brnas/Documents/Cocoa/Scribbler/Scribbler-Info.plist4300903632#316"    cd /Users/brnas/Documents/Cocoa/Scribbler    builtin-infoPlistUtility Scribbler-Info.plist -genpkginfo /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app/Contents/Info.plist0#
+
+CProcessPCH /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch.gch Scribbler_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s293556955.980690
+e293556986.079796
+r1
+xProcessPCH
+x/var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch.gch
+xScribbler_Prefix.pch
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@31"Precompile Scribbler_Prefix.pch293556955#293556986#0(0"0(0#0#59"/Users/brnas/Documents/Cocoa/Scribbler/Scribbler_Prefix.pch4300903632#1394"    cd /Users/brnas/Documents/Cocoa/Scribbler    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-generated-files.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-own-target-headers.hmap -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-all-target-headers.hmap -iquote /Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/Scribbler-project-headers.hmap -F/Users/brnas/Documents/Cocoa/Scribbler/build/Debug -I/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/include -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources/x86_64 -I/Users/brnas/Documents/Cocoa/Scribbler/build/Scribbler.build/Debug/Scribbler.build/DerivedSources -c /Users/brnas/Documents/Cocoa/Scribbler/Scribbler_Prefix.pch -o /var/folders/9k/9kDMqJOAGcSRHePAPcrIrk+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Scribbler_Prefix-bancmksauxyufzftkrlygyaxakoh/Scribbler_Prefix.pch.gch0#
+
+CTouch /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app
+s293556988.986865
+e293556989.003080
+r1
+xTouch
+x/Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app
+lSLF07#2@70"Touch /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app293556988#293556989#0(0"0(0#0#0"4300903632#133"    cd /Users/brnas/Documents/Cocoa/Scribbler    /usr/bin/touch -c /Users/brnas/Documents/Cocoa/Scribbler/build/Debug/Scribbler.app0#
+
