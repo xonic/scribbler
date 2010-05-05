@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>36F40DD71191D4AD00A5D39C</string>
+										<string>36F40DE31191EF3200A5D39C</string>
 										<key>history</key>
 										<array>
 											<string>36F40DAE1191D1F600A5D39C</string>
@@ -334,7 +334,7 @@
 											<string>36F40DB11191D1F600A5D39C</string>
 											<string>36F40DD41191D4AD00A5D39C</string>
 											<string>36F40DD51191D4AD00A5D39C</string>
-											<string>36F40DD61191D4AD00A5D39C</string>
+											<string>36F40DD71191D4AD00A5D39C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -346,14 +346,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {996, 560}}</string>
+								<string>{{0, 0}, {996, 554}}</string>
 								<key>RubberWindowFrame</key>
 								<string>278 203 1204 822 0 0 2048 1130 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>560pt</string>
+							<string>554pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -366,14 +366,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 565}, {996, 216}}</string>
+								<string>{{0, 559}, {996, 222}}</string>
 								<key>RubberWindowFrame</key>
 								<string>278 203 1204 822 0 0 2048 1130 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>216pt</string>
+							<string>222pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -392,9 +392,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>36F40DB51191D1F600A5D39C</string>
+				<string>36F40DE41191EF3200A5D39C</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>36F40DB61191D1F600A5D39C</string>
+				<string>36F40DE51191EF3200A5D39C</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -532,13 +532,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>36F40DD81191D4AD00A5D39C</string>
-		<string>36F40DB81191D1F600A5D39C</string>
-		<string>36F40DB91191D1F600A5D39C</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>368646BF117F59590020319A</string>
-		<string>/Users/brnas/Desktop/src/Scribbler/Scribbler.xcodeproj</string>
-		<string>1C78EAAD065D492600B07095</string>
+		<string>/Users/brnas/scribbler/Scribbler.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>278 203 1204 822 0 0 2048 1130 </string>
@@ -618,7 +613,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>368646BF117F59590020319A</string>
-				<string>36F40D801191B70D00A5D39C</string>
+				<string>36F40DE61191EF3200A5D39C</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
