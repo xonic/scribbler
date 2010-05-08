@@ -25,9 +25,6 @@
 	// uncomment next line to overrule OS menubars
 	//[self setLevel:NSMainMenuWindowLevel + 1];
 	
-<<<<<<< HEAD
-	
-=======
 	// initialize Array for future keyWindowViews
 	keyWindowViews = [[NSMutableDictionary alloc] init];
 	
@@ -58,8 +55,7 @@
 				
 				return result;
 	}]; 
->>>>>>> brnas_remote/master
-				
+		
     return self;
 }
 
@@ -95,20 +91,20 @@
 		//NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
 	}
 	
-<<<<<<< HEAD
+
 	//NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
 
 - (void)windowDidResignKey:(NSNotification *)notification
-=======
+
 	NSLog(@"keyWindowID=%@",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
 - (NSMutableDictionary*)getCurrentKeyWindowInfos
->>>>>>> brnas_remote/master
+
 {
 	//get info about the currently active application
 	NSWorkspace* workspace            = [NSWorkspace sharedWorkspace];
