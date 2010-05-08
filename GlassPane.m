@@ -25,28 +25,7 @@
 	// uncomment next line to overrule OS menubars
 	//[self setLevel:NSMainMenuWindowLevel + 1];
 	
-	// Start watching global events to figure out when to show the pane	
-	[NSEvent addGlobalMonitorForEventsMatchingMask:
-			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEntered)
-			handler:^(NSEvent *incomingEvent) {
-																 							
-				if ([incomingEvent type] == NSTabletProximity) 
-					[self showGlassPane:[incomingEvent isEnteringProximity]];
-	}]; 
 	
-	// Start watching local events to figure out when to hide the pane	
-	[NSEvent addLocalMonitorForEventsMatchingMask:
-			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask)// | NSTabletPointMask)
-			handler:^(NSEvent *incomingEvent) {
-											   
-				NSEvent *result = incomingEvent;
-											   
-				if ([incomingEvent type] == NSTabletProximity)
-					[self showGlassPane:[incomingEvent isEnteringProximity]];
-				
-				//NSLog(@"Event id = %@", result);
-				return result;
-	}]; 
 				
     return self;
 }
@@ -81,61 +60,13 @@
 	[screenView setNeedsDisplay:YES];
 	if(flag) {
 		[self makeKeyAndOrderFront:nil];
-		NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
+		//NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
 	}
 	
-	NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
+	//NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
-- (NSMutableDictionary*)getCurrentKeyWindowInfos
-{
-	//get info about the currently active application
-	NSWorkspace* workspace            = [NSWorkspace sharedWorkspace];
-	NSDictionary* currentAppInfo      = [workspace activeApplication];
-	
-	//get the PSN of the current app
-	UInt32 lowLong                    = [[currentAppInfo objectForKey:@"NSApplicationProcessSerialNumberLow"] longValue];
-	UInt32 highLong                   = [[currentAppInfo objectForKey:@"NSApplicationProcessSerialNumberHigh"] longValue];
-	ProcessSerialNumber currentAppPSN = {highLong,lowLong};
-		
-	//grab window information from the window server
-	CFArrayRef windowList             = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
-	ProcessSerialNumber myPSN         = {kNoProcess, kNoProcess};
-	
-	//loop through the windows, the window list is ordered from front to back
-	for (NSMutableDictionary* entry in (NSArray*) windowList)
-	{
-		int pid = [[entry objectForKey:(id)kCGWindowOwnerPID] intValue];
-		GetProcessForPID(pid, &myPSN);
-		
-		//if the process of the current window in the list matches our process, get the front window number
-		if(myPSN.lowLongOfPSN == currentAppPSN.lowLongOfPSN && myPSN.highLongOfPSN == currentAppPSN.highLongOfPSN)
-		{
-			[entry retain]; 
-			CFRelease(windowList);
-			//return because we found front window
-			return entry;
-		}
-	}
-	
-	return 0;
-}
-
-- (NSInteger) getKeyWindowID: (NSMutableDictionary*)windowInfos
-{
-	return [[windowInfos objectForKey:(id)kCGWindowNumber] integerValue];
-}
-
-- (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos
-{
-	return [windowInfos objectForKey:(id)kCGWindowOwnerName];
-}
-
-- (NSRect *) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
-{
-	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
-}
 
 - (void)windowDidResignKey:(NSNotification *)notification
 {
