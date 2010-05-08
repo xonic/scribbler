@@ -25,11 +25,19 @@
 	// uncomment next line to overrule OS menubars
 	//[self setLevel:NSMainMenuWindowLevel + 1];
 	
+	// initialize Array for future keyWindowViews
+	keyWindowViews = [[NSMutableDictionary alloc] init];
+	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
-			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEntered)
+			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask)
 			handler:^(NSEvent *incomingEvent) {
-																 							
+				
+				// if change of keyWindow happens (this could only happen with a mouseDown event)
+				if ([incomingEvent type] == NSLeftMouseDown)
+					[self keyWindowHandler];
+				
+				// if tabletpen is near the tablet
 				if ([incomingEvent type] == NSTabletProximity) 
 					[self showGlassPane:[incomingEvent isEnteringProximity]];
 	}]; 
@@ -40,11 +48,11 @@
 			handler:^(NSEvent *incomingEvent) {
 											   
 				NSEvent *result = incomingEvent;
-											   
+				
+				// if tabletpen is near the tablet
 				if ([incomingEvent type] == NSTabletProximity)
 					[self showGlassPane:[incomingEvent isEnteringProximity]];
 				
-				//NSLog(@"Event id = %@", result);
 				return result;
 	}]; 
 				
@@ -52,8 +60,7 @@
 }
 
 - (void) showHide:(id)sender {
-	
-		
+			
 	if([screenView draw]) {
 		// hide painting ability
 		[screenView setDraw: NO];
@@ -84,7 +91,7 @@
 		NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
 	}
 	
-	NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
+	NSLog(@"keyWindowID=%@",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
@@ -122,9 +129,9 @@
 	return 0;
 }
 
-- (NSInteger) getKeyWindowID: (NSMutableDictionary*)windowInfos
+- (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos
 {
-	return [[windowInfos objectForKey:(id)kCGWindowNumber] integerValue];
+	return [windowInfos objectForKey:(id)kCGWindowNumber];
 }
 
 - (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos
@@ -137,27 +144,27 @@
 	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
 }
 
-- (void)windowDidResignKey:(NSNotification *)notification
+- (void) keyWindowHandler
 {
-//	[self setLevel:NSFloatingWindowLevel];
-	NSLog(@"didResignKey");
+	// get keyWindowID
+	NSNumber *keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	// lookup if there is an arrayEntry for this ID
+	if ([keyWindowViews objectForKey:keyID]==nil) {
+		// add view for current keyWindow
+		[keyWindowViews setObject:screenView forKey:keyID];
+		NSLog(@"added window with id %@ to array",keyID);
+	}
+	else {
+		// switch to other view
+	}
 
+	
 }
 
-- (void)windowDidResignMain:(NSNotification *)notification
+- (void)dealloc
 {
-	NSLog(@"didResignMain");
+	[keyWindowViews release];
+	[super dealloc];
 }
-
-- (void)becomeKeyWindow:(NSNotification *)notification
-{
-	NSLog(@"becomeKeyWindow");
-}
-- (void)becomeMainWindow:(NSNotification *)notification
-{
-	NSLog(@"becomeMainWindow");
-}
-
-
 
 @end

@@ -12,6 +12,7 @@
 
 @interface GlassPane : NSWindow {
 	IBOutlet PaintView *screenView;
+	NSMutableDictionary *keyWindowViews;
 }
 
 - (void) showHide:(id)sender;
@@ -20,8 +21,10 @@
 - (void) showGlassPane:(BOOL)flag;
 
 - (NSMutableDictionary*) getCurrentKeyWindowInfos;
-- (NSInteger)  getKeyWindowID:(NSMutableDictionary*) windowInfos;
+- (NSNumber *) getKeyWindowID:(NSMutableDictionary*) windowInfos;
 - (NSString *) getKeyWindowsApplicationName:(NSMutableDictionary*) windowInfos;
 - (NSRect *)   getKeyWindowBounds:(NSMutableDictionary*) windowInfos;
+
+- (void) keyWindowHandler;
 
 @end
