@@ -4,9 +4,9 @@
 
 build/
 
-*/*.pbxuser
-*/*.perspective
-*/*.perspectivev3
+Scribbler.xcodeproj/*.pbxuser
+Scribbler.xcodeproj/*.perspective
+Scribbler.xcodeproj/*.perspectivev3
 
-*/*.mode1v3
-*/*.mode2v3
+Scribbler.xcodeproj/*.mode1v3
+Scribbler.xcodeproj/*.mode2v3
