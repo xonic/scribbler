@@ -19,9 +19,6 @@
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
 
-- (NSMutableDictionary*) getCurrentKeyWindowInfos;
-- (NSInteger)  getKeyWindowID:(NSMutableDictionary*) windowInfos;
-- (NSString *) getKeyWindowsApplicationName:(NSMutableDictionary*) windowInfos;
-- (NSRect *)   getKeyWindowBounds:(NSMutableDictionary*) windowInfos;
+
 
 @end
