@@ -8,8 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface PaintView : NSView {
+@interface PaintView : NSView {	
 	NSWindow *mainWindow;
 	NSPoint downPoint;
 	NSPoint currentPoint;
