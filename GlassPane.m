@@ -25,14 +25,46 @@
 	// uncomment next line to overrule OS menubars
 	//[self setLevel:NSMainMenuWindowLevel + 1];
 	
+<<<<<<< HEAD
 	
+=======
+	// initialize Array for future keyWindowViews
+	keyWindowViews = [[NSMutableDictionary alloc] init];
+	
+	// Start watching global events to figure out when to show the pane	
+	[NSEvent addGlobalMonitorForEventsMatchingMask:
+			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask)
+			handler:^(NSEvent *incomingEvent) {
+				
+				// if change of keyWindow happens (this could only happen with a mouseDown event)
+				if ([incomingEvent type] == NSLeftMouseDown)
+					[self keyWindowHandler];
+				
+				// if tabletpen is near the tablet
+				if ([incomingEvent type] == NSTabletProximity) 
+					[self showGlassPane:[incomingEvent isEnteringProximity]];
+	}]; 
+	
+	// Start watching local events to figure out when to hide the pane	
+	[NSEvent addLocalMonitorForEventsMatchingMask:
+			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask)// | NSTabletPointMask)
+			handler:^(NSEvent *incomingEvent) {
+											   
+				NSEvent *result = incomingEvent;
+				
+				// if tabletpen is near the tablet
+				if ([incomingEvent type] == NSTabletProximity)
+					[self showGlassPane:[incomingEvent isEnteringProximity]];
+				
+				return result;
+	}]; 
+>>>>>>> brnas_remote/master
 				
     return self;
 }
 
 - (void) showHide:(id)sender {
-	
-		
+			
 	if([screenView draw]) {
 		// hide painting ability
 		[screenView setDraw: NO];
@@ -63,32 +95,89 @@
 		//NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
 	}
 	
+<<<<<<< HEAD
 	//NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
 
 - (void)windowDidResignKey:(NSNotification *)notification
-{
-//	[self setLevel:NSFloatingWindowLevel];
-	NSLog(@"didResignKey");
-
+=======
+	NSLog(@"keyWindowID=%@",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
+	
 }
 
-- (void)windowDidResignMain:(NSNotification *)notification
+- (NSMutableDictionary*)getCurrentKeyWindowInfos
+>>>>>>> brnas_remote/master
 {
-	NSLog(@"didResignMain");
+	//get info about the currently active application
+	NSWorkspace* workspace            = [NSWorkspace sharedWorkspace];
+	NSDictionary* currentAppInfo      = [workspace activeApplication];
+	
+	//get the PSN of the current app
+	UInt32 lowLong                    = [[currentAppInfo objectForKey:@"NSApplicationProcessSerialNumberLow"] longValue];
+	UInt32 highLong                   = [[currentAppInfo objectForKey:@"NSApplicationProcessSerialNumberHigh"] longValue];
+	ProcessSerialNumber currentAppPSN = {highLong,lowLong};
+		
+	//grab window information from the window server
+	CFArrayRef windowList             = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+	ProcessSerialNumber myPSN         = {kNoProcess, kNoProcess};
+	
+	//loop through the windows, the window list is ordered from front to back
+	for (NSMutableDictionary* entry in (NSArray*) windowList)
+	{
+		int pid = [[entry objectForKey:(id)kCGWindowOwnerPID] intValue];
+		GetProcessForPID(pid, &myPSN);
+		
+		//if the process of the current window in the list matches our process, get the front window number
+		if(myPSN.lowLongOfPSN == currentAppPSN.lowLongOfPSN && myPSN.highLongOfPSN == currentAppPSN.highLongOfPSN)
+		{
+			[entry retain]; 
+			CFRelease(windowList);
+			//return because we found front window
+			return entry;
+		}
+	}
+	
+	return 0;
 }
 
-- (void)becomeKeyWindow:(NSNotification *)notification
+- (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos
 {
-	NSLog(@"becomeKeyWindow");
-}
-- (void)becomeMainWindow:(NSNotification *)notification
-{
-	NSLog(@"becomeMainWindow");
+	return [windowInfos objectForKey:(id)kCGWindowNumber];
 }
 
+- (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos
+{
+	return [windowInfos objectForKey:(id)kCGWindowOwnerName];
+}
 
+- (NSRect *) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
+{
+	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
+}
+
+- (void) keyWindowHandler
+{
+	// get keyWindowID
+	NSNumber *keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	// lookup if there is an arrayEntry for this ID
+	if ([keyWindowViews objectForKey:keyID]==nil) {
+		// add view for current keyWindow
+		[keyWindowViews setObject:screenView forKey:keyID];
+		NSLog(@"added window with id %@ to array",keyID);
+	}
+	else {
+		// switch to other view
+	}
+
+	
+}
+
+- (void)dealloc
+{
+	[keyWindowViews release];
+	[super dealloc];
+}
 
 @end

@@ -12,6 +12,7 @@
 
 @interface GlassPane : NSWindow {
 	IBOutlet PaintView *screenView;
+	NSMutableDictionary *keyWindowViews;
 }
 
 - (void) showHide:(id)sender;
@@ -19,6 +20,17 @@
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
 
+<<<<<<< HEAD
 
 
 @end
+=======
+- (NSMutableDictionary*) getCurrentKeyWindowInfos;
+- (NSNumber *) getKeyWindowID:(NSMutableDictionary*) windowInfos;
+- (NSString *) getKeyWindowsApplicationName:(NSMutableDictionary*) windowInfos;
+- (NSRect *)   getKeyWindowBounds:(NSMutableDictionary*) windowInfos;
+
+- (void) keyWindowHandler;
+
+@end
+>>>>>>> brnas_remote/master
