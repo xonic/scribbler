@@ -18,7 +18,7 @@
     }
 	
 	// alloc Arrays
-	ovals = [[NSMutableArray alloc] init];
+	myPaths = [[NSMutableArray alloc] init];
 	path = [[NSBezierPath alloc] init];
 	
 	draw = YES;
@@ -41,19 +41,29 @@
 			[NSBezierPath fillRect:bounds];
 		}
 		
-		// draw ovals from array
+		// Draw our paths
 		[[NSColor redColor] set];
-		int count = [ovals count];
-		for(int i=0;i<count;i++) {
-			[path appendBezierPath:[NSBezierPath bezierPathWithOvalInRect:[[ovals objectAtIndex:i] rectValue]]];
+		
+		// Go through paths
+		for (int i=0; i < [myPaths count]; i++)
+		{
+			// Create a new path for performance reasons
+			path = [[NSBezierPath alloc] init];
+			
+			// Move to first point without drawing
+			[path moveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:0] myNSPoint]];
+			
+			// Go through points
+			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 1; j++)
+			{
+				[path lineToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:j+1] myNSPoint]];
+			}
+			// Draw the path
+			[path stroke];
+			
+			// Bye path
+			[path release];
 		}
-		[path stroke];
-	
-		// draw current dragged path
-		currentPath = [[NSBezierPath alloc] init];
-		[currentPath appendBezierPath:[NSBezierPath bezierPathWithOvalInRect:[self currentRect]]];
-		[currentPath stroke];
-		[currentPath dealloc];
 	}
 }
 
@@ -61,42 +71,61 @@
 
 - (void)mouseDown:(NSEvent *)event
 {
+	// Create a new array for the points of our line
+	myPoints = [[NSMutableArray alloc] init];
+	
+	// Add the new array to our list of paths
+	[myPaths addObject:myPoints];
+	
+	// Get the mouse point and convert location
 	NSPoint p = [event locationInWindow];
 	downPoint = [self convertPoint:p fromView:nil];
-	currentPoint = downPoint;
+	
+	// Create a new MyPoint object
+	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+		
+	// Add the converted point to the list of points for active path
+	[myPoints addObject:currentPoint];
+	
 	[self setNeedsDisplay:YES];
 	NSLog(@"mouseDown");
 }
 
 - (void)mouseDragged:(NSEvent *)event
 {
+	// Get the next mouse point and convert location 
 	NSPoint p = [event locationInWindow];
-	currentPoint = [self convertPoint:p fromView:nil];
-	[self autoscroll:event];
+	downPoint = [self convertPoint:p fromView:nil];
+	
+	// Create a new MyPoint object
+	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+	
+	// Add the converted point to the list of points for active path
+	[myPoints addObject:currentPoint];
+	
 	[self setNeedsDisplay:YES];
 }
 
 - (void)mouseUp:(NSEvent *)event
 {
+	// Get the last mouse point and convert location
 	NSPoint p = [event locationInWindow];
-	currentPoint = [self convertPoint:p fromView:nil];
-	[ovals addObject:[NSValue valueWithRect:[self currentRect]]];
-	[self setNeedsDisplay:YES];
-}
-
-- (NSRect)currentRect
-{
-	float minX = MIN(downPoint.x, currentPoint.x);
-	float maxX = MAX(downPoint.x, currentPoint.x);
-	float minY = MIN(downPoint.y, currentPoint.y);
-	float maxY = MAX(downPoint.y, currentPoint.y);
+	downPoint = [self convertPoint:p fromView:nil];
 	
-	return NSMakeRect(minX, minY, maxX-minX, maxY-minY);
+	// Create a new MyPoint object
+	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+	
+	// Add the converted point to the list of points for active path
+	[myPoints addObject:currentPoint];
+
+	[self setNeedsDisplay:YES];
 }
 
 - (void)dealloc
 {
-	[ovals release];
+	[myPaths release];
+	[myPoints release];
+	[currentPoint release];
 	[path release];
 	[super dealloc];
 }

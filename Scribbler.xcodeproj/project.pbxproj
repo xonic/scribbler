@@ -14,6 +14,7 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		C68BFDD11196D3FD0040D32C /* MyPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* MyPoint.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		368646FE117F93330020319A /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Scribbler-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Scribbler-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Scribbler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scribbler.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C68BFDCF1196D3FD0040D32C /* MyPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPoint.h; sourceTree = "<group>"; };
+		C68BFDD01196D3FD0040D32C /* MyPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPoint.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +59,8 @@
 				368646B2117F4C650020319A /* GlassPane.m */,
 				368646FD117F93330020319A /* PaintView.h */,
 				368646FE117F93330020319A /* PaintView.m */,
+				C68BFDCF1196D3FD0040D32C /* MyPoint.h */,
+				C68BFDD01196D3FD0040D32C /* MyPoint.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 				256AC3DA0F4B6AC300CF3369 /* ScribblerAppDelegate.m in Sources */,
 				368646B3117F4C650020319A /* GlassPane.m in Sources */,
 				368646FF117F93330020319A /* PaintView.m in Sources */,
+				C68BFDD11196D3FD0040D32C /* MyPoint.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

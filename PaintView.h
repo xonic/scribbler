@@ -7,18 +7,21 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MyPoint.h"
 
 @interface PaintView : NSView {	
-	NSWindow *mainWindow;
-	NSPoint downPoint;
-	NSPoint currentPoint;
-	NSMutableArray *ovals;
-	NSBezierPath *path, *currentPath;
-	BOOL draw;
-	BOOL clickThrough;
+	NSWindow		*	mainWindow;
+	NSPoint				downPoint;		
+	MyPoint			*	currentPoint;
+	NSMutableArray	*	myPaths;
+	NSMutableArray	*	myPoints;
+	NSBezierPath	*	path;
+	NSBezierPath	*	currentPath;
+	BOOL				draw;
+	BOOL				clickThrough;
 }
 
-- (NSRect)currentRect;
+//- (NSRect)currentRect;
 
 @property(readwrite, assign) BOOL draw;
 @property(readwrite, assign) BOOL clickThrough;
