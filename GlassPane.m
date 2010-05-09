@@ -27,15 +27,18 @@
 	
 	// initialize Array for future keyWindowViews
 	keyWindowViews = [[NSMutableDictionary alloc] init];
-	
+		
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask)
 			handler:^(NSEvent *incomingEvent) {
 				
 				// if change of keyWindow happens (this could only happen with a mouseDown event)
-				if ([incomingEvent type] == NSLeftMouseDown)
-					[self keyWindowHandler];
+				if ([incomingEvent type] == NSLeftMouseDown) {
+					if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
+						[self keyWindowHandler];
+					}
+				}
 				
 				// if tabletpen is near the tablet
 				if ([incomingEvent type] == NSTabletProximity) 
@@ -55,7 +58,7 @@
 				
 				return result;
 	}]; 
-		
+				
     return self;
 }
 
@@ -84,6 +87,7 @@
 }
 
 - (void) showGlassPane:(BOOL)flag {
+	NSLog(@"showGlassPane: %@",screenView);
 	[screenView setClickThrough: !flag];
 	[screenView setNeedsDisplay:YES];
 	if(flag) {
@@ -91,20 +95,11 @@
 		//NSLog(@"isKeyWindow=%d",[self isKeyWindow]);
 	}
 	
-
-	//NSLog(@"keyWindowID=%d",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
-	
-}
-
-
-- (void)windowDidResignKey:(NSNotification *)notification
-
 	NSLog(@"keyWindowID=%@",[self getKeyWindowID:[self getCurrentKeyWindowInfos]]);
 	
 }
 
 - (NSMutableDictionary*)getCurrentKeyWindowInfos
-
 {
 	//get info about the currently active application
 	NSWorkspace* workspace            = [NSWorkspace sharedWorkspace];
@@ -155,19 +150,28 @@
 
 - (void) keyWindowHandler
 {
+	NSLog(@"--- keyWindowHandler ---");
 	// get keyWindowID
-	NSNumber *keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	NSNumber* keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	
+	if (keyID == nil) {
+		return;
+	}
 	// lookup if there is an arrayEntry for this ID
 	if ([keyWindowViews objectForKey:keyID]==nil) {
 		// add view for current keyWindow
-		[keyWindowViews setObject:screenView forKey:keyID];
-		NSLog(@"added window with id %@ to array",keyID);
+		PaintView *newView = [[PaintView alloc] initWithFrame:[[NSScreen mainScreen] frame]];
+		[keyWindowViews setObject:newView forKey:keyID];
+		NSLog(@"added window %@ with id %@ to array",[keyWindowViews objectForKey:keyID],keyID);
+		screenView = newView;
+		[self setContentView:screenView];
 	}
 	else {
 		// switch to other view
+		screenView = [keyWindowViews objectForKey:keyID];
+		[self setContentView:screenView];
+		NSLog(@"in Array: switched to window %@ with id %@", screenView, keyID);
 	}
-
-	
 }
 
 - (void)dealloc
