@@ -47,7 +47,7 @@
 		
 		// Draw our paths
 		[[NSColor redColor] set];
-		/*
+		
 		// Go through paths
 		for (int i=0; i < [myPaths count]; i++)
 		{
@@ -69,7 +69,26 @@
 			
 			// Bye path
 			[path release];
-		}*/
+		}
+		
+		// if user is currently drawing - draw drawingpath
+		if (isDrawing) {
+			// Create a new path for performance reasons
+			path = [[NSBezierPath alloc] init];
+			
+			// Move to first point without drawing
+			[path moveToPoint:[[myPoints objectAtIndex:0] myNSPoint]];
+			
+			// Go through points
+			for (int i=1; i <[myPoints count]; i++)
+				[path lineToPoint:[[myPoints objectAtIndex:i] myNSPoint]];
+			
+			// Draw the path
+			[path stroke];
+			
+			// Bye path
+			[path release];
+		}
 	}
 }
 
@@ -77,67 +96,72 @@
 
 - (void)mouseDown:(NSEvent *)event
 {
-	// Create a new array for the points of our line
-	myPoints = [[NSMutableArray alloc] init];
+	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
+		// Create a new array for the points of our line
+		myPoints = [[NSMutableArray alloc] init];
 	
-	// Add the new array to our list of paths
-	//[myPaths addObject:myPoints];
+		// Add the new array to our list of paths
+		//[myPaths addObject:myPoints];
 	
-	// Get the mouse point and convert location
-	NSPoint p = [event locationInWindow];
-	downPoint = [self convertPoint:p fromView:nil];
+		// Get the mouse point and convert location
+		NSPoint p = [event locationInWindow];
+		downPoint = [self convertPoint:p fromView:nil];
 	
-	// Create a new MyPoint object
-	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+		// Create a new MyPoint object
+		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
 		
-	// Add the converted point to the list of points for active path
-	[myPoints addObject:currentPoint];
+		// Add the converted point to the list of points for active path
+		[myPoints addObject:currentPoint];
 	
-	// The user is now drawing
-	isDrawing = YES;
+		// The user is now drawing
+		isDrawing = YES;
 	
-	[self setNeedsDisplay:YES];
-	NSLog(@"mouseDown");
+		[self setNeedsDisplay:YES];
+		NSLog(@"mouseDown");
+	}
 }
 
 - (void)mouseDragged:(NSEvent *)event
 {
-	// Get the next mouse point and convert location 
-	NSPoint p = [event locationInWindow];
-	downPoint = [self convertPoint:p fromView:nil];
+	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
+		// Get the next mouse point and convert location 
+		NSPoint p = [event locationInWindow];
+		downPoint = [self convertPoint:p fromView:nil];
 	
-	// Create a new MyPoint object
-	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+		// Create a new MyPoint object
+		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
 	
-	// Add the converted point to the list of points for active path
-	[myPoints addObject:currentPoint];
+		// Add the converted point to the list of points for active path
+		[myPoints addObject:currentPoint];
 	
-	[self setNeedsDisplay:YES];
+		[self setNeedsDisplay:YES];
+	}
 }
 
 - (void)mouseUp:(NSEvent *)event
 {
-	// Get the last mouse point and convert location
-	NSPoint p = [event locationInWindow];
-	downPoint = [self convertPoint:p fromView:nil];
+	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
+		// Get the last mouse point and convert location
+		NSPoint p = [event locationInWindow];
+		downPoint = [self convertPoint:p fromView:nil];
 	
-	// Create a new MyPoint object
-	currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
+		// Create a new MyPoint object
+		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
 	
-	// Add the converted point to the list of points for active path
-	[myPoints addObject:currentPoint];
+		// Add the converted point to the list of points for active path
+		[myPoints addObject:currentPoint];
 	
-	NSMutableArray *newPoints = [self getCurveControlPoints: myPoints]; 
-	[newPoints retain]; 
-	[myPaths addObject: newPoints];
-	//curvedPath = [self getCurveControlPoints:myPoints];
+		NSMutableArray *cpy = [[NSMutableArray alloc] init];
+		[cpy addObjectsFromArray:myPoints];
+		NSMutableArray *newPoints = [self getCurveControlPoints: cpy]; 
+		[myPaths addObject: newPoints];
 	
-	//[myPaths addObject:curvedPath];
+		// The user stopped drawing
+		isDrawing = NO;
 	
-	// The user stopped drawing
-	isDrawing = NO;
-	
-	[self setNeedsDisplay:YES];
+		[self setNeedsDisplay:YES];
+		NSLog(@"mouseUp");
+	}
 }
 
 // Method takes an array of line points p0, p1,...pn and calculates the 
@@ -175,7 +199,7 @@
 		[pathToBeEdited insertObject:newControlPoint atIndex:1];
 		
 		// Bye new control point
-		[newControlPoint release];
+		//[newControlPoint release];
 		
 		// Calculate second control point
 		NSPoint anotherNewPoint;
@@ -189,7 +213,7 @@
 		[pathToBeEdited insertObject:anotherNewControlPoint atIndex:2];
 		
 		// Bye new control point
-		[anotherNewControlPoint release];
+		//[anotherNewControlPoint release];
 		
 		// Gief back!
 		return pathToBeEdited;
@@ -209,7 +233,7 @@
 		[rhs addObject:newRightHandX];
 		
 		// Bye.
-		[newRightHandX release];
+		//[newRightHandX release];
 	}
 	
 	// Set the first element
@@ -218,7 +242,7 @@
 	[rhs insertObject:firstElementX atIndex:0];
 	
 	// Bye.
-	[firstElementX release];
+	//[firstElementX release];
 	
 	// Set the last element
 	NSNumber *lastElementX = [NSNumber numberWithDouble:(8 * (double) [[pathToBeEdited objectAtIndex:n-1] myNSPoint].x + 
@@ -226,7 +250,7 @@
 	[rhs addObject:lastElementX];
 	
 	// Bye.
-	[lastElementX release];
+	//[lastElementX release];
 	
 	// Get first control points x-values
 	NSMutableArray *xPoints = [self getFirstControlPoints:rhs];
@@ -244,7 +268,7 @@
 		[rhs addObject:newRightHandY];
 		
 		// Bye.
-		[newRightHandY release];
+		//[newRightHandY release];
 	}
 	
 	// Set the first element
@@ -253,7 +277,7 @@
 	[rhs insertObject:firstElementY atIndex:0];
 	
 	// Bye.
-	[firstElementY release];
+	//[firstElementY release];
 	
 	// Set the last element
 	NSNumber *lastElementY = [NSNumber numberWithDouble:(8 * (double) [[pathToBeEdited objectAtIndex:n-1] myNSPoint].y + 
@@ -261,7 +285,7 @@
 	[rhs addObject:lastElementY];
 	
 	// Bye.
-	[lastElementY release];
+	//[lastElementY release];
 	
 	// Get first control points y-values
 	NSMutableArray *yPoints = [self getFirstControlPoints:rhs];
@@ -282,7 +306,7 @@
 		[pathToBeEdited insertObject:firstControlPoint atIndex:i+1];
 		
 		// Bye.
-		[firstControlPoint release];
+		//[firstControlPoint release];
 		
 		if(i < newArraySize-1){
 			// Second control point
@@ -295,7 +319,7 @@
 			[pathToBeEdited insertObject:secondControlPoint atIndex:i+2];
 			
 			// Bye.
-			[secondControlPoint release];
+			//[secondControlPoint release];
 			
 		} else {
 			// Last control point
@@ -307,7 +331,7 @@
 			[pathToBeEdited addObject:lastControlPoint];
 			
 			// Bye.
-			[lastControlPoint release];
+			//[lastControlPoint release];
 		}
 		// Increment auxiliary index
 		if (j < [xPoints count] - 2)
