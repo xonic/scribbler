@@ -22,6 +22,17 @@
 	return self;
 }
 
+- (id) initWithDoubleX:(double) x Y:(double) y
+{
+	if(![super init])
+		return nil;
+	
+	myNSPoint.x = (float) x;
+	myNSPoint.y = (float) y;
+	
+	return self;
+}
+
 - (NSPoint) myNSPoint
 {
 	return myNSPoint;

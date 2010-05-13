@@ -15,15 +15,21 @@
 	MyPoint			*	currentPoint;
 	NSMutableArray	*	myPaths;
 	NSMutableArray	*	myPoints;
+	NSMutableArray	*	firstControlPoints;
+	NSMutableArray	*	secondControlPoints;
 	NSBezierPath	*	path;
 	NSBezierPath	*	currentPath;
+	NSMutableArray	*	curvedPath;
 	BOOL				draw;
 	BOOL				clickThrough;
+	BOOL				isDrawing;
 }
 
-//- (NSRect)currentRect;
+- (NSMutableArray *) getCurveControlPoints:(NSMutableArray *)pathToBeEdited;
+- (NSMutableArray *) getFirstControlPoints:(NSMutableArray *)rhs;
 
 @property(readwrite, assign) BOOL draw;
 @property(readwrite, assign) BOOL clickThrough;
+@property(readwrite, assign) BOOL isDrawing;
 
 @end

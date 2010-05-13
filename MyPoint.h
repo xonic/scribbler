@@ -14,6 +14,7 @@
 }
 
 - (id) initWithNSPoint:(NSPoint)initPoint;
+- (id) initWithDoubleX:(double)x Y:(double)y;
 - (NSPoint) myNSPoint;
 - (float) x;
 - (float) y;
