@@ -45,6 +45,21 @@
 			[NSBezierPath fillRect:bounds];
 		}
 		
+		[NSGraphicsContext saveGraphicsState];
+		
+		// Create the shadow below and to the right of the shape.
+		
+		NSShadow* theShadow = [[NSShadow alloc] init];
+		
+		[theShadow setShadowOffset:NSMakeSize(1.8, -1.8)];
+		
+		[theShadow setShadowBlurRadius:2.0];
+		
+		// Use a partially transparent color for shapes that overlap.
+		
+		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.5]];
+		
+		[theShadow set];
 		// Draw our paths
 		[[NSColor redColor] set];
 		
@@ -58,7 +73,7 @@
 			[path moveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:0] myNSPoint]];
 			
 			// Go through points
-			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 1; j+=3)
+			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 3; j+=3)
 			{
 				[path curveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:j+3] myNSPoint] 
 					 controlPoint1:[[[myPaths objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
@@ -89,6 +104,10 @@
 			// Bye path
 			[path release];
 		}
+		
+		[NSGraphicsContext restoreGraphicsState];
+		
+		[theShadow release];
 	}
 }
 
