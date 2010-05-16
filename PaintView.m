@@ -165,7 +165,8 @@
 			[myPoints addObject:[[MyPoint alloc] initWithNSPoint:[self convertPoint:[event locationInWindow] fromView:nil]]];
 			
 			// Curve the path and add it to the others
-			[myPaths addObject: [self getCurveControlPoints: myPoints]];
+			[self insertObjectInMyPaths:[self getCurveControlPoints:myPoints]];
+			//[myPaths addObject: [self getCurveControlPoints: myPoints]];
 		}
 		
 		[self setNeedsDisplay:YES];
@@ -363,11 +364,43 @@
 			
 			//NSLog(@"Distance = %f", distance);
 			if([[[myPaths objectAtIndex:i] objectAtIndex:j] isInRange:tolerance ofNSPoint:point]){
-				[myPaths removeObjectAtIndex:i];
+				[self removeObjectFromMyPaths:[myPaths objectAtIndex:i]];
+				//[myPaths removeObjectAtIndex:i];
 				break;
 			}
 		}
 	}
+}
+
+- (void) insertObjectInMyPaths:(id)newPath
+{
+	//NSLog(@"adding %@ to %@", newPath, myPaths);
+	
+	// Setup undo manager
+	NSUndoManager *undo = [self undoManager];
+	[[undo prepareWithInvocationTarget:self] removeObjectFromMyPaths:newPath];
+	
+	if(![undo isUndoing])
+		[undo setActionName:@"Insert path"];
+
+	// Finally add the new path
+	[myPaths addObject:newPath];
+	
+}
+
+- (void) removeObjectFromMyPaths:(id)existingPath
+{
+	//NSLog(@"removing %@ from %@", existingPath, myPaths);
+	
+	// Setup undo manager
+	NSUndoManager *undo = [self undoManager];
+	[[undo prepareWithInvocationTarget:self] insertObjectInMyPaths:existingPath];
+	
+	if(![undo isUndoing])
+		[undo setActionName:@"Removing path"];
+	
+	// Finally remove the path
+	[myPaths removeObject:existingPath];
 }
 
 - (void)dealloc

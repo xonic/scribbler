@@ -27,6 +27,9 @@
 - (NSMutableArray *) getFirstControlPoints:(NSMutableArray *)rhs;
 - (void)erasePath:(NSPoint)point;
 
+- (void) insertObjectInMyPaths:(id)newPath;
+- (void) removeObjectFromMyPaths:(id)existingPath;
+
 @property(readwrite, assign) BOOL draw, clickThrough, isDrawing, erase;
 
 @end
