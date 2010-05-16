@@ -48,4 +48,14 @@
 	return myNSPoint.y;
 }
 
+- (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point
+{
+	if (myNSPoint.x > (point.x - [range doubleValue]) && myNSPoint.x < (point.x + [range doubleValue])) {
+		if (myNSPoint.y > (point.y - [range doubleValue]) && myNSPoint.y < (point.y + [range doubleValue])) {
+			return YES;
+		}
+	}
+	return NO;
+}
+
 @end

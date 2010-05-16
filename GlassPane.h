@@ -11,8 +11,8 @@
 #import "PaintView.h"
 
 @interface GlassPane : NSWindow {
-	IBOutlet PaintView *screenView;
-	NSMutableDictionary *keyWindowViews;
+	IBOutlet PaintView		*	screenView;
+	NSMutableDictionary		*	keyWindowViews;
 }
 
 - (void) showHide:(id)sender;
@@ -20,6 +20,7 @@
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
 
+- (void) getKeyWindowViewAndSetEraserTo:(BOOL)value;
 - (NSMutableDictionary*) getCurrentKeyWindowInfos;
 - (NSNumber *) getKeyWindowID:(NSMutableDictionary*) windowInfos;
 - (NSString *) getKeyWindowsApplicationName:(NSMutableDictionary*) windowInfos;

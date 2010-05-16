@@ -41,8 +41,22 @@
 				}
 				
 				// if tabletpen is near the tablet
-				if ([incomingEvent type] == NSTabletProximity) 
+				if ([incomingEvent type] == NSTabletProximity) {
 					[self showGlassPane:[incomingEvent isEnteringProximity]];
+					
+					// Ignore the rest if pointing device exited proximity
+					if([incomingEvent isEnteringProximity]){
+					
+						// Check whether the user is drawing or erasing
+						if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
+							NSLog(@"Found Eraser");
+							[self getKeyWindowViewAndSetEraserTo:YES];
+						} else {
+							NSLog(@"Found Pen");
+							[self getKeyWindowViewAndSetEraserTo:NO];
+						}
+					}
+				}
 	}]; 
 	
 	// Start watching local events to figure out when to hide the pane	
@@ -52,9 +66,26 @@
 											   
 				NSEvent *result = incomingEvent;
 				
+				
+				
 				// if tabletpen is near the tablet
-				if ([incomingEvent type] == NSTabletProximity)
+				if ([incomingEvent type] == NSTabletProximity){
+					
 					[self showGlassPane:[incomingEvent isEnteringProximity]];
+					
+					// Ignore the rest if pointing device exited proximity
+					if([incomingEvent isEnteringProximity]){
+					
+						// Check whether the user is drawing or erasing
+						if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
+							NSLog(@"Found Eraser");
+							[self getKeyWindowViewAndSetEraserTo:YES];
+						} else {
+							NSLog(@"Found Pen");
+							[self getKeyWindowViewAndSetEraserTo:NO];
+						}
+					}
+				}
 				
 				return result;
 	}]; 
@@ -148,6 +179,19 @@
 	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
 }
 
+- (void) getKeyWindowViewAndSetEraserTo:(BOOL)value {
+	// get keyWindowID
+	NSNumber* keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	// Make sure the PaintView exists
+	if(!screenView)
+		return;
+	if(value)
+		NSLog(@"--- Setting Mode to 'Erase' on KeyWindow: %@ with ID: %@ ---", screenView, keyID);
+	else 
+		NSLog(@"--- Setting Mode to 'Draw' on KeyWindow: %@ with ID: %@ ---", screenView, keyID);
+	[screenView setErase:value];
+}
+
 - (void) keyWindowHandler
 {
 	NSLog(@"--- keyWindowHandler ---");
@@ -176,6 +220,7 @@
 
 - (void)dealloc
 {
+	[screenView release];
 	[keyWindowViews release];
 	[super dealloc];
 }

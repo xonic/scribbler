@@ -10,26 +10,23 @@
 #import "MyPoint.h"
 
 @interface PaintView : NSView {	
-	NSWindow		*	mainWindow;
-	NSPoint				downPoint;		
-	MyPoint			*	currentPoint;
-	NSMutableArray	*	myPaths;
-	NSMutableArray	*	myPoints;
-	NSMutableArray	*	firstControlPoints;
-	NSMutableArray	*	secondControlPoints;
-	NSBezierPath	*	path;
-	NSBezierPath	*	currentPath;
-	NSMutableArray	*	curvedPath;
-	BOOL				draw;
-	BOOL				clickThrough;
-	BOOL				isDrawing;
+	NSWindow			*	mainWindow;
+	NSMutableArray		*	myPaths;
+	NSMutableArray		*	myPoints;
+	NSMutableArray		*	firstControlPoints;
+	NSMutableArray		*	secondControlPoints;
+	NSBezierPath		*	path;
+
+	BOOL					draw;
+	BOOL					clickThrough;
+	BOOL					isDrawing;
+	BOOL					erase;
 }
 
 - (NSMutableArray *) getCurveControlPoints:(NSMutableArray *)pathToBeEdited;
 - (NSMutableArray *) getFirstControlPoints:(NSMutableArray *)rhs;
+- (void)erasePath:(NSPoint)point;
 
-@property(readwrite, assign) BOOL draw;
-@property(readwrite, assign) BOOL clickThrough;
-@property(readwrite, assign) BOOL isDrawing;
+@property(readwrite, assign) BOOL draw, clickThrough, isDrawing, erase;
 
 @end

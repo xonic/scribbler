@@ -19,4 +19,6 @@
 - (float) x;
 - (float) y;
 
+- (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point;
+
 @end

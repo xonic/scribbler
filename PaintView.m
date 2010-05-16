@@ -21,12 +21,12 @@
 	myPaths				= [[NSMutableArray alloc] init];
 	firstControlPoints  = [[NSMutableArray alloc] init];
 	secondControlPoints = [[NSMutableArray alloc] init];
-	curvedPath			= [[NSMutableArray alloc] init];
-	
 	path				= [[NSBezierPath alloc] init];
+	
 	draw				= YES;
 	clickThrough		= YES;
 	isDrawing			= NO;
+	erase				= NO;
 			
     return self;
 }
@@ -118,22 +118,16 @@
 	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
 		// Create a new array for the points of our line
 		myPoints = [[NSMutableArray alloc] init];
-	
-		// Add the new array to our list of paths
-		//[myPaths addObject:myPoints];
-	
-		// Get the mouse point and convert location
-		NSPoint p = [event locationInWindow];
-		downPoint = [self convertPoint:p fromView:nil];
-	
-		// Create a new MyPoint object
-		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
 		
-		// Add the converted point to the list of points for active path
-		[myPoints addObject:currentPoint];
-	
-		// The user is now drawing
-		isDrawing = YES;
+		if(erase){
+			isDrawing = NO;
+			// Erase Path
+			[self erasePath:[self convertPoint:[event locationInWindow] fromView:nil]];
+		} else {
+			isDrawing = YES;
+			// Get the point, convert it, make it a MyPoint object and add it to the current path
+			[myPoints addObject:[[MyPoint alloc] initWithNSPoint:[self convertPoint:[event locationInWindow] fromView:nil]]];
+		}
 	
 		[self setNeedsDisplay:YES];
 		NSLog(@"mouseDown");
@@ -143,16 +137,14 @@
 - (void)mouseDragged:(NSEvent *)event
 {
 	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
-		// Get the next mouse point and convert location 
-		NSPoint p = [event locationInWindow];
-		downPoint = [self convertPoint:p fromView:nil];
-	
-		// Create a new MyPoint object
-		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
-	
-		// Add the converted point to the list of points for active path
-		[myPoints addObject:currentPoint];
-	
+
+		if(erase){
+			// Erase Path
+			[self erasePath:[self convertPoint:[event locationInWindow] fromView:nil]];
+		} else {
+			// Get the point, convert it, make it a MyPoint object and add it to the current path
+			[myPoints addObject:[[MyPoint alloc] initWithNSPoint:[self convertPoint:[event locationInWindow] fromView:nil]]];
+		}	
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -160,24 +152,22 @@
 - (void)mouseUp:(NSEvent *)event
 {
 	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
-		// Get the last mouse point and convert location
-		NSPoint p = [event locationInWindow];
-		downPoint = [self convertPoint:p fromView:nil];
-	
-		// Create a new MyPoint object
-		currentPoint = [[MyPoint alloc] initWithNSPoint:downPoint];
-	
-		// Add the converted point to the list of points for active path
-		[myPoints addObject:currentPoint];
-	
-		NSMutableArray *cpy = [[NSMutableArray alloc] init];
-		[cpy addObjectsFromArray:myPoints];
-		NSMutableArray *newPoints = [self getCurveControlPoints: cpy]; 
-		[myPaths addObject: newPoints];
-	
-		// The user stopped drawing
-		isDrawing = NO;
-	
+
+		if(erase){
+			// The user stopped drawing
+			isDrawing = NO;
+			// Erase Path
+			[self erasePath:[self convertPoint:[event locationInWindow] fromView:nil]];
+		} else {
+			// The user stopped drawing
+			isDrawing = NO;
+			// Get the point, convert it, make it a MyPoint object and add it to the current path
+			[myPoints addObject:[[MyPoint alloc] initWithNSPoint:[self convertPoint:[event locationInWindow] fromView:nil]]];
+			
+			// Curve the path and add it to the others
+			[myPaths addObject: [self getCurveControlPoints: myPoints]];
+		}
+		
 		[self setNeedsDisplay:YES];
 		NSLog(@"mouseUp");
 	}
@@ -217,9 +207,6 @@
 		// Add the first control point to the array
 		[pathToBeEdited insertObject:newControlPoint atIndex:1];
 		
-		// Bye new control point
-		//[newControlPoint release];
-		
 		// Calculate second control point
 		NSPoint anotherNewPoint;
 				anotherNewPoint.x = 2 * newPoint.x - [[pathToBeEdited objectAtIndex:0] myNSPoint].x;
@@ -230,9 +217,6 @@
 		
 		// Add the second control point to array
 		[pathToBeEdited insertObject:anotherNewControlPoint atIndex:2];
-		
-		// Bye new control point
-		//[anotherNewControlPoint release];
 		
 		// Gief back!
 		return pathToBeEdited;
@@ -250,9 +234,6 @@
 														 2 * (double) [[pathToBeEdited objectAtIndex:i+1] myNSPoint].x];
 		// Add it to the array
 		[rhs addObject:newRightHandX];
-		
-		// Bye.
-		//[newRightHandX release];
 	}
 	
 	// Set the first element
@@ -260,16 +241,10 @@
 												 2 * (double) [[pathToBeEdited objectAtIndex:1] myNSPoint].x];
 	[rhs insertObject:firstElementX atIndex:0];
 	
-	// Bye.
-	//[firstElementX release];
-	
 	// Set the last element
 	NSNumber *lastElementX = [NSNumber numberWithDouble:(8 * (double) [[pathToBeEdited objectAtIndex:n-1] myNSPoint].x + 
 														 (double) [[pathToBeEdited objectAtIndex:n] myNSPoint].x) / 2.0 ];
 	[rhs addObject:lastElementX];
-	
-	// Bye.
-	//[lastElementX release];
 	
 	// Get first control points x-values
 	NSMutableArray *xPoints = [self getFirstControlPoints:rhs];
@@ -285,9 +260,6 @@
 															 2 * (double) [[pathToBeEdited objectAtIndex:i+1] myNSPoint].y];
 		// Add it to the array
 		[rhs addObject:newRightHandY];
-		
-		// Bye.
-		//[newRightHandY release];
 	}
 	
 	// Set the first element
@@ -295,16 +267,10 @@
 													 2 * (double) [[pathToBeEdited objectAtIndex:1] myNSPoint].y];
 	[rhs insertObject:firstElementY atIndex:0];
 	
-	// Bye.
-	//[firstElementY release];
-	
 	// Set the last element
 	NSNumber *lastElementY = [NSNumber numberWithDouble:(8 * (double) [[pathToBeEdited objectAtIndex:n-1] myNSPoint].y + 
 															 (double) [[pathToBeEdited objectAtIndex:n] myNSPoint].y) / 2.0];
 	[rhs addObject:lastElementY];
-	
-	// Bye.
-	//[lastElementY release];
 	
 	// Get first control points y-values
 	NSMutableArray *yPoints = [self getFirstControlPoints:rhs];
@@ -324,9 +290,6 @@
 		// Insert after "real" point
 		[pathToBeEdited insertObject:firstControlPoint atIndex:i+1];
 		
-		// Bye.
-		//[firstControlPoint release];
-		
 		if(i < newArraySize-1){
 			// Second control point
 			double x = 2 * [[pathToBeEdited objectAtIndex:i+2] myNSPoint].x - [[xPoints objectAtIndex:j+1] doubleValue];
@@ -337,9 +300,6 @@
 			// Insert after first control point
 			[pathToBeEdited insertObject:secondControlPoint atIndex:i+2];
 			
-			// Bye.
-			//[secondControlPoint release];
-			
 		} else {
 			// Last control point
 			double x = 2 * [[pathToBeEdited lastObject] myNSPoint].x + [[xPoints objectAtIndex:[xPoints count]-1] doubleValue];
@@ -348,9 +308,6 @@
 			MyPoint *lastControlPoint = [[MyPoint alloc] initWithDoubleX:x Y:y];
 			
 			[pathToBeEdited addObject:lastControlPoint];
-			
-			// Bye.
-			//[lastControlPoint release];
 		}
 		// Increment auxiliary index
 		if (j < [xPoints count] - 2)
@@ -382,7 +339,6 @@
 	NSMutableArray *vector = [[NSMutableArray alloc] init];
 	
 	for(int i=0; i<n; i++){
-		NSLog(@"x[%d] = %f", i, x[i]);
 		NSNumber *tmpNumber = [NSNumber numberWithDouble:x[i]];
 		[vector addObject:tmpNumber];
 		[tmpNumber release];
@@ -390,11 +346,37 @@
 	return vector;
 }
 
+- (void)erasePath:(NSPoint)point
+{
+	
+	// Go through paths
+	for (int i=0; i < [myPaths count]; i++)
+	{
+		// Go through points
+		for (int j=0; j < [[myPaths objectAtIndex:i] count] - 3; j+=3)
+		{
+			//double distance = sqrt((pow((double)([[[myPaths objectAtIndex:i] objectAtIndex:j] myNSPoint].x - [[[myPaths objectAtIndex:i] objectAtIndex:j+3] myNSPoint].x), 2.0) + 
+			//						pow((double)([[[myPaths objectAtIndex:i] objectAtIndex:j] myNSPoint].y - [[[myPaths objectAtIndex:i] objectAtIndex:j+3] myNSPoint].y), 2.0)));
+			
+			// Set the tolerance range
+			NSNumber * tolerance = [NSNumber numberWithDouble:20.0]; // [NSNumber numberWithDouble:(distance / 10)];
+			
+			//NSLog(@"Distance = %f", distance);
+			if([[[myPaths objectAtIndex:i] objectAtIndex:j] isInRange:tolerance ofNSPoint:point]){
+				[myPaths removeObjectAtIndex:i];
+				break;
+			}
+		}
+	}
+}
+
 - (void)dealloc
 {
+	[mainWindow release];
+	[firstControlPoints release];
+	[secondControlPoints release];
 	[myPaths release];
 	[myPoints release];
-	[currentPoint release];
 	[path release];
 	[super dealloc];
 }
@@ -409,8 +391,6 @@
 	return YES;
 }
 
-@synthesize draw;
-@synthesize clickThrough;
-@synthesize isDrawing;
+@synthesize draw, clickThrough, isDrawing, erase;
 
 @end
