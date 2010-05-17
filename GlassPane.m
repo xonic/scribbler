@@ -32,8 +32,23 @@
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 			(NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
 			handler:^(NSEvent *incomingEvent) {
+
 				NSLog(@"event");
-				
+
+				// The user pressed cmd+alt+ctrl+Z or the according tablet button
+				if ([incomingEvent modifierFlags] == 1835305){
+					NSLog(@"UNDO");
+					[[screenView undoManager] undo];
+					[screenView setNeedsDisplay:YES];
+					return;
+				} 
+				// The user pressed shift+cmd+alt+ctrl+Z or the according tablet button
+				else if ([incomingEvent modifierFlags] ==  1966379) {
+					NSLog(@"REDO");
+					[[screenView undoManager] redo];
+					[screenView setNeedsDisplay:YES];
+					return;
+				}				
 				// if change of keyWindow happens (this could only happen with a mouseDown event)
 				if ([incomingEvent type] == NSLeftMouseDown) {
 					if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
@@ -74,7 +89,18 @@
 											   
 				NSEvent *result = incomingEvent;
 				
-				
+				// The user pressed cmd+alt+ctrl+Z or the according tablet button
+				if ([incomingEvent modifierFlags] == 1835305){
+					NSLog(@"UNDO");
+					[[screenView undoManager] undo];
+					[screenView setNeedsDisplay:YES];
+				} 
+				// The user pressed shift+cmd+alt+ctrl+Z or the according tablet button
+				else if ([incomingEvent modifierFlags] ==  1966379) {
+					NSLog(@"REDO");
+					[[screenView undoManager] redo];
+					[screenView setNeedsDisplay:YES];
+				}
 				
 				// if tabletpen is near the tablet
 				if ([incomingEvent type] == NSTabletProximity){
