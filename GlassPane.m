@@ -30,14 +30,16 @@
 		
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
-			(NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask)
+			(NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
 			handler:^(NSEvent *incomingEvent) {
+				NSLog(@"event");
 				
 				// if change of keyWindow happens (this could only happen with a mouseDown event)
 				if ([incomingEvent type] == NSLeftMouseDown) {
 					if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
 						[self keyWindowHandler];
 					}
+					NSLog(@"TODO: save window position");
 				}
 				
 				// if tabletpen is near the tablet
@@ -57,6 +59,12 @@
 						}
 					}
 				}
+				
+				if ([incomingEvent type] == NSLeftMouseDragged) {
+					NSLog(@"drag");
+				}
+				
+				
 	}]; 
 	
 	// Start watching local events to figure out when to hide the pane	

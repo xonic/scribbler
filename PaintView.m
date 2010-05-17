@@ -79,6 +79,10 @@
 					 controlPoint1:[[[myPaths objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
 					 controlPoint2:[[[myPaths objectAtIndex:i] objectAtIndex:j+2] myNSPoint]];
 			}
+			
+			// Close the path
+			[path closePath];
+			
 			// Draw the path
 			[path stroke];
 			
@@ -97,6 +101,9 @@
 			// Go through points
 			for (int i=1; i <[myPoints count]; i++)
 				[path lineToPoint:[[myPoints objectAtIndex:i] myNSPoint]];
+			
+			// Close the path
+			[path closePath];
 			
 			// Draw the path
 			[path stroke];
