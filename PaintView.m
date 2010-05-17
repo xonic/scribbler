@@ -57,7 +57,7 @@
 		
 		// Use a partially transparent color for shapes that overlap.
 		
-		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.5]];
+		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.3]];
 		
 		[theShadow set];
 		// Draw our paths
@@ -381,7 +381,7 @@
 	[[undo prepareWithInvocationTarget:self] removeObjectFromMyPaths:newPath];
 	
 	if(![undo isUndoing])
-		[undo setActionName:@"Insert path"];
+		[undo setActionName:@"Draw Path"];
 
 	// Finally add the new path
 	[myPaths addObject:newPath];
@@ -397,7 +397,7 @@
 	[[undo prepareWithInvocationTarget:self] insertObjectInMyPaths:existingPath];
 	
 	if(![undo isUndoing])
-		[undo setActionName:@"Removing path"];
+		[undo setActionName:@"Delete Path"];
 	
 	// Finally remove the path
 	[myPaths removeObject:existingPath];
