@@ -73,15 +73,12 @@
 			[path moveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:0] myNSPoint]];
 			
 			// Go through points
-			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 3; j+=3)
+			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 4; j+=3)
 			{
 				[path curveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:j+3] myNSPoint] 
 					 controlPoint1:[[[myPaths objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
 					 controlPoint2:[[[myPaths objectAtIndex:i] objectAtIndex:j+2] myNSPoint]];
 			}
-			
-			// Close the path
-			[path closePath];
 			
 			// Draw the path
 			[path stroke];
@@ -101,10 +98,7 @@
 			// Go through points
 			for (int i=1; i <[myPoints count]; i++)
 				[path lineToPoint:[[myPoints objectAtIndex:i] myNSPoint]];
-			
-			// Close the path
-			[path closePath];
-			
+						
 			// Draw the path
 			[path stroke];
 			
@@ -377,6 +371,30 @@
 			}
 		}
 	}
+}
+
+- (void) repositionPaths:(MyPoint *)delta
+{
+	// duplicate paths
+	NSMutableArray *repositionPaths = [[NSMutableArray alloc] initWithArray:myPaths];
+	
+	// Go through paths
+	for (int i=0; i < [repositionPaths count]; i++)
+		// Go through points
+		for (int j=0; j < [[repositionPaths objectAtIndex:i] count]; j++)
+			// add delta to each point
+			[[[repositionPaths objectAtIndex:i] objectAtIndex:j] addDelta:[delta myNSPoint]];
+	
+	// retain changed paths
+	[repositionPaths retain];
+	// disable drawing to avoid errors
+	draw = NO;
+	// override original paths with changed ones
+	myPaths = repositionPaths;
+	// enable drawing again
+	draw = YES;
+	// repaint
+	[self setNeedsDisplay:YES];
 }
 
 - (void) insertObjectInMyPaths:(id)newPath

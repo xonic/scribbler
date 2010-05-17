@@ -25,7 +25,8 @@
 
 - (NSMutableArray *) getCurveControlPoints:(NSMutableArray *)pathToBeEdited;
 - (NSMutableArray *) getFirstControlPoints:(NSMutableArray *)rhs;
-- (void)erasePath:(NSPoint)point;
+- (void) erasePath:(NSPoint)point;
+- (void) repositionPaths:(MyPoint *)delta;
 
 - (void) insertObjectInMyPaths:(id)newPath;
 - (void) removeObjectFromMyPaths:(id)existingPath;

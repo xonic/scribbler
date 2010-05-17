@@ -27,13 +27,16 @@
 	
 	// initialize Array for future keyWindowViews
 	keyWindowViews = [[NSMutableDictionary alloc] init];
+
+	// initialize point variables for capture dragging
+	startDragPoint = [[MyPoint alloc] initWithDoubleX:-1 Y:-1];
+	endDragPoint	= [[MyPoint alloc] initWithDoubleX:-1 Y:-1];
+	
 		
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 			(NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
 			handler:^(NSEvent *incomingEvent) {
-
-				NSLog(@"event");
 
 				// The user pressed cmd+alt+ctrl+Z or the according tablet button
 				if ([incomingEvent modifierFlags] == 1835305){
@@ -54,7 +57,9 @@
 					if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
 						[self keyWindowHandler];
 					}
-					NSLog(@"TODO: save window position");
+					
+					// save start mouseposition in case of dragging
+					[startDragPoint initWithNSPoint:[NSEvent mouseLocation]];
 				}
 				
 				// if tabletpen is near the tablet
@@ -76,7 +81,14 @@
 				}
 				
 				if ([incomingEvent type] == NSLeftMouseDragged) {
-					NSLog(@"drag");
+					// save current mouseposition
+					[endDragPoint initWithNSPoint:[NSEvent mouseLocation]];
+					// calculate delta offset from startdragpoint (=mouseDown position) to enddragpoint (=current mouseposition)
+					MyPoint *delta = [[MyPoint alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] Y:[endDragPoint y]-[startDragPoint y]];
+					// call function to reposition all paths with delta
+					[screenView repositionPaths:delta];
+					// reset startpoint
+					[startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
 				}
 				
 				
@@ -258,5 +270,7 @@
 	[keyWindowViews release];
 	[super dealloc];
 }
+
+@synthesize startDragPoint, endDragPoint;
 
 @end

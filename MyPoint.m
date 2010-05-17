@@ -48,6 +48,23 @@
 	return myNSPoint.y;
 }
 
+- (void) setX:(float) x
+{
+	myNSPoint.x = x;
+}
+
+- (void) setY:(float) y
+{
+	myNSPoint.y = y;
+}
+
+// function to add a delta offset to the point
+- (void) addDelta:(NSPoint)delta
+{
+	myNSPoint.x+=delta.x;
+	myNSPoint.y+=delta.y;
+}
+
 - (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point
 {
 	if (myNSPoint.x > (point.x - [range doubleValue]) && myNSPoint.x < (point.x + [range doubleValue])) {
