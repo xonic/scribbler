@@ -73,7 +73,7 @@
 			[path moveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:0] myNSPoint]];
 			
 			// Go through points
-			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 3; j+=3)
+			for (int j=0; j < [[myPaths objectAtIndex:i] count] - 4; j+=3)
 			{
 				[path curveToPoint:[[[myPaths objectAtIndex:i] objectAtIndex:j+3] myNSPoint] 
 					 controlPoint1:[[[myPaths objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
