@@ -13,6 +13,8 @@
 @interface GlassPane : NSWindow {
 	IBOutlet PaintView		*	screenView;
 	NSMutableDictionary		*	keyWindowViews;
+	MyPoint					*	startDragPoint;
+	MyPoint					*	endDragPoint;
 }
 
 - (void) showHide:(id)sender;
@@ -27,5 +29,7 @@
 - (NSRect *)   getKeyWindowBounds:(NSMutableDictionary*) windowInfos;
 
 - (void) keyWindowHandler;
+
+@property(readwrite, assign) MyPoint *startDragPoint, *endDragPoint;
 
 @end

@@ -18,6 +18,9 @@
 - (NSPoint) myNSPoint;
 - (float) x;
 - (float) y;
+- (void) setX:(float)x;
+- (void) setY:(float)y;
+- (void) addDelta:(NSPoint)delta;
 
 - (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point;
 
