@@ -27,5 +27,6 @@
 - (void) showGlassPane:(BOOL)flag;
 
 @property(readwrite, assign) PointModel *startDragPoint, *endDragPoint;
+@property (retain) SketchController *controller;
 
 @end

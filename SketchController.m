@@ -62,7 +62,7 @@
 											   // if tabletpen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   
-												   [self keyWindowHandler];
+												   //[self keyWindowHandler];
 												   
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
@@ -86,11 +86,13 @@
 												   // save current mouseposition
 												   [endDragPoint initWithNSPoint:[NSEvent mouseLocation]];
 												   // calculate delta offset from startdragpoint (=mouseDown position) to enddragpoint (=current mouseposition)
-												   //PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
+												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
-												  // [activeSketchView repositionPaths:delta];
+												   [[activeSketchView model] repositionPaths:delta];
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+												   // repaint sketchView
+												   [activeSketchView setNeedsDisplay:YES];
 											   }
 											   
 											   
@@ -119,7 +121,7 @@
 											  // if tabletpen is near the tablet
 											  if ([incomingEvent type] == NSTabletProximity){
 												  
-												  [self keyWindowHandler];
+												  //[self keyWindowHandler];
 												  
 												  [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												  

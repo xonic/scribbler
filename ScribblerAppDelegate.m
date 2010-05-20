@@ -7,7 +7,7 @@
 //
 
 #import "ScribblerAppDelegate.h"
-#import "GlassPane.h"
+#import "MainWindow.h"
 
 @implementation ScribblerAppDelegate
 
@@ -31,7 +31,7 @@
 		[self setInitialSwitchToKeyWindow:NO];
 		[NSApp hide:self];
 		[NSApp sendAction:@selector(firstResponder:) to:nil from:self];
-		[(GlassPane*)window keyWindowHandler];
+		[[(MainWindow*)window controller] keyWindowHandler];
 	}
 }
 

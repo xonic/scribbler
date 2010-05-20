@@ -52,6 +52,6 @@
 	[super dealloc];
 }
 
-@synthesize startDragPoint, endDragPoint;
+@synthesize startDragPoint, endDragPoint, controller;
 
 @end
