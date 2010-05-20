@@ -41,7 +41,7 @@
 - (NSMutableDictionary*)getCurrentKeyWindowInfos;
 - (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos;
 - (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos;
-- (NSRect *) getKeyWindowBounds: (NSMutableDictionary*) windowInfos;
+- (NSRect) getKeyWindowBounds: (NSMutableDictionary*) windowInfos;
 - (void) keyWindowHandler;
 
 @end

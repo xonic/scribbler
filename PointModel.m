@@ -62,7 +62,7 @@
 - (void) addDelta:(NSPoint)delta
 {
 	myNSPoint.x+=delta.x;
-	myNSPoint.y+=delta.y;
+	myNSPoint.y-=delta.y;
 }
 
 - (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point

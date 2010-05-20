@@ -55,8 +55,8 @@
 													   [self keyWindowHandler];
 												   }
 												   
-												   // save start mouseposition in case of dragging
-												   [startDragPoint initWithNSPoint:[NSEvent mouseLocation]];
+												   // save windowposition in case of dragging
+												   [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 											   }
 											   
 											   // if tabletpen is near the tablet
@@ -83,9 +83,10 @@
 											   }
 											   
 											   if ([incomingEvent type] == NSLeftMouseDragged) {
-												   // save current mouseposition
-												   [endDragPoint initWithNSPoint:[NSEvent mouseLocation]];
-												   // calculate delta offset from startdragpoint (=mouseDown position) to enddragpoint (=current mouseposition)
+												   // save current windowposition
+												   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
+												   
+												   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
 												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
 												   [[activeSketchView model] repositionPaths:delta];
@@ -254,10 +255,17 @@
 {
 	return [windowInfos objectForKey:(id)kCGWindowOwnerName];
 }
-
+/*
 - (NSRect *) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
 {
 	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
+}*/
+- (NSRect) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
+{
+	CGRect rect;
+	CFDictionaryRef blab = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
+	CGRectMakeWithDictionaryRepresentation(blab,&rect);
+	return (NSRect)rect;
 }
 
 - (void) keyWindowHandler
