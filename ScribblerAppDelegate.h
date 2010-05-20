@@ -12,8 +12,11 @@
 	NSWindow *window;
 	IBOutlet NSMenu *statusMenu;
 	NSStatusItem *statusItem;
+	BOOL initialSwitchToKeyWindow;
+	
 }
 
 @property (assign) IBOutlet NSWindow *window;
+@property(readwrite, assign) BOOL initialSwitchToKeyWindow;
 
 @end

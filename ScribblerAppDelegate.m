@@ -7,14 +7,14 @@
 //
 
 #import "ScribblerAppDelegate.h"
+#import "GlassPane.h"
 
 @implementation ScribblerAppDelegate
 
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	// Insert code here to initialize your application 
-	
+	initialSwitchToKeyWindow = YES;
 }
 
 -(void)awakeFromNib{
@@ -24,5 +24,17 @@
 	[statusItem setHighlightMode:YES];
 	[statusItem setToolTip:@"Scribbler"];
 }
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+
+	if(initialSwitchToKeyWindow) {
+		[self setInitialSwitchToKeyWindow:NO];
+		[NSApp hide:self];
+		[NSApp sendAction:@selector(firstResponder:) to:nil from:self];
+		[(GlassPane*)window keyWindowHandler];
+	}
+}
+
+@synthesize initialSwitchToKeyWindow;
 
 @end

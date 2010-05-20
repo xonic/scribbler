@@ -15,6 +15,8 @@
 	NSMutableDictionary		*	keyWindowViews;
 	MyPoint					*	startDragPoint;
 	MyPoint					*	endDragPoint;
+	
+	ProcessSerialNumber * initialAppPSN;
 }
 
 - (void) showHide:(id)sender;
@@ -31,5 +33,6 @@
 - (void) keyWindowHandler;
 
 @property(readwrite, assign) MyPoint *startDragPoint, *endDragPoint;
+@property(readwrite, assign) ProcessSerialNumber *initialAppPSN;
 
 @end

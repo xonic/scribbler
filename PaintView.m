@@ -27,7 +27,7 @@
 	clickThrough		= YES;
 	isDrawing			= NO;
 	erase				= NO;
-			
+		
     return self;
 }
 
@@ -375,24 +375,8 @@
 
 - (void) repositionPaths:(MyPoint *)delta
 {
-	// duplicate paths
-	NSMutableArray *repositionPaths = [[NSMutableArray alloc] initWithArray:myPaths];
-	
-	// Go through paths
-	for (int i=0; i < [repositionPaths count]; i++)
-		// Go through points
-		for (int j=0; j < [[repositionPaths objectAtIndex:i] count]; j++)
-			// add delta to each point
-			[[[repositionPaths objectAtIndex:i] objectAtIndex:j] addDelta:[delta myNSPoint]];
-	
-	// retain changed paths
-	[repositionPaths retain];
-	// disable drawing to avoid errors
-	draw = NO;
-	// override original paths with changed ones
-	myPaths = repositionPaths;
-	// enable drawing again
-	draw = YES;
+	// repsotion the origin from the view with delta
+	[self translateOriginToPoint:[delta myNSPoint]];
 	// repaint
 	[self setNeedsDisplay:YES];
 }
@@ -448,6 +432,11 @@
 {
 	return YES;
 }
+
+/*- (BOOL) shouldDelayWindowOrderingForEvent: (NSEvent *) theEvent
+{
+	return YES;
+}*/
 
 @synthesize draw, clickThrough, isDrawing, erase;
 

@@ -18,7 +18,7 @@
     {
 		return nil;
     }
-	
+
 	[self setLevel:CGShieldingWindowLevel()];//NSFloatingWindowLevel];
 	[self setBackgroundColor:[NSColor clearColor]];
 	[self setOpaque:NO];
@@ -30,7 +30,7 @@
 
 	// initialize point variables for capture dragging
 	startDragPoint = [[MyPoint alloc] initWithDoubleX:-1 Y:-1];
-	endDragPoint	= [[MyPoint alloc] initWithDoubleX:-1 Y:-1];
+	endDragPoint   = [[MyPoint alloc] initWithDoubleX:-1 Y:-1];
 	
 		
 	// Start watching global events to figure out when to show the pane	
@@ -135,9 +135,13 @@
 				
 				return result;
 	}]; 
-				
+	
+	//[self keyWindowHandler];
+	
+					
     return self;
 }
+
 
 - (void) showHide:(id)sender {
 			
@@ -271,6 +275,12 @@
 	[super dealloc];
 }
 
-@synthesize startDragPoint, endDragPoint;
+- (void)becomeKeyWindow
+{
+	NSLog(@"becomeKey");
+	[super becomeKeyWindow];
+}
+
+@synthesize startDragPoint, endDragPoint, initialAppPSN;
 
 @end
