@@ -30,6 +30,8 @@
 	
 	erase = NO;
 	
+	
+	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
@@ -62,7 +64,7 @@
 											   // if tabletpen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   
-												   [self keyWindowHandler];
+												  // [self keyWindowHandler];
 												   
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
@@ -86,9 +88,10 @@
 												   // save current mouseposition
 												   [endDragPoint initWithNSPoint:[NSEvent mouseLocation]];
 												   // calculate delta offset from startdragpoint (=mouseDown position) to enddragpoint (=current mouseposition)
-												   //PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
+												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
-												  // [activeSketchView repositionPaths:delta];
+												   [[activeSketchView model] repositionPaths:delta];
+												   [activeSketchView setNeedsDisplay:YES];
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
 											   }
@@ -119,7 +122,7 @@
 											  // if tabletpen is near the tablet
 											  if ([incomingEvent type] == NSTabletProximity){
 												  
-												  [self keyWindowHandler];
+												  //[self keyWindowHandler];
 												  
 												  [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												  
@@ -141,6 +144,7 @@
 											  
 											  return result;
 										  }]; 
+	[self keyWindowHandler];
     return self;	
 }
 
