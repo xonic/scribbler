@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* ScribblerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* ScribblerAppDelegate.m */; };
-		368646B3117F4C650020319A /* GlassPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 368646B2117F4C650020319A /* GlassPane.m */; };
-		368646FF117F93330020319A /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = 368646FE117F93330020319A /* PaintView.m */; };
+		368646B3117F4C650020319A /* MainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 368646B2117F4C650020319A /* MainWindow.m */; };
+		368646FF117F93330020319A /* SketchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 368646FE117F93330020319A /* SketchView.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		C68BFDD11196D3FD0040D32C /* MyPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* MyPoint.m */; };
+		C61C782511A5373A00183CC7 /* SketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C782411A5373A00183CC7 /* SketchModel.m */; };
+		C61C783F11A54A8000183CC7 /* SketchController.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C783E11A54A8000183CC7 /* SketchController.m */; };
+		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,14 +30,18 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		368646B1117F4C650020319A /* GlassPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlassPane.h; sourceTree = "<group>"; };
-		368646B2117F4C650020319A /* GlassPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlassPane.m; sourceTree = "<group>"; };
-		368646FD117F93330020319A /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintView.h; sourceTree = "<group>"; };
-		368646FE117F93330020319A /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintView.m; sourceTree = "<group>"; };
+		368646B1117F4C650020319A /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindow.h; sourceTree = "<group>"; };
+		368646B2117F4C650020319A /* MainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainWindow.m; sourceTree = "<group>"; };
+		368646FD117F93330020319A /* SketchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchView.h; sourceTree = "<group>"; };
+		368646FE117F93330020319A /* SketchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Scribbler-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Scribbler-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Scribbler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scribbler.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C68BFDCF1196D3FD0040D32C /* MyPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPoint.h; sourceTree = "<group>"; };
-		C68BFDD01196D3FD0040D32C /* MyPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPoint.m; sourceTree = "<group>"; };
+		C61C782311A5373A00183CC7 /* SketchModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchModel.h; sourceTree = "<group>"; };
+		C61C782411A5373A00183CC7 /* SketchModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchModel.m; sourceTree = "<group>"; };
+		C61C783D11A54A8000183CC7 /* SketchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchController.h; sourceTree = "<group>"; };
+		C61C783E11A54A8000183CC7 /* SketchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchController.m; sourceTree = "<group>"; };
+		C68BFDCF1196D3FD0040D32C /* PointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointModel.h; sourceTree = "<group>"; };
+		C68BFDD01196D3FD0040D32C /* PointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,14 +59,18 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C61C783D11A54A8000183CC7 /* SketchController.h */,
+				C61C783E11A54A8000183CC7 /* SketchController.m */,
+				C61C782311A5373A00183CC7 /* SketchModel.h */,
+				C61C782411A5373A00183CC7 /* SketchModel.m */,
 				256AC3D80F4B6AC300CF3369 /* ScribblerAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* ScribblerAppDelegate.m */,
-				368646B1117F4C650020319A /* GlassPane.h */,
-				368646B2117F4C650020319A /* GlassPane.m */,
-				368646FD117F93330020319A /* PaintView.h */,
-				368646FE117F93330020319A /* PaintView.m */,
-				C68BFDCF1196D3FD0040D32C /* MyPoint.h */,
-				C68BFDD01196D3FD0040D32C /* MyPoint.m */,
+				368646B1117F4C650020319A /* MainWindow.h */,
+				368646B2117F4C650020319A /* MainWindow.m */,
+				368646FD117F93330020319A /* SketchView.h */,
+				368646FE117F93330020319A /* SketchView.m */,
+				C68BFDCF1196D3FD0040D32C /* PointModel.h */,
+				C68BFDD01196D3FD0040D32C /* PointModel.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -188,9 +198,11 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				256AC3DA0F4B6AC300CF3369 /* ScribblerAppDelegate.m in Sources */,
-				368646B3117F4C650020319A /* GlassPane.m in Sources */,
-				368646FF117F93330020319A /* PaintView.m in Sources */,
-				C68BFDD11196D3FD0040D32C /* MyPoint.m in Sources */,
+				368646B3117F4C650020319A /* MainWindow.m in Sources */,
+				368646FF117F93330020319A /* SketchView.m in Sources */,
+				C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */,
+				C61C782511A5373A00183CC7 /* SketchModel.m in Sources */,
+				C61C783F11A54A8000183CC7 /* SketchController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,17 +9,17 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface MyPoint : NSObject {
+@interface PointModel : NSObject {
 	NSPoint myNSPoint;
 }
 
 - (id) initWithNSPoint:(NSPoint)initPoint;
-- (id) initWithDoubleX:(double)x Y:(double)y;
+- (id) initWithDoubleX:(double)x andDoubleY:(double)y;
 - (NSPoint) myNSPoint;
-- (float) x;
-- (float) y;
-- (void) setX:(float)x;
-- (void) setY:(float)y;
+- (double) x;
+- (double) y;
+- (void) setX:(double)x;
+- (void) setY:(double)y;
 - (void) addDelta:(NSPoint)delta;
 
 - (BOOL) isInRange:(NSNumber *)range ofNSPoint:(NSPoint)point;

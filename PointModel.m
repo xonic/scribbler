@@ -6,10 +6,10 @@
 //  Copyright 2010 xonic. All rights reserved.
 //
 
-#import "MyPoint.h"
+#import "PointModel.h"
 
 
-@implementation MyPoint
+@implementation PointModel
 
 - (id) initWithNSPoint:(NSPoint)initPoint
 {
@@ -22,7 +22,7 @@
 	return self;
 }
 
-- (id) initWithDoubleX:(double) x Y:(double) y
+- (id) initWithDoubleX:(double) x andDoubleY:(double) y
 {
 	if(![super init])
 		return nil;
@@ -38,24 +38,24 @@
 	return myNSPoint;
 }
 
-- (float) x
+- (double) x
 {
-	return myNSPoint.x;
+	return (double) myNSPoint.x;
 }
 
-- (float) y
+- (double) y
 {
-	return myNSPoint.y;
+	return (double) myNSPoint.y;
 }
 
-- (void) setX:(float) x
+- (void) setX:(double) x
 {
-	myNSPoint.x = x;
+	myNSPoint.x = (float) x;
 }
 
-- (void) setY:(float) y
+- (void) setY:(double) y
 {
-	myNSPoint.y = y;
+	myNSPoint.y = (float) y;
 }
 
 // function to add a delta offset to the point
