@@ -64,8 +64,6 @@
 											   // if tabletpen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   
-												  // [self keyWindowHandler];
-												   
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
 												   // Ignore the rest if pointing device exited proximity
@@ -91,9 +89,11 @@
 												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
 												   [[activeSketchView model] repositionPaths:delta];
-												   [activeSketchView setNeedsDisplay:YES];
+
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+												   // repaint sketchView
+												   [activeSketchView setNeedsDisplay:YES];
 											   }
 											   
 											   
