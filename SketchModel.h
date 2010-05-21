@@ -26,7 +26,7 @@
 - (id) initWithController:(SketchController *)theController andWindow:(MainWindow *)theWindow;
 
 // Basic adding and removing of paths and points
-- (void) createNewPathAt:(NSPoint)inputPoint;
+- (void) createNewPathAt:(NSPoint)inputPoint withColor:(NSColor *)theColor;
 - (void) addPointToCurrentPath:(NSPoint)inputPoint;
 - (void) saveCurrentPath;
 - (void) removePath:(NSMutableArray *)path;

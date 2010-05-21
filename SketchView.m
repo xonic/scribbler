@@ -59,20 +59,20 @@
 		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.3]];
 		[theShadow set];
 		
-		// Draw our paths
-		[[NSColor redColor] set];
-		
 		// Go through paths
 		for (int i=0; i < [[model curvedPaths] count]; i++)
 		{
 			// Create a new path for performance reasons
 			NSBezierPath *path = [[NSBezierPath alloc] init];
 			
+			// Get the color of the path (it's saved right before the first point at index=0)
+			[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:0] set];
+			
 			// Move to first point without drawing
-			[path moveToPoint:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:0] myNSPoint]];
+			[path moveToPoint:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:1] myNSPoint]];
 			
 			// Go through points
-			for (int j=0; j < [[[model curvedPaths] objectAtIndex:i] count] - 4; j+=3)
+			for (int j=1; j < [[[model curvedPaths] objectAtIndex:i] count] - 4; j+=3)
 			{
 				[path curveToPoint:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:j+3] myNSPoint] 
 					 controlPoint1:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
@@ -91,11 +91,14 @@
 			// Create a new path for performance reasons
 			NSBezierPath *path = [[NSBezierPath alloc] init];
 			
+			// Get the color of the path (it's saved right before the first point at index=0)
+			[[[model currentPath] objectAtIndex:0] set];
+			
 			// Move to first point without drawing
-			[path moveToPoint:[[[model currentPath] objectAtIndex:0] myNSPoint]];
+			[path moveToPoint:[[[model currentPath] objectAtIndex:1] myNSPoint]];
 			
 			// Go through points
-			for (int i=1; i <[[model currentPath] count]; i++)
+			for (int i=2; i <[[model currentPath] count]; i++)
 				[path lineToPoint:[[[model currentPath] objectAtIndex:i] myNSPoint]];
 						
 			// Draw the path

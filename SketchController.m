@@ -11,7 +11,7 @@
 
 @implementation SketchController
 
-@synthesize activeSketchView;
+@synthesize activeSketchView, selectedColor;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -20,6 +20,9 @@
 	
 	[theMainWindow retain];
 	mainWindow = theMainWindow;
+	
+	// Set the default Color to red
+	selectedColor = [NSColor redColor];
 	
 	// initialize Array for future keyWindowViews
 	keyWindowViews = [[NSMutableDictionary alloc] init];
@@ -156,7 +159,7 @@
 	// Drawing or Erasing?
 	if (!erase){
 		// Create a new Path
-		[[sender model] createNewPathAt:inputPoint];
+		[[sender model] createNewPathAt:inputPoint withColor:(NSColor *)selectedColor];
 	} else {
 		// Remove intersecting Path
 		[[sender model] removePathIntersectingWith:inputPoint];

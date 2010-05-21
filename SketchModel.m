@@ -31,9 +31,13 @@
 
 #pragma mark Create
 
-- (void) createNewPathAt:(NSPoint)inputPoint
+- (void) createNewPathAt:(NSPoint)inputPoint withColor:(NSColor *)theColor
 {
 	currentPath = [[NSMutableArray alloc] init];
+	
+	// Save the color as first element in our array
+	[currentPath addObject:theColor];
+	
 	[currentPath addObject:[[PointModel alloc] initWithNSPoint:inputPoint]];
 }
 
@@ -91,7 +95,7 @@
 	for (int i=0; i < [curvedPaths count]; i++)
 	{
 		// Go through points
-		for (int j=0; j < [[curvedPaths objectAtIndex:i] count] - 3; j+=3)
+		for (int j=1; j < [[curvedPaths objectAtIndex:i] count] - 3; j+=3)
 		{
 			// Set the tolerance range
 			NSNumber * tolerance = [NSNumber numberWithDouble:20.0];
@@ -119,7 +123,7 @@
 	}
 	
 	// Count the points of our path
-	int n = [currentPath count] - 1;
+	int n = [currentPath count] - 2;
 	
 	// Too few points
 	if (n < 1) {
@@ -131,25 +135,25 @@
 	if (n == 1) {
 		// Calculate first control point
 		NSPoint newPoint;
-		newPoint.x = (2 * [[currentPath objectAtIndex:0] myNSPoint].x + [[currentPath objectAtIndex:1] myNSPoint].x) / 3;
-		newPoint.y = (2 * [[currentPath objectAtIndex:0] myNSPoint].y + [[currentPath objectAtIndex:1] myNSPoint].y) / 3;
+		newPoint.x = (2 * [[currentPath objectAtIndex:1] myNSPoint].x + [[currentPath objectAtIndex:2] myNSPoint].x) / 3;
+		newPoint.y = (2 * [[currentPath objectAtIndex:1] myNSPoint].y + [[currentPath objectAtIndex:2] myNSPoint].y) / 3;
 		
 		// Create a new object to be added to path
 		PointModel *newControlPoint = [[PointModel alloc] initWithNSPoint:newPoint];
 		
 		// Add the first control point to the array
-		[currentPath insertObject:newControlPoint atIndex:1];
+		[currentPath insertObject:newControlPoint atIndex:2];
 		
 		// Calculate second control point
 		NSPoint anotherNewPoint;
-		anotherNewPoint.x = 2 * newPoint.x - [[currentPath objectAtIndex:0] myNSPoint].x;
-		anotherNewPoint.y = 2 * newPoint.y - [[currentPath objectAtIndex:0] myNSPoint].y;
+		anotherNewPoint.x = 2 * newPoint.x - [[currentPath objectAtIndex:1] myNSPoint].x;
+		anotherNewPoint.y = 2 * newPoint.y - [[currentPath objectAtIndex:1] myNSPoint].y;
 		
 		// Create new object to be added to path
 		PointModel *anotherNewControlPoint = [[PointModel alloc] initWithNSPoint:anotherNewPoint];
 		
 		// Add the second control point to array
-		[currentPath insertObject:anotherNewControlPoint atIndex:2];
+		[currentPath insertObject:anotherNewControlPoint atIndex:3];
 		
 		return;
 	}
@@ -162,15 +166,15 @@
 	for (int i=1; i < n-1; ++i){
 		
 		// Calculate the new number 
-		NSNumber *newRightHandX = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i] myNSPoint].x + 
-								   2 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].x];
+		NSNumber *newRightHandX = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].x + 
+								   2 * (double) [[currentPath objectAtIndex:i+2] myNSPoint].x];
 		// Add it to the array
 		[rhs addObject:newRightHandX];
 	}
 	
 	// Set the first element
-	NSNumber *firstElementX = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:0] myNSPoint].x +
-							   2 * (double) [[currentPath objectAtIndex:1] myNSPoint].x];
+	NSNumber *firstElementX = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:1] myNSPoint].x +
+							   2 * (double) [[currentPath objectAtIndex:2] myNSPoint].x];
 	[rhs insertObject:firstElementX atIndex:0];
 	
 	// Set the last element
@@ -188,15 +192,15 @@
 	for (int i=1; i < n-1; ++i){
 		
 		// Calculate the new number 
-		NSNumber *newRightHandY = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i] myNSPoint].y + 
-								   2 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].y];
+		NSNumber *newRightHandY = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].y + 
+								   2 * (double) [[currentPath objectAtIndex:i+2] myNSPoint].y];
 		// Add it to the array
 		[rhs addObject:newRightHandY];
 	}
 	
 	// Set the first element
-	NSNumber *firstElementY = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:0] myNSPoint].y +
-							   2 * (double) [[currentPath objectAtIndex:1] myNSPoint].y];
+	NSNumber *firstElementY = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:1] myNSPoint].y +
+							   2 * (double) [[currentPath objectAtIndex:2] myNSPoint].y];
 	[rhs insertObject:firstElementY atIndex:0];
 	
 	// Set the last element
@@ -208,13 +212,13 @@
 	NSMutableArray *yPoints = [self getControlPoints:rhs];
 	
 	// Set the new array size for the path holding also all control points
-	int newArraySize = 3 * [currentPath count] - 2;
+	int newArraySize = 3 * ([currentPath count] - 1) - 2;
 	
 	// Auxiliary index variable
 	int j = 0;
 	
 	// This loop goes i=0, i=3, i=6, etc. therefore we need an aux. index j=0, j=1 j=2, etc.
-	for(int i=0; i<newArraySize; i+=3){
+	for(int i=1; i<newArraySize; i+=3){
 		
 		// First control point
 		PointModel *firstControlPoint = [[PointModel alloc] initWithDoubleX:[[xPoints objectAtIndex:j] doubleValue] andDoubleY:[[yPoints objectAtIndex:j] doubleValue]];
