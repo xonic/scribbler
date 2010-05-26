@@ -48,41 +48,45 @@
 
 - (void) saveCurrentPath
 {
-	[currentPath retain];
-	
-	// Get a new hot'n fresh smooooooooth path
-	NSMutableArray *newPath = [[NSMutableArray alloc] init];
-	newPath = currentPath;
-	
-	// Setup the undo operation
-	[[[window undoManager] prepareWithInvocationTarget:self] removePath:newPath];
-	
-	if(![[window undoManager] isUndoing])
-		[[window undoManager] setActionName:@"Draw Path"];
-	
-	// Finally add the new path
-	[curvedPaths addObject:newPath];
-	[currentPath release];
+	// Do the saving
+	[self insertObjectInCurvedPaths:currentPath];
 }
+
+- (void) insertObjectInCurvedPaths:(NSMutableArray *)newObject
+{
+	[[[window undoManager] prepareWithInvocationTarget:self] removeObjectFromCurvedPaths:newObject];
+	
+	// Name the undo action
+	if(![[window undoManager] isUndoing])
+		[[window undoManager] setActionName:@"Save Path"];
+	
+	// Finally save the path
+	[curvedPaths addObject:newObject];
+}
+	
 
 #pragma mark Remove
 
 - (void) removePath:(NSMutableArray *)path
 {
-	// Does the path really exist in our array?
-	if(![curvedPaths containsObject:path]){
-		NSLog(@"Trying to remove a path which is not in the array");
+	// Do the removing
+	[self removeObjectFromCurvedPaths:path];
+}
+
+- (void) removeObjectFromCurvedPaths:(NSMutableArray *)existingObject
+{
+	if(! [curvedPaths containsObject:existingObject])
 		return;
-	}
 	
-	// Setup the redo operation
-	[[[window undoManager] prepareWithInvocationTarget:self] saveCurrentPath];
+	// Setup undo stuff
+	[[[window undoManager] prepareWithInvocationTarget:self] insertObjectInCurvedPaths:existingObject];
 	
+	// Name the undo action
 	if(![[window undoManager] isUndoing])
-		[[window undoManager] setActionName:@"Delete Path"];
+		[[window undoManager] setActionName:@"Remove Path"];
 	
 	// Finally remove the path
-	[curvedPaths removeObject:path];
+	[curvedPaths removeObject:existingObject];
 }
 
 - (void) removePathIntersectingWith:(NSPoint)inputPoint
@@ -298,6 +302,20 @@
 	
 	// override original paths with changed ones
 	curvedPaths = repositionPaths;
+}
+
+- (NSArray *) getPointsOfPath:(NSMutableArray *)thePath
+{
+	NSRange theRange;
+	theRange.location = 1;
+	theRange.length   = [thePath count] - 1;
+	
+	return [thePath subarrayWithRange:theRange];
+}
+
+- (NSColor *) getColorOfPath:(NSMutableArray *)thePath
+{
+	return [thePath objectAtIndex:0];
 }
 
 - (void) dealloc 

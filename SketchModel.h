@@ -32,11 +32,20 @@
 - (void) removePath:(NSMutableArray *)path;
 - (void) removePathIntersectingWith:(NSPoint)inputPoint;
 
+// Methods for adding and removing Paths to the array
+// Needed for proper undo/redo implementation
+- (void) insertObjectInCurvedPaths:(NSMutableArray *)newObject;
+- (void) removeObjectFromCurvedPaths:(NSMutableArray *)existingObject;
+
 // Smoothing path curves
 - (void) smoothCurrentPath;
 - (NSMutableArray *) getControlPoints:(NSMutableArray *)rhs;
 
 // Repositioning
 - (void) repositionPaths:(PointModel *)delta;
+
+// Get stuff
+- (NSArray *) getPointsOfPath:(NSMutableArray *)thePath;
+- (NSColor *) getColorOfPath:(NSMutableArray *)thePath;
 
 @end
