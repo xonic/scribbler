@@ -16,6 +16,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		C61C782511A5373A00183CC7 /* SketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C782411A5373A00183CC7 /* SketchModel.m */; };
 		C61C783F11A54A8000183CC7 /* SketchController.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C783E11A54A8000183CC7 /* SketchController.m */; };
+		C670DA9511F1A70D004F4912 /* PathModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C670DA9411F1A70D004F4912 /* PathModel.m */; };
 		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,8 @@
 		C61C782411A5373A00183CC7 /* SketchModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchModel.m; sourceTree = "<group>"; };
 		C61C783D11A54A8000183CC7 /* SketchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchController.h; sourceTree = "<group>"; };
 		C61C783E11A54A8000183CC7 /* SketchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchController.m; sourceTree = "<group>"; };
+		C670DA9311F1A70D004F4912 /* PathModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathModel.h; sourceTree = "<group>"; };
+		C670DA9411F1A70D004F4912 /* PathModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathModel.m; sourceTree = "<group>"; };
 		C68BFDCF1196D3FD0040D32C /* PointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointModel.h; sourceTree = "<group>"; };
 		C68BFDD01196D3FD0040D32C /* PointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,6 +72,8 @@
 				368646B2117F4C650020319A /* MainWindow.m */,
 				368646FD117F93330020319A /* SketchView.h */,
 				368646FE117F93330020319A /* SketchView.m */,
+				C670DA9311F1A70D004F4912 /* PathModel.h */,
+				C670DA9411F1A70D004F4912 /* PathModel.m */,
 				C68BFDCF1196D3FD0040D32C /* PointModel.h */,
 				C68BFDD01196D3FD0040D32C /* PointModel.m */,
 			);
@@ -203,6 +208,7 @@
 				C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */,
 				C61C782511A5373A00183CC7 /* SketchModel.m in Sources */,
 				C61C783F11A54A8000183CC7 /* SketchController.m in Sources */,
+				C670DA9511F1A70D004F4912 /* PathModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

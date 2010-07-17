@@ -56,46 +56,23 @@
 		[theShadow setShadowBlurRadius:2.0];
 		
 		// Use a partially transparent color for shapes that overlap.
-		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.3]];
+		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.1]];
 		[theShadow set];
+		/*
+		NSDictionary *colorsAndPaths = [[NSDictionary alloc] init];
+					  colorsAndPaths = [model smoothedPaths];
 		
-		int lineCount = [[model curvedPaths] count];
+		NSArray	*paths = [[NSArray alloc] init];
+				 paths = [[model smoothedPaths] allKeys];
+		*/
 		
-		// Go through paths
-		for (int i=0; i < lineCount; i++)
-		{
-			// Get the Color
-			NSColor *theColor = [model getColorOfPath:[[model curvedPaths] objectAtIndex:i]];
-			
-			// Get the points
-			NSArray *thePoints = [model getPointsOfPath:[[model curvedPaths] objectAtIndex:i]];
-						
-			// Create a new path for performance reasons
-			NSBezierPath *path = [[NSBezierPath alloc] init];
-			
-			// Set the color
-			[theColor set];
-			
-			// Move to first point without drawing
-			[path moveToPoint:[[thePoints objectAtIndex:0] myNSPoint]];
-			
-			int pointCount = [thePoints count] - 3;
-			
-			// Go through points
-			for (int j=0; j < pointCount; j+=3)
-			{
-				[path curveToPoint:[[thePoints objectAtIndex:j+3] myNSPoint] 
-					 controlPoint1:[[thePoints objectAtIndex:j+1] myNSPoint]
-					 controlPoint2:[[thePoints objectAtIndex:j+2] myNSPoint]];
-			}
-			
-			// Draw the path
-			[path stroke];
-			
-			// Bye stuff
-			[path release];
-			[theColor release];
+		NSArray *smoothedPaths = [model smoothedPaths];
+		
+		for (id pathModel in smoothedPaths){
+			[[pathModel	color] set];
+			[[pathModel path]  stroke];
 		}
+		
 		
 		// if user is currently drawing - draw drawingpath
 		if (isDrawing && !erase) {

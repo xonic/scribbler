@@ -186,7 +186,6 @@
 	if (!erase){
 		// Conclude Path and save it
 		[[sender model] addPointToCurrentPath:inputPoint];
-		[[sender model] smoothCurrentPath];
 		[[sender model] saveCurrentPath];
 	} else {
 		// Remove intersecting Path
