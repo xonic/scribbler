@@ -26,6 +26,8 @@
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
 
+- (void) setPenColor:(id)sender;
+
 @property(readwrite, assign) PointModel *startDragPoint, *endDragPoint;
 @property (retain) SketchController *controller;
 

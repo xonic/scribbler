@@ -46,6 +46,32 @@
 	}
 }
 
+- (void) setPenColor:(id)sender
+{
+	NSLog(@"Select %@", [sender title]);
+	
+	if ([[sender title] isEqualToString:@"White"]) {
+		[controller setSelectedColor:[NSColor whiteColor]];
+		return;
+	}
+	if ([[sender title] isEqualToString:@"Red"]) {
+		[controller setSelectedColor:[NSColor redColor]];
+		return;
+	}
+	if ([[sender title] isEqualToString:@"Green"]) {
+		[controller setSelectedColor:[NSColor greenColor]];
+		return;
+	}
+	if ([[sender title] isEqualToString:@"Blue"]) {
+		[controller setSelectedColor:[NSColor blueColor]];
+		return;
+	}
+	if ([[sender title] isEqualToString:@"Black"]) {
+		[controller setSelectedColor:[NSColor blackColor]];
+		return;
+	}
+}
+
 - (void)dealloc
 {
 	[controller release];

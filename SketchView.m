@@ -56,53 +56,54 @@
 		[theShadow setShadowBlurRadius:2.0];
 		
 		// Use a partially transparent color for shapes that overlap.
-		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.3]];
+		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.1]];
 		[theShadow set];
+		/*
+		NSDictionary *colorsAndPaths = [[NSDictionary alloc] init];
+					  colorsAndPaths = [model smoothedPaths];
 		
-		// Draw our paths
-		[[NSColor redColor] set];
+		NSArray	*paths = [[NSArray alloc] init];
+				 paths = [[model smoothedPaths] allKeys];
+		*/
 		
-		// Go through paths
-		for (int i=0; i < [[model curvedPaths] count]; i++)
-		{
-			// Create a new path for performance reasons
-			NSBezierPath *path = [[NSBezierPath alloc] init];
-			
-			// Move to first point without drawing
-			[path moveToPoint:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:0] myNSPoint]];
-			
-			// Go through points
-			for (int j=0; j < [[[model curvedPaths] objectAtIndex:i] count] - 4; j+=3)
-			{
-				[path curveToPoint:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:j+3] myNSPoint] 
-					 controlPoint1:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:j+1] myNSPoint]
-					 controlPoint2:[[[[model curvedPaths] objectAtIndex:i] objectAtIndex:j+2] myNSPoint]];
-			}
-			
-			// Draw the path
-			[path stroke];
-			
-			// Bye path
-			[path release];
+		NSArray *smoothedPaths = [model smoothedPaths];
+		
+		for (id pathModel in smoothedPaths){
+			[[pathModel	color] set];
+			[[pathModel path]  stroke];
 		}
+		
 		
 		// if user is currently drawing - draw drawingpath
 		if (isDrawing && !erase) {
+			
+			// Get the Color
+			NSColor *theColor = [model getColorOfPath:[model currentPath]];
+			
+			// Get the points
+			NSArray *thePoints = [model getPointsOfPath:[model currentPath]];
+			
 			// Create a new path for performance reasons
 			NSBezierPath *path = [[NSBezierPath alloc] init];
 			
+			// Set the color
+			[theColor set];
+			
 			// Move to first point without drawing
-			[path moveToPoint:[[[model currentPath] objectAtIndex:0] myNSPoint]];
+			[path moveToPoint:[[thePoints objectAtIndex:0] myNSPoint]];
+			
+			int pointCount = [thePoints count];
 			
 			// Go through points
-			for (int i=1; i <[[model currentPath] count]; i++)
-				[path lineToPoint:[[[model currentPath] objectAtIndex:i] myNSPoint]];
+			for (int i=0; i < pointCount; i++)
+				[path lineToPoint:[[thePoints objectAtIndex:i] myNSPoint]];
 						
 			// Draw the path
 			[path stroke];
 			
-			// Bye path
+			// Bye stuff
 			[path release];
+			[theColor release];
 		}
 		
 		[NSGraphicsContext restoreGraphicsState];

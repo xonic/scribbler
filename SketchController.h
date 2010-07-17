@@ -23,10 +23,11 @@
 	MainWindow					*	mainWindow;
 	PointModel					*   startDragPoint;
 	PointModel					*	endDragPoint;
+	NSColor						*	selectedColor;
 	
 	BOOL							erase;
 }
-
+@property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;

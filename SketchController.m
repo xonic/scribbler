@@ -11,7 +11,7 @@
 
 @implementation SketchController
 
-@synthesize activeSketchView;
+@synthesize activeSketchView, selectedColor;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -21,6 +21,9 @@
 	[theMainWindow retain];
 	mainWindow = theMainWindow;
 	
+	// Set the default Color to red
+	selectedColor = [NSColor redColor];
+	
 	// initialize Array for future keyWindowViews
 	keyWindowViews = [[NSMutableDictionary alloc] init];
 	
@@ -29,6 +32,8 @@
 	endDragPoint	= [[PointModel alloc] initWithDoubleX:-1 andDoubleY:-1];
 	
 	erase = NO;
+	
+	
 	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
@@ -62,8 +67,6 @@
 											   // if tabletpen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   
-												   //[self keyWindowHandler];
-												   
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
 												   // Ignore the rest if pointing device exited proximity
@@ -90,6 +93,7 @@
 												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
 												   [[activeSketchView model] repositionPaths:delta];
+
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
 												   // repaint sketchView
@@ -158,6 +162,8 @@
 							  object:nil];
 
 	
+	//[self keyWindowHandler];
+	
     return self;	
 }
 
@@ -168,7 +174,7 @@
 	// Drawing or Erasing?
 	if (!erase){
 		// Create a new Path
-		[[sender model] createNewPathAt:inputPoint];
+		[[sender model] createNewPathAt:inputPoint withColor:(NSColor *)selectedColor];
 	} else {
 		// Remove intersecting Path
 		[[sender model] removePathIntersectingWith:inputPoint];
@@ -195,7 +201,6 @@
 	if (!erase){
 		// Conclude Path and save it
 		[[sender model] addPointToCurrentPath:inputPoint];
-		[[sender model] smoothCurrentPath];
 		[[sender model] saveCurrentPath];
 	} else {
 		// Remove intersecting Path

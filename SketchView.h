@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SketchModel.h"
+#import "PathModel.h"
 
 @class MainWindow;
 @class SketchModel;

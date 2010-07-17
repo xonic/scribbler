@@ -11,7 +11,7 @@
 
 @implementation SketchModel
 
-@synthesize curvedPaths, currentPath;
+@synthesize currentPath, smoothedPaths;
 
 - (id) initWithController:(SketchController *)theController andWindow:(MainWindow *)theWindow
 {	
@@ -23,17 +23,21 @@
 	[theWindow retain];
 	window = theWindow;
 	
-	curvedPaths = [[NSMutableArray alloc] init];
-	currentPath = [[NSMutableArray alloc] init];
+	smoothedPaths = [[NSMutableArray alloc] init];
+	currentPath   = [[NSMutableArray alloc] init];
 	
 	return self;
 }
 
 #pragma mark Create
 
-- (void) createNewPathAt:(NSPoint)inputPoint
+- (void) createNewPathAt:(NSPoint)inputPoint withColor:(NSColor *)theColor
 {
-	currentPath = [[NSMutableArray alloc] init];
+	currentPath  = [[NSMutableArray alloc] init];
+	
+	// Save the color as first element in our array
+	[currentPath addObject:theColor];
+	
 	[currentPath addObject:[[PointModel alloc] initWithNSPoint:inputPoint]];
 }
 
@@ -44,63 +48,54 @@
 
 - (void) saveCurrentPath
 {
-	[currentPath retain];
+	[self smoothCurrentPath];
+
+	NSBezierPath *newPath = [[[NSBezierPath alloc] init] autorelease];
+
+	int pointCount = [currentPath count]-4;
 	
-	// Get a new hot'n fresh smooooooooth path
-	NSMutableArray *newPath = [[NSMutableArray alloc] init];
-	newPath = currentPath;
+	[newPath moveToPoint:[[currentPath objectAtIndex:1] myNSPoint]];
 	
-	// Setup the undo operation
-	[[[window undoManager] prepareWithInvocationTarget:self] removePath:newPath];
+	for (int j=1; j < pointCount; j+=3)
+	{
+		[newPath curveToPoint: [[currentPath objectAtIndex:j+3] myNSPoint] 
+				 controlPoint1:[[currentPath objectAtIndex:j+1] myNSPoint]
+				 controlPoint2:[[currentPath objectAtIndex:j+2] myNSPoint]];
+	}
+	
+	PathModel *newPathModel = [[PathModel alloc] initWithPath:newPath andColor:[currentPath objectAtIndex:0]];
+	
+	[self insertPathModelIntoArray:newPathModel];
+}
+
+- (void) insertPathModelIntoArray:(PathModel *)thePath
+{
+	[[[window undoManager] prepareWithInvocationTarget:self] removePathModelFromArray:thePath];
 	
 	if(![[window undoManager] isUndoing])
-		[[window undoManager] setActionName:@"Draw Path"];
+		[[window undoManager] setActionName:@"Save PathModel"];
 	
-	// Finally add the new path
-	[curvedPaths addObject:newPath];
-	[currentPath release];
+	[smoothedPaths addObject:thePath];
+}
+
+- (void) removePathModelFromArray:(PathModel *)thePath
+{
+	[[[window undoManager] prepareWithInvocationTarget:self] insertPathModelIntoArray:thePath];
+	
+	if(![[window undoManager] isUndoing])
+		[[window undoManager] setActionName:@"Delete PathModel"];
+	
+	[smoothedPaths removeObject:thePath];
+
 }
 
 #pragma mark Remove
 
-- (void) removePath:(NSMutableArray *)path
-{
-	// Does the path really exist in our array?
-	if(![curvedPaths containsObject:path]){
-		NSLog(@"Trying to remove a path which is not in the array");
-		return;
-	}
-	
-	// Setup the redo operation
-	[[[window undoManager] prepareWithInvocationTarget:self] saveCurrentPath];
-	
-	if(![[window undoManager] isUndoing])
-		[[window undoManager] setActionName:@"Delete Path"];
-	
-	// Finally remove the path
-	[curvedPaths removeObject:path];
-}
-
 - (void) removePathIntersectingWith:(NSPoint)inputPoint
-{
-	// Are there any paths?
-	if([curvedPaths count] == 0)
-		return;
-	
-	// Go through paths
-	for (int i=0; i < [curvedPaths count]; i++)
-	{
-		// Go through points
-		for (int j=0; j < [[curvedPaths objectAtIndex:i] count] - 3; j+=3)
-		{
-			// Set the tolerance range
-			NSNumber * tolerance = [NSNumber numberWithDouble:20.0];
-			
-			if([[[curvedPaths objectAtIndex:i] objectAtIndex:j] isInRange:tolerance ofNSPoint:inputPoint]){
-				[self removePath:[curvedPaths objectAtIndex:i]];
-				break;
-			}
-		}
+{	
+	for(id obj in smoothedPaths){
+		if([obj containsPoint:inputPoint])
+			[self removePathModelFromArray:obj];
 	}
 }
 
@@ -119,7 +114,7 @@
 	}
 	
 	// Count the points of our path
-	int n = [currentPath count] - 1;
+	int n = [currentPath count] - 2;
 	
 	// Too few points
 	if (n < 1) {
@@ -131,25 +126,25 @@
 	if (n == 1) {
 		// Calculate first control point
 		NSPoint newPoint;
-		newPoint.x = (2 * [[currentPath objectAtIndex:0] myNSPoint].x + [[currentPath objectAtIndex:1] myNSPoint].x) / 3;
-		newPoint.y = (2 * [[currentPath objectAtIndex:0] myNSPoint].y + [[currentPath objectAtIndex:1] myNSPoint].y) / 3;
+		newPoint.x = (2 * [[currentPath objectAtIndex:1] myNSPoint].x + [[currentPath objectAtIndex:2] myNSPoint].x) / 3;
+		newPoint.y = (2 * [[currentPath objectAtIndex:1] myNSPoint].y + [[currentPath objectAtIndex:2] myNSPoint].y) / 3;
 		
 		// Create a new object to be added to path
 		PointModel *newControlPoint = [[PointModel alloc] initWithNSPoint:newPoint];
 		
 		// Add the first control point to the array
-		[currentPath insertObject:newControlPoint atIndex:1];
+		[currentPath insertObject:newControlPoint atIndex:2];
 		
 		// Calculate second control point
 		NSPoint anotherNewPoint;
-		anotherNewPoint.x = 2 * newPoint.x - [[currentPath objectAtIndex:0] myNSPoint].x;
-		anotherNewPoint.y = 2 * newPoint.y - [[currentPath objectAtIndex:0] myNSPoint].y;
+		anotherNewPoint.x = 2 * newPoint.x - [[currentPath objectAtIndex:1] myNSPoint].x;
+		anotherNewPoint.y = 2 * newPoint.y - [[currentPath objectAtIndex:1] myNSPoint].y;
 		
 		// Create new object to be added to path
 		PointModel *anotherNewControlPoint = [[PointModel alloc] initWithNSPoint:anotherNewPoint];
 		
 		// Add the second control point to array
-		[currentPath insertObject:anotherNewControlPoint atIndex:2];
+		[currentPath insertObject:anotherNewControlPoint atIndex:3];
 		
 		return;
 	}
@@ -162,15 +157,15 @@
 	for (int i=1; i < n-1; ++i){
 		
 		// Calculate the new number 
-		NSNumber *newRightHandX = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i] myNSPoint].x + 
-								   2 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].x];
+		NSNumber *newRightHandX = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].x + 
+								   2 * (double) [[currentPath objectAtIndex:i+2] myNSPoint].x];
 		// Add it to the array
 		[rhs addObject:newRightHandX];
 	}
 	
 	// Set the first element
-	NSNumber *firstElementX = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:0] myNSPoint].x +
-							   2 * (double) [[currentPath objectAtIndex:1] myNSPoint].x];
+	NSNumber *firstElementX = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:1] myNSPoint].x +
+							   2 * (double) [[currentPath objectAtIndex:2] myNSPoint].x];
 	[rhs insertObject:firstElementX atIndex:0];
 	
 	// Set the last element
@@ -188,15 +183,15 @@
 	for (int i=1; i < n-1; ++i){
 		
 		// Calculate the new number 
-		NSNumber *newRightHandY = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i] myNSPoint].y + 
-								   2 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].y];
+		NSNumber *newRightHandY = [NSNumber numberWithDouble:4 * (double) [[currentPath objectAtIndex:i+1] myNSPoint].y + 
+								   2 * (double) [[currentPath objectAtIndex:i+2] myNSPoint].y];
 		// Add it to the array
 		[rhs addObject:newRightHandY];
 	}
 	
 	// Set the first element
-	NSNumber *firstElementY = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:0] myNSPoint].y +
-							   2 * (double) [[currentPath objectAtIndex:1] myNSPoint].y];
+	NSNumber *firstElementY = [NSNumber numberWithDouble:(double) [[currentPath objectAtIndex:1] myNSPoint].y +
+							   2 * (double) [[currentPath objectAtIndex:2] myNSPoint].y];
 	[rhs insertObject:firstElementY atIndex:0];
 	
 	// Set the last element
@@ -208,13 +203,13 @@
 	NSMutableArray *yPoints = [self getControlPoints:rhs];
 	
 	// Set the new array size for the path holding also all control points
-	int newArraySize = 3 * [currentPath count] - 2;
+	int newArraySize = 3 * ([currentPath count] - 1) - 2;
 	
 	// Auxiliary index variable
 	int j = 0;
 	
 	// This loop goes i=0, i=3, i=6, etc. therefore we need an aux. index j=0, j=1 j=2, etc.
-	for(int i=0; i<newArraySize; i+=3){
+	for(int i=1; i<newArraySize; i+=3){
 		
 		// First control point
 		PointModel *firstControlPoint = [[PointModel alloc] initWithDoubleX:[[xPoints objectAtIndex:j] doubleValue] andDoubleY:[[yPoints objectAtIndex:j] doubleValue]];
@@ -279,26 +274,34 @@
 
 - (void) repositionPaths:(PointModel *)delta
 {
-	// duplicate paths
-	NSMutableArray *repositionPaths = [[NSMutableArray alloc] initWithArray:curvedPaths];
+	// setup the transformation
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy:[delta x] yBy:-[delta y]];
 	
-	// Go through paths
-	for (int i=0; i < [repositionPaths count]; i++)
-		// Go through points
-		for (int j=0; j < [[repositionPaths objectAtIndex:i] count]; j++)
-			// add delta to each point
-			[[[repositionPaths objectAtIndex:i] objectAtIndex:j] addDelta:[delta myNSPoint]];
+	// go through paths
+	for(id pathModel in smoothedPaths)
+	{
+		[[pathModel path] transformUsingAffineTransform:transform];
+	}
+}
+
+- (NSArray *) getPointsOfPath:(NSMutableArray *)thePath
+{
+	NSRange theRange;
+	theRange.location = 1;
+	theRange.length   = [thePath count] - 1;
 	
-	// retain changed paths
-	[repositionPaths retain];	
-	
-	// override original paths with changed ones
-	curvedPaths = repositionPaths;
+	return [thePath subarrayWithRange:theRange];
+}
+
+- (NSColor *) getColorOfPath:(NSMutableArray *)thePath
+{
+	return [thePath objectAtIndex:0];
 }
 
 - (void) dealloc 
 {
-	[curvedPaths release];
+//	[curvedPaths release];
 	[currentPath release];
 	[controller release];
 	[window release];
