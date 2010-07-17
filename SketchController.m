@@ -35,7 +35,7 @@
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
 										   handler:^(NSEvent *incomingEvent) {
 											   
-											   // The user pressed cmd+alt+ctrl+Z or the according tablet button
+											  // The user pressed cmd+alt+ctrl+Z or the according tablet button
 											   if ([incomingEvent modifierFlags] == 1835305){
 												   NSLog(@"UNDO");
 												   [[mainWindow undoManager] undo];
@@ -105,7 +105,7 @@
 										  handler:^(NSEvent *incomingEvent) {
 											  
 											  NSEvent *result = incomingEvent;
-											  
+											  											  
 											  // The user pressed cmd+alt+ctrl+Z or the according tablet button
 											  if ([incomingEvent modifierFlags] == 1835305){
 												  NSLog(@"UNDO");
@@ -144,6 +144,20 @@
 											  
 											  return result;
 										  }]; 
+	
+	[[NSDistributedNotificationCenter 
+	  notificationCenterForType: NSLocalNotificationCenterType] addObserver:self	 
+											 selector:@selector(aWindowBecameMain:)
+	 											 name:nil 
+											   object:nil];
+	
+	[[[NSWorkspace sharedWorkspace]
+	 notificationCenter] addObserver:self	 
+							selector:@selector(aWindowBecameMain:)
+								name:nil 
+							  object:nil];
+
+	
     return self;	
 }
 
@@ -248,23 +262,19 @@
 
 - (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos
 {
-	return [windowInfos objectForKey:(id)kCGWindowNumber];
+	return [NSNumber numberWithInt:[[windowInfos objectForKey:(id)kCGWindowNumber] intValue]];
 }
 
 - (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos
 {
 	return [windowInfos objectForKey:(id)kCGWindowOwnerName];
 }
-/*
-- (NSRect *) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
-{
-	return (NSRect *)&*([windowInfos objectForKey:(id)kCGWindowBounds]);
-}*/
+
 - (NSRect) getKeyWindowBounds: (NSMutableDictionary*) windowInfos
 {
 	CGRect rect;
-	CFDictionaryRef blab = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
-	CGRectMakeWithDictionaryRepresentation(blab,&rect);
+	CFDictionaryRef ref = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
+	CGRectMakeWithDictionaryRepresentation(ref, &rect);
 	return (NSRect)rect;
 }
 
@@ -293,6 +303,20 @@
 		[mainWindow setContentView:activeSketchView];
 		NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
 	}
+}
+
+- (void)aWindowBecameMain:(NSNotification *)notification
+
+{
+	
+    //NSWindow *theWindow = [notification object];
+	
+    //MyDocument = (MyDocument *)[[theWindow windowController] document];
+	NSLog(@"scrolling %@",[notification name]);
+	
+	
+    // Retrieve information about the document and update the panel
+	
 }
 
 @end
