@@ -62,6 +62,48 @@
 												   
 												   // save windowposition in case of dragging
 												   [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
+												   
+												   // TODO Accessibility testen
+												   NSLog(@"mouseDown");
+												   
+												   AXUIElementRef _systemWideElement;
+												   AXUIElementRef _focusedApp;
+												   CFTypeRef _focusedWindow;
+												   CFTypeRef _position;
+												   CFTypeRef _size;												   
+												   
+												   _systemWideElement = AXUIElementCreateSystemWide();
+
+												   //Get the app that has the focus
+												   AXUIElementCopyAttributeValue(_systemWideElement,
+																				 (CFStringRef)kAXFocusedApplicationAttribute,
+																				 (CFTypeRef*)&_focusedApp);
+												   
+												   //Get the window that has the focus
+												   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedApp,
+																					(CFStringRef)NSAccessibilityFocusedWindowAttribute,
+																					(CFTypeRef*)&_focusedWindow) == kAXErrorSuccess) {
+													   
+													   if(CFGetTypeID(_focusedWindow) == AXUIElementGetTypeID()) {
+														   //Get the Window's Current Position
+														   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedWindow,
+																							(CFStringRef)NSAccessibilityPositionAttribute,
+																							(CFTypeRef*)&_position) != kAXErrorSuccess) {
+															   NSLog(@"Can't Retrieve Window Position");
+														   }
+														   //Get the Window's Current Size
+														   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedWindow,
+																							(CFStringRef)NSAccessibilitySizeAttribute,
+																							(CFTypeRef*)&_size) != kAXErrorSuccess) {
+															   NSLog(@"Can't Retrieve Window Size");
+														   }
+													   }
+												   }else {
+													   NSLog(@"Problem with App");
+												   }
+												   
+												   //NSLog(@"position=%@ size=%@",_position, _size);
+												   
 											   }
 											   
 											   // if tabletpen is near the tablet
@@ -149,20 +191,17 @@
 											  return result;
 										  }]; 
 	
-	[[NSDistributedNotificationCenter 
+	/*[[NSDistributedNotificationCenter 
 	  notificationCenterForType: NSLocalNotificationCenterType] addObserver:self	 
-											 selector:@selector(aWindowBecameMain:)
+											 selector:@selector(anAppWasActivated:)
 	 											 name:nil 
 											   object:nil];
-	
+	*/
 	[[[NSWorkspace sharedWorkspace]
 	 notificationCenter] addObserver:self	 
-							selector:@selector(aWindowBecameMain:)
+							selector:@selector(anAppWasActivated:)
 								name:nil 
 							  object:nil];
-
-	
-	//[self keyWindowHandler];
 	
     return self;	
 }
@@ -304,24 +343,24 @@
 	}
 	else {
 		// switch to other view
-		activeSketchView = [keyWindowViews objectForKey:keyID];
-		[mainWindow setContentView:activeSketchView];
-		NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
+		if (activeSketchView != [keyWindowViews objectForKey:keyID]) {
+			activeSketchView = [keyWindowViews objectForKey:keyID];
+			[mainWindow setContentView:activeSketchView];
+			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
+		}
 	}
 }
 
-- (void)aWindowBecameMain:(NSNotification *)notification
+- (void)anAppWasActivated:(NSNotification *)notification
 
 {
-	
-    //NSWindow *theWindow = [notification object];
-	
-    //MyDocument = (MyDocument *)[[theWindow windowController] document];
-	NSLog(@"scrolling %@",[notification name]);
-	
-	
-    // Retrieve information about the document and update the panel
-	
+	// if an other application was activated (eg. via exposé or appSwitcher)
+	if ([[notification name] isEqualToString:@"NSWorkspaceDidActivateApplicationNotification"]) {
+		NSLog(@"newMainWindow");
+		// call keyWindowHandler, but only if it wasn't scribbler itself which was activated
+		if( ![[self getKeyWindowsApplicationName: [self getCurrentKeyWindowInfos]] isEqualToString:[[NSRunningApplication currentApplication] localizedName]] )
+			[self keyWindowHandler];
+	}
 }
 
 @end

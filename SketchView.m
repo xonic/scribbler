@@ -70,7 +70,7 @@
 		
 		for (id pathModel in smoothedPaths){
 			[[pathModel	color] set];
-			[[pathModel path]  stroke];
+			[[(PathModel*)pathModel path]  stroke];
 		}
 		
 		

@@ -281,7 +281,7 @@
 	// go through paths
 	for(id pathModel in smoothedPaths)
 	{
-		[[pathModel path] transformUsingAffineTransform:transform];
+		[[(PathModel *)pathModel path] transformUsingAffineTransform:transform];
 	}
 }
 
