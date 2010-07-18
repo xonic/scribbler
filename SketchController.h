@@ -11,6 +11,7 @@
 #import "SketchModel.h"
 #import "MainWindow.h"
 #import "SketchView.h"
+#import "WindowModel.h"
 
 @class SketchModel;
 @class MainWindow;
@@ -18,7 +19,8 @@
 @class PointModel;
 
 @interface SketchController : NSObject {
-	NSMutableDictionary			*	keyWindowViews;
+//	NSMutableDictionary			*	keyWindowViews;
+	NSMutableDictionary			*	windowModelList;
 	SketchView					*	activeSketchView;
 	MainWindow					*	mainWindow;
 	PointModel					*   startDragPoint;
@@ -29,6 +31,7 @@
 }
 @property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;
+@property (retain) MainWindow *mainWindow;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;
 

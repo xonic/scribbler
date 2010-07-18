@@ -1,5 +1,5 @@
 //
-//  PaintView.m
+//  SketchView.m
 //  Scribbler
 //
 //  Created by Clemens Sagmeister on 21.04.10.
@@ -11,26 +11,63 @@
 
 @implementation SketchView
 
-@synthesize model, draw, clickThrough, isDrawing, erase;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase;
 
-- (id)initWithController:(SketchController *)theController andModel:(SketchModel *)theModel
+- (id)initWithController:(SketchController *)theController 
+		  andSketchModel:(SketchModel *)theSketchModel 
+			 andTabModel:(TabModel *)theTabModel
 {
     if (![super initWithFrame:[[NSScreen mainScreen] frame]])
         return nil;
 	
-	// Setup the Model
-	[theModel retain];
-	model = theModel;
+	if(theController == nil || theSketchModel == nil || theTabModel == nil){
+		NSLog(@"SketchView/initWithController:theController andSketchModel:theSketchModel andTabModel:theTabModel - ERROR: one of the parameters was nil.");
+		[self release];
+		return nil;
+	}
+	
+	// Setup the SketchModel
+	sketchModel  = [theSketchModel retain];
+	
+	// Setup the TabModel
+	tabModel     = [theTabModel	   retain];
 	
 	// Setup the Controller
-	[theController retain];
-	controller = theController;
+	controller   = [theController  retain];
 	
-	draw				= YES;
-	clickThrough		= YES;
-	isDrawing			= NO;
-	erase				= NO;
+	draw		 = YES;
+	clickThrough = YES;
+	isDrawing	 =  NO;
+	erase		 =  NO;
 		
+    return self;
+}
+
+- (id)initWithController:(SketchController *)theController andTabModel:(TabModel *)theTabModel
+{
+	if (![super initWithFrame:[[NSScreen mainScreen] frame]])
+        return nil;
+	
+	if(theController == nil || theTabModel == nil){
+		NSLog(@"SketchView/initWithController:theController andTabModel:theTabModel - ERROR: one of the parameters was nil.");
+		[self release];
+		return nil;
+	}
+	
+	// Setup the SketchModel
+	sketchModel  = [[SketchModel alloc] initWithController:theController andWindow:[theController mainWindow]];
+	
+	// Setup the TabModel
+	tabModel     = [theTabModel	   retain];
+	
+	// Setup the Controller
+	controller   = [theController  retain];
+	
+	draw		 = YES;
+	clickThrough = YES;
+	isDrawing	 =  NO;
+	erase		 =  NO;
+	
     return self;
 }
 
@@ -66,11 +103,11 @@
 				 paths = [[model smoothedPaths] allKeys];
 		*/
 		
-		NSArray *smoothedPaths = [model smoothedPaths];
+		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
 		for (id pathModel in smoothedPaths){
 			[[pathModel	color] set];
-			[[(PathModel*)pathModel path]  stroke];
+			[[(PathModel *)pathModel path]  stroke];
 		}
 		
 		
@@ -78,10 +115,10 @@
 		if (isDrawing && !erase) {
 			
 			// Get the Color
-			NSColor *theColor = [model getColorOfPath:[model currentPath]];
+			NSColor *theColor = [sketchModel getColorOfPath:[sketchModel currentPath]];
 			
 			// Get the points
-			NSArray *thePoints = [model getPointsOfPath:[model currentPath]];
+			NSArray *thePoints = [sketchModel getPointsOfPath:[sketchModel currentPath]];
 			
 			// Create a new path for performance reasons
 			NSBezierPath *path = [[NSBezierPath alloc] init];
@@ -115,6 +152,7 @@
 
 - (void)mouseDown:(NSEvent *)event
 {
+	// TODO: check for special cases i.e. click on a scrollbar etc.
 	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
 		isDrawing = YES;
 		[controller handleMouseDownAt:[self convertPoint:[event locationInWindow] fromView:nil] from:self];
@@ -123,6 +161,7 @@
 
 - (void)mouseDragged:(NSEvent *)event
 {
+	// TODO: check for special cases i.e. drag on a scrollbar etc.
 	if ([event subtype] == NSTabletPointEventSubtype || [event subtype] == NSTabletProximityEventSubtype) {
 		[controller handleMouseDraggedAt:[self convertPoint:[event locationInWindow] fromView:nil] from:self];
 	}
@@ -148,10 +187,10 @@
 
 - (void)dealloc
 {
-	[mainWindow release];
-	[model release];
-	[controller release];
-	[super dealloc];
+	[sketchModel release];
+	[tabModel    release];
+	[controller  release];
+	[super       dealloc];
 }
 
 @end

@@ -18,10 +18,14 @@
 	if(![super init])
 		return nil;
 	
-	[theController retain];
-	controller = theController;
-	[theWindow retain];
-	window = theWindow;
+	if(theController == nil || theWindow == nil){
+		NSLog(@"SketchModel/initWithController:theController andWindow:theWindow - ERROR: one of the parameters was nil.");
+		[self release];
+		return nil;
+	}
+	
+	controller	  = [theController  retain];
+	window		  = [theWindow	    retain];
 	
 	smoothedPaths = [[NSMutableArray alloc] init];
 	currentPath   = [[NSMutableArray alloc] init];
@@ -94,7 +98,7 @@
 - (void) removePathIntersectingWith:(NSPoint)inputPoint
 {	
 	for(id obj in smoothedPaths){
-		if([obj containsPoint:inputPoint])
+		if([[(PathModel *)obj path] containsPoint:inputPoint])
 			[self removePathModelFromArray:obj];
 	}
 }

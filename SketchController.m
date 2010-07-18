@@ -11,21 +11,26 @@
 
 @implementation SketchController
 
-@synthesize activeSketchView, selectedColor;
+@synthesize activeSketchView, selectedColor, mainWindow;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
 	if(![super init])
 		return nil;
 	
-	[theMainWindow retain];
-	mainWindow = theMainWindow;
+	if(theMainWindow == nil){
+		NSLog(@"SketchController/initWithMainWindow:theMainWindow - ERROR: theMainWindow was nil");
+		[self release];
+		return nil;
+	}
+	
+	mainWindow = [theMainWindow retain];
 	
 	// Set the default Color to red
 	selectedColor = [NSColor redColor];
 	
-	// initialize Array for future keyWindowViews
-	keyWindowViews = [[NSMutableDictionary alloc] init];
+	// initialize array for list of windows
+	windowModelList = [[NSMutableDictionary alloc] init];
 	
 	// initialize point variables for capture dragging
 	startDragPoint = [[PointModel alloc] initWithDoubleX:-1 andDoubleY:-1];
@@ -134,7 +139,7 @@
 												   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
 												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 												   // call function to reposition all paths with delta
-												   [[activeSketchView model] repositionPaths:delta];
+												   [[activeSketchView sketchModel] repositionPaths:delta];
 
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
@@ -213,10 +218,10 @@
 	// Drawing or Erasing?
 	if (!erase){
 		// Create a new Path
-		[[sender model] createNewPathAt:inputPoint withColor:(NSColor *)selectedColor];
+		[[sender sketchModel] createNewPathAt:inputPoint withColor:(NSColor *)selectedColor];
 	} else {
 		// Remove intersecting Path
-		[[sender model] removePathIntersectingWith:inputPoint];
+		[[sender sketchModel] removePathIntersectingWith:inputPoint];
 	}
 	[sender setNeedsDisplay:YES];
 }
@@ -226,10 +231,10 @@
 	// Drawing or Erasing?
 	if (!erase){
 		// Continue current Path
-		[[sender model] addPointToCurrentPath:inputPoint];
+		[[sender sketchModel] addPointToCurrentPath:inputPoint];
 	} else {
 		// Remove intersecting Path
-		[[sender model] removePathIntersectingWith:inputPoint];
+		[[sender sketchModel] removePathIntersectingWith:inputPoint];
 	}
 	[sender setNeedsDisplay:YES];
 }
@@ -239,11 +244,11 @@
 	// Drawing or Erasing?
 	if (!erase){
 		// Conclude Path and save it
-		[[sender model] addPointToCurrentPath:inputPoint];
-		[[sender model] saveCurrentPath];
+		[[sender sketchModel] addPointToCurrentPath:inputPoint];
+		[[sender sketchModel] saveCurrentPath];
 	} else {
 		// Remove intersecting Path
-		[[sender model] removePathIntersectingWith:inputPoint];
+		[[sender sketchModel] removePathIntersectingWith:inputPoint];
 	}
 	[sender setNeedsDisplay:YES];
 }
@@ -325,26 +330,45 @@
 - (void) keyWindowHandler
 {
 	NSLog(@"--- keyWindowHandler ---");
+	
 	// get keyWindowID
 	NSNumber* keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
 	
 	if (keyID == nil) {
 		return;
 	}
+	
 	// lookup if there is an arrayEntry for this ID
-	if ([keyWindowViews objectForKey:keyID]==nil) {
-		// add view for current keyWindow
-		SketchModel *newModel = [[SketchModel alloc] initWithController:self andWindow:mainWindow];
-		SketchView *newView = [[SketchView alloc] initWithController:self andModel:newModel];
-		[keyWindowViews setObject:newView forKey:keyID];
-		NSLog(@"added window %@ with id %@ to array",[keyWindowViews objectForKey:keyID],keyID);
-		activeSketchView = newView;
+	if ([windowModelList objectForKey:keyID] == nil) {
+	
+		// create the new classes for the window
+		SketchModel *newModel  = [[SketchModel alloc] initWithController:self andWindow:mainWindow];
+		WindowModel *newWindow = [[WindowModel alloc] initWithController:self];
+		
+		// the view is being created by the TabModel itself
+		// so we just query the view from the model
+		SketchView  *newView   = [[[newWindow activeTab] view] retain];
+		
+		// add to our list
+		[windowModelList setObject:newWindow forKey:keyID];
+		
+		NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
+		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
+		
+		// set as active
+		activeSketchView = [newView retain];
 		[mainWindow setContentView:activeSketchView];
+		
+		// free your mind... uhm... memory
+		[newModel  release];
+		[newView   release];
+		[newWindow release];
 	}
 	else {
 		// switch to other view
-		if (activeSketchView != [keyWindowViews objectForKey:keyID]) {
-			activeSketchView = [keyWindowViews objectForKey:keyID];
+
+		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeTab] view]) {
+			activeSketchView = [[[windowModelList objectForKey:keyID] activeTab] view];
 			[mainWindow setContentView:activeSketchView];
 			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
 		}
@@ -361,6 +385,8 @@
 		if( ![[self getKeyWindowsApplicationName: [self getCurrentKeyWindowInfos]] isEqualToString:[[NSRunningApplication currentApplication] localizedName]] )
 			[self keyWindowHandler];
 	}
+	
+	[keyID release];
 }
 
 @end
