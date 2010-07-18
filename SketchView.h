@@ -1,5 +1,5 @@
 //
-//  PaintView.h
+//  SketchView.h
 //  Scribbler
 //
 //  Created by Clemens Sagmeister on 21.04.10.
@@ -9,14 +9,18 @@
 #import <Cocoa/Cocoa.h>
 #import "SketchModel.h"
 #import "PathModel.h"
+#import "TabModel.h"
+
 
 @class MainWindow;
 @class SketchModel;
 @class SketchController;
+@class TabModel;
 
 @interface SketchView : NSView {	
-	MainWindow			*	mainWindow;
-	SketchModel			*	model;
+	//MainWindow			*	mainWindow;
+	SketchModel			*	sketchModel;
+	TabModel			*	tabModel;
 	SketchController	*   controller;
 
 	BOOL					draw;
@@ -25,9 +29,10 @@
 	BOOL					erase;
 }
 
-@property (retain) SketchModel *model;
+@property (retain) SketchModel *sketchModel;
 @property BOOL draw, clickThrough, isDrawing, erase;
 
-- (id) initWithController:(SketchController *)theController andModel:(SketchModel *)theModel;
+- (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(TabModel *)theTabModel;
+- (id)initWithController:(SketchController *)theController andTabModel:(TabModel *)theTabModel;
 
 @end
