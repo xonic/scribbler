@@ -8,6 +8,7 @@
 
 #import "SketchController.h"
 
+id refToSelf; // declaration of a reference to self - to access class functions in outter c methods
 
 @implementation SketchController
 
@@ -23,7 +24,7 @@
 		[self release];
 		return nil;
 	}
-	
+		
 	mainWindow = [theMainWindow retain];
 	
 	// Set the default Color to red
@@ -196,19 +197,18 @@
 											  return result;
 										  }]; 
 	
-	/*[[NSDistributedNotificationCenter 
-	  notificationCenterForType: NSLocalNotificationCenterType] addObserver:self	 
-											 selector:@selector(anAppWasActivated:)
-	 											 name:nil 
-											   object:nil];
-	*/
+	
+	// start the notificationCenter to catch windowActivation Events
 	[[[NSWorkspace sharedWorkspace]
 	 notificationCenter] addObserver:self	 
 							selector:@selector(anAppWasActivated:)
 								name:nil 
 							  object:nil];
 	
-    return self;	
+	// save reference from self
+	refToSelf = self;
+	
+	return self;	
 }
 
 #pragma mark Events
@@ -314,6 +314,11 @@
 	return [NSNumber numberWithInt:[[windowInfos objectForKey:(id)kCGWindowNumber] intValue]];
 }
 
+- (int) getProcessID: (NSMutableDictionary*)windowInfos
+{
+	return [[windowInfos objectForKey:(id)kCGWindowOwnerPID] intValue];
+}
+
 - (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos
 {
 	return [windowInfos objectForKey:(id)kCGWindowOwnerName];
@@ -331,8 +336,12 @@
 {
 	NSLog(@"--- keyWindowHandler ---");
 	
+	// get current key window infos
+	NSMutableDictionary* currentInfos = [self getCurrentKeyWindowInfos];
 	// get keyWindowID
-	NSNumber* keyID = [self getKeyWindowID:[self getCurrentKeyWindowInfos]];
+	NSNumber* keyID = [self getKeyWindowID:currentInfos];
+	// get processID
+	int pid = [self getProcessID:currentInfos];
 	
 	if (keyID == nil) {
 		return;
@@ -359,6 +368,9 @@
 		activeSketchView = [newView retain];
 		[mainWindow setContentView:activeSketchView];
 		
+		// register keyWindow for accessibility notifications (to get notifications even if the user switch to another window via exposé)
+		[self registerForAccessibilityEvents:pid];
+		
 		// free your mind... uhm... memory
 		[newModel  release];
 		[newView   release];
@@ -371,22 +383,46 @@
 			activeSketchView = [[[windowModelList objectForKey:keyID] activeTab] view];
 			[mainWindow setContentView:activeSketchView];
 			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
+			//[keyID release];
 		}
+		
 	}
 }
 
 - (void)anAppWasActivated:(NSNotification *)notification
-
 {
 	// if an other application was activated (eg. via exposé or appSwitcher)
 	if ([[notification name] isEqualToString:@"NSWorkspaceDidActivateApplicationNotification"]) {
-		NSLog(@"newMainWindow");
 		// call keyWindowHandler, but only if it wasn't scribbler itself which was activated
 		if( ![[self getKeyWindowsApplicationName: [self getCurrentKeyWindowInfos]] isEqualToString:[[NSRunningApplication currentApplication] localizedName]] )
 			[self keyWindowHandler];
 	}
+}
+
+- (void) registerForAccessibilityEvents:(int) pid {
+	// pid can be NULL(0) if the application is only in dock (minimized or inactive)
+	// and application was reached via the appSwitcher
+	if (pid!=0) {
+		AXUIElementRef sys = AXUIElementCreateApplication(pid);
+		AXError err;
+		AXObserverRef observer;
+		err = AXObserverCreate (pid, callback, &observer);
+		err = AXObserverAddNotification(observer, sys, kAXFocusedWindowChangedNotification, NULL);
+		CFRunLoopAddSource ([[NSRunLoop currentRunLoop] getCFRunLoop], AXObserverGetRunLoopSource(observer), kCFRunLoopDefaultMode);
+	}
 	
-	[keyID release];
+	// TODO: if an app was reached via the appSwitcher but is only in dock - a view is created for the dock
+	//		 how should scribbler handle the situation in order to ensure user satisfaction?
+	// NOTE: offer feedback to user with a short visual notification to which window the user will be drawing. eg. showing
+	//		 windowBounds for a second with fadeout when proximity event occurs (only first time after keyWindow has changed)
 }
 
 @end
+
+
+static void callback (AXObserverRef observer, AXUIElementRef element, CFStringRef notification, void *refcon)
+{
+	[refToSelf anAppWasActivated:[NSNotification notificationWithName:@"NSWorkspaceDidActivateApplicationNotification" 
+														  object:refToSelf 
+														userInfo:nil]];
+}

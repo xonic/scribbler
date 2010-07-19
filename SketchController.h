@@ -44,8 +44,13 @@
 
 - (NSMutableDictionary*)getCurrentKeyWindowInfos;
 - (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos;
+- (int) getProcessID: (NSMutableDictionary*)windowInfos;
 - (NSString*) getKeyWindowsApplicationName: (NSMutableDictionary*)windowInfos;
 - (NSRect) getKeyWindowBounds: (NSMutableDictionary*) windowInfos;
 - (void) keyWindowHandler;
+- (void) registerForAccessibilityEvents:(int)pid;
+
+static void callback (AXObserverRef observer, AXUIElementRef element, CFStringRef notification, void *refcon);
 
 @end
+
