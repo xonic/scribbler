@@ -23,6 +23,8 @@
 	
 	controller = [[SketchController alloc] initWithMainWindow:self];
 	
+	isVisible = NO;
+	
     return self;
 }
 
@@ -40,6 +42,7 @@
 }
 
 - (void) showGlassPane:(BOOL)flag {
+	isVisible = flag;
 	[controller setClickThrough: !flag];
 	if(flag) {
 		[self makeKeyAndOrderFront:nil];
@@ -78,6 +81,6 @@
 	[super dealloc];
 }
 
-@synthesize startDragPoint, endDragPoint, controller;
+@synthesize startDragPoint, endDragPoint, controller, isVisible;
 
 @end

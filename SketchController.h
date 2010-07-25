@@ -28,6 +28,9 @@
 	NSColor						*	selectedColor;
 	
 	BOOL							erase;
+	BOOL							mouseMode;
+	BOOL							mainWindowWasVisible;
+	BOOL							penIsNearTablet;
 }
 @property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;

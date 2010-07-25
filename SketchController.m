@@ -39,22 +39,57 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	erase = NO;
 	
-	
+	mouseMode = NO;
+	penIsNearTablet = NO;
 	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
-	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
+	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
 										   handler:^(NSEvent *incomingEvent) {
 											   
+											   // Check whether the pen is near the tablet
+											   if ([incomingEvent type] == NSTabletProximity) {
+												   penIsNearTablet = [incomingEvent isEnteringProximity];
+											   }
+											   
+											   // The user pressed cmd+shift+f7 or the according tablet button
+											   if (([incomingEvent modifierFlags] == 1245450 && [incomingEvent keyCode] == 10) && [incomingEvent type] == NSKeyDown){
+												   
+												   if ([mainWindow isVisible]) {
+													   [mainWindow showGlassPane:NO];
+												   }
+												   mouseMode = YES;
+											   } 
+											   
+												// The user released cmd+shift+f7 or the according tablet button
+											   if (([incomingEvent modifierFlags] == 1245450 && [incomingEvent keyCode] == 10) && [incomingEvent type] == NSKeyUp) {
+												   
+												   if (penIsNearTablet) {
+													   [mainWindow showGlassPane:YES];
+												   }
+												   mouseMode = NO;   
+											   }
+											   
+											   NSLog(@"----------------------- GLOBAL");
+											   NSLog(@"the event type is %d", [incomingEvent type]);
+											   if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp)
+												   NSLog(@"modifierFlags: %d, keycode: %d", [incomingEvent modifierFlags], [incomingEvent keyCode]);
+											   if(mouseMode)
+												   NSLog(@"mouseMode = YES");
+											   else  
+												   NSLog(@"mouseMode = NO");
+											   NSLog(@"------------------------------");
+											   NSLog(@"");
+											   
 											  // The user pressed cmd+alt+ctrl+Z or the according tablet button
-											   if ([incomingEvent modifierFlags] == 1835305){
+											   if ([incomingEvent modifierFlags] == 1835305 && [incomingEvent keyCode] == 16){
 												   NSLog(@"UNDO");
 												   [[mainWindow undoManager] undo];
 												   [activeSketchView setNeedsDisplay:YES];
 												   return;
 											   } 
 											   // The user pressed shift+cmd+alt+ctrl+Z or the according tablet button
-											   else if ([incomingEvent modifierFlags] ==  1966379) {
+											   else if ([incomingEvent modifierFlags] ==  1966379 && [incomingEvent keyCode] == 16) {
 												   NSLog(@"REDO");
 												   [[mainWindow undoManager] redo];
 												   [activeSketchView setNeedsDisplay:YES];
@@ -62,9 +97,9 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   }				
 											   // if change of keyWindow happens (this could only happen with a mouseDown event)
 											   if ([incomingEvent type] == NSLeftMouseDown) {
-												   if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
+												   //if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
 													   [self keyWindowHandler];
-												   }
+												   //}
 												   
 												   // save windowposition in case of dragging
 												   [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
@@ -113,8 +148,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   }
 											   
 											   // if tabletpen is near the tablet
-											   if ([incomingEvent type] == NSTabletProximity) {
-												   
+											   if ([incomingEvent type] == NSTabletProximity && !mouseMode) {
+
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
 												   // Ignore the rest if pointing device exited proximity
@@ -132,8 +167,9 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   }
 												   }
 											   }
+
 											   
-											   if ([incomingEvent type] == NSLeftMouseDragged) {
+											   if ([incomingEvent type] == NSLeftMouseDragged || ([incomingEvent type] == NSTabletProximity && mouseMode == YES)) {
 												   // save current windowposition
 												   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 												   
@@ -153,29 +189,65 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// Start watching local events to figure out when to hide the pane	
 	[NSEvent addLocalMonitorForEventsMatchingMask:
-	 (NSMouseMovedMask | NSKeyDownMask | NSTabletProximityMask)// | NSTabletPointMask)
+	 (NSMouseMovedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask)// | NSTabletPointMask)
 										  handler:^(NSEvent *incomingEvent) {
 											  
 											  NSEvent *result = incomingEvent;
-											  											  
+											  
+											  // Check whether the pen is near the tablet
+											  if ([incomingEvent type] == NSTabletProximity) {
+												  penIsNearTablet = [incomingEvent isEnteringProximity];
+											  }											  
+											  																																  
+											  // The user pressed cmd+shift+f7 or the according tablet button
+											  if (([incomingEvent modifierFlags] == 1245450 && [incomingEvent keyCode] == 10) && [incomingEvent type] == NSKeyDown){
+												  
+												  if ([mainWindow isVisible]) {
+													  [mainWindow showGlassPane:NO];
+													  mainWindowWasVisible = YES;
+												  }
+												  mouseMode = YES;
+											  } 
+											  
+											  // The user released cmd+shift+f7 or the according tablet button
+											  if (([incomingEvent modifierFlags] == 1245450 && [incomingEvent keyCode] == 10) && [incomingEvent type] == NSKeyUp) {
+												  
+												  if (mainWindowWasVisible) {
+													  [mainWindow showGlassPane:YES];
+													  mainWindowWasVisible = NO;
+												  }
+												  mouseMode = NO;
+											  }
+											  
+											  NSLog(@"------------------------ LOCAL");
+											  NSLog(@"the event type is %d", [incomingEvent type]);
+											  if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp)
+												  NSLog(@"modifierFlags: %d, keycode: %d", [incomingEvent modifierFlags], [incomingEvent keyCode]);
+											  if(mouseMode)
+												  NSLog(@"mouseMode = YES");
+											  else  
+												  NSLog(@"mouseMode = NO");
+											  NSLog(@"------------------------------");
+											  NSLog(@"");
+											  
 											  // The user pressed cmd+alt+ctrl+Z or the according tablet button
-											  if ([incomingEvent modifierFlags] == 1835305){
+											  if ([incomingEvent modifierFlags] == 1835305 && [incomingEvent keyCode] == 16){
 												  NSLog(@"UNDO");
 												  [[mainWindow undoManager] undo];
 												  [activeSketchView setNeedsDisplay:YES];
 											  } 
 											  // The user pressed shift+cmd+alt+ctrl+Z or the according tablet button
-											  else if ([incomingEvent modifierFlags] ==  1966379) {
+											  else if ([incomingEvent modifierFlags] ==  1966379 && [incomingEvent keyCode] == 16) {
 												  NSLog(@"REDO");
 												  [[mainWindow undoManager] redo];
 												  [activeSketchView setNeedsDisplay:YES];
 											  }
 											  
 											  // if tabletpen is near the tablet
-											  if ([incomingEvent type] == NSTabletProximity){
+											  if ([incomingEvent type] == NSTabletProximity && !mouseMode){
 												  
 												  //[self keyWindowHandler];
-												  
+
 												  [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												  
 												  // Ignore the rest if pointing device exited proximity
@@ -183,11 +255,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													  
 													  // Check whether the user is drawing or erasing
 													  if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
-														  NSLog(@"Found Eraser");
+														  //NSLog(@"Found Eraser");
 														  erase = YES;
 														  [activeSketchView setErase:YES];
 													  } else {
-														  NSLog(@"Found Pen");
+														  //NSLog(@"Found Pen");
 														  erase = NO;
 														  [activeSketchView setErase:NO];
 													  }
@@ -334,7 +406,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 - (void) keyWindowHandler
 {
-	NSLog(@"--- keyWindowHandler ---");
+	//NSLog(@"--- keyWindowHandler ---");
 	
 	// get current key window infos
 	NSMutableDictionary* currentInfos = [self getCurrentKeyWindowInfos];
@@ -361,8 +433,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		// add to our list
 		[windowModelList setObject:newWindow forKey:keyID];
 		
-		NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
-		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
+		//NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
+		//NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
 		
 		// set as active
 		activeSketchView = [newView retain];
@@ -382,7 +454,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeTab] view]) {
 			activeSketchView = [[[windowModelList objectForKey:keyID] activeTab] view];
 			[mainWindow setContentView:activeSketchView];
-			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
+			//NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
 			//[keyID release];
 		}
 		
