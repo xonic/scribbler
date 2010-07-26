@@ -76,7 +76,8 @@
 	if(draw) {
 		if(!clickThrough) {
 			NSRect bounds = [self bounds];
-			[[NSColor colorWithCalibratedWhite:1.0 alpha:0.05] set];
+			[[[NSColor grayColor] colorWithAlphaComponent:0.05] set];
+			//[[NSColor colorWithCalibratedWhite:1.0 alpha:0.05] set];
 			[NSBezierPath fillRect:bounds];
 		}
 		else {
