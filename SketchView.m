@@ -77,7 +77,6 @@
 		if(!clickThrough) {
 			NSRect bounds = [self bounds];
 			[[[NSColor grayColor] colorWithAlphaComponent:0.05] set];
-			//[[NSColor colorWithCalibratedWhite:1.0 alpha:0.05] set];
 			[NSBezierPath fillRect:bounds];
 		}
 		else {
@@ -85,24 +84,6 @@
 			[[NSColor clearColor] set];
 			[NSBezierPath fillRect:bounds];
 		}
-		
-		[NSGraphicsContext saveGraphicsState];
-		
-		// Create the shadow below and to the right of the shape.
-		NSShadow* theShadow = [[NSShadow alloc] init];
-		[theShadow setShadowOffset:NSMakeSize(1.8, -1.8)];
-		[theShadow setShadowBlurRadius:2.0];
-		
-		// Use a partially transparent color for shapes that overlap.
-		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.1]];
-		[theShadow set];
-		/*
-		NSDictionary *colorsAndPaths = [[NSDictionary alloc] init];
-					  colorsAndPaths = [model smoothedPaths];
-		
-		NSArray	*paths = [[NSArray alloc] init];
-				 paths = [[model smoothedPaths] allKeys];
-		*/
 		
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
@@ -141,11 +122,8 @@
 			
 			// Bye stuff
 			[path release];
-			[theColor release];
 		}
-		
-		[NSGraphicsContext restoreGraphicsState];
-		[theShadow release];
+		 
 	}
 }
 
