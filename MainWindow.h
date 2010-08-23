@@ -19,6 +19,8 @@
 @interface MainWindow : NSWindow {
 	IBOutlet SketchView			*	screenView;
 	SketchController			*	controller;
+	
+	BOOL							isVisible;
 }
 
 - (void) showHide:(id)sender;
@@ -28,7 +30,8 @@
 
 - (void) setPenColor:(id)sender;
 
-@property(readwrite, assign) PointModel *startDragPoint, *endDragPoint;
+@property (readwrite, assign) PointModel *startDragPoint, *endDragPoint;
 @property (retain) SketchController *controller;
+@property (readwrite) BOOL isVisible;
 
 @end

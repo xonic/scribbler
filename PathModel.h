@@ -10,13 +10,17 @@
 
 
 @interface PathModel : NSObject {
-	NSBezierPath	*path;
-	NSColor			*color;
-	BOOL			isAffectedByScrollingAndResizing;
+	NSBezierPath	*	path;
+	NSColor			*	color;
+	NSDate			*	creationDate;
+	NSDate			*	undoDate;
+	NSDate			*	redoDate;
+	BOOL				isAffectedByScrollingAndResizing;
 }
 
 @property (retain) NSBezierPath *path;
 @property (retain) NSColor		*color;
+@property (retain) NSDate		*creationDate, *undoDate, *redoDate;
 @property (assign) BOOL			 isAffectedByScrollingAndResizing;
 
 - (id)initWithPath:(NSBezierPath *)thePath andColor:(NSColor *)theColor;

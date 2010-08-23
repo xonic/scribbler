@@ -68,6 +68,9 @@
 	}
 	
 	PathModel *newPathModel = [[PathModel alloc] initWithPath:newPath andColor:[currentPath objectAtIndex:0]];
+	[newPathModel setCreationDate:[NSDate date]];
+	
+	NSLog(@"saved path at %@", [newPathModel creationDate]);
 	
 	[self insertPathModelIntoArray:newPathModel];
 }
@@ -76,8 +79,12 @@
 {
 	[[[window undoManager] prepareWithInvocationTarget:self] removePathModelFromArray:thePath];
 	
-	if(![[window undoManager] isUndoing])
+	if(![[window undoManager] isRedoing])
 		[[window undoManager] setActionName:@"Save PathModel"];
+	else {
+		[thePath setUndoDate:[NSDate date]];
+		NSLog(@"redone path at %@", [thePath undoDate]);
+	}
 	
 	[smoothedPaths addObject:thePath];
 }
@@ -88,7 +95,10 @@
 	
 	if(![[window undoManager] isUndoing])
 		[[window undoManager] setActionName:@"Delete PathModel"];
-	
+	else {
+		[thePath setRedoDate:[NSDate date]];
+		NSLog(@"undone path at %@", [thePath redoDate]);
+	}
 	[smoothedPaths removeObject:thePath];
 
 }
