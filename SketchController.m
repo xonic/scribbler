@@ -209,6 +209,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 												   // reset startpoint
 												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+												   
+												   NSMutableDictionary *keyWindowInfos = [self getCurrentKeyWindowInfos];
+												   [activeSketchView setKeyWindow:[self getKeyWindowBounds:keyWindowInfos]];
+												   [activeSketchView invertKeyWindowBoundsYAxis];
+												   
 												   // repaint sketchView
 												   [activeSketchView setNeedsDisplay:YES];
 											   }
@@ -457,6 +462,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	CGRect rect;
 	CFDictionaryRef ref = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
 	CGRectMakeWithDictionaryRepresentation(ref, &rect);
+	
 	return (NSRect)rect;
 }
 

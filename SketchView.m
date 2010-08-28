@@ -11,7 +11,7 @@
 
 @implementation SketchView
 
-@synthesize sketchModel, draw, clickThrough, isDrawing, erase;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow;
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
@@ -34,6 +34,10 @@
 	
 	// Setup the Controller
 	controller   = [theController  retain];
+	
+	NSMutableDictionary *windowInfos = [controller getCurrentKeyWindowInfos];
+	keyWindow = [controller getKeyWindowBounds:windowInfos];
+	keyWindow.origin.y *= -1;
 	
 	draw		 = YES;
 	clickThrough = YES;
@@ -63,6 +67,13 @@
 	// Setup the Controller
 	controller   = [theController  retain];
 	
+	NSMutableDictionary *windowInfos = [controller getCurrentKeyWindowInfos];
+	keyWindow = [controller getKeyWindowBounds:windowInfos];
+	
+	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
+	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+	
+	NSLog(@"origin.x = %f origin.y = %f width = %f height = %f sketchview init", keyWindow.origin.x, keyWindow.origin.y, keyWindow.size.width, keyWindow.size.height);
 	draw		 = YES;
 	clickThrough = YES;
 	isDrawing	 =  NO;
@@ -86,29 +97,18 @@
 			[NSBezierPath fillRect:bounds];
 		}
 		
-		[NSGraphicsContext saveGraphicsState];
+		[NSBezierPath setDefaultLineWidth:5];
+		[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
 		
-		// Create the shadow below and to the right of the shape.
-		NSShadow* theShadow = [[NSShadow alloc] init];
-		[theShadow setShadowOffset:NSMakeSize(1.8, -1.8)];
-		[theShadow setShadowBlurRadius:2.0];
+		[[NSColor colorWithCalibratedRed:0.56 green:0.74 blue:0.90 alpha:1.0] set];
+		[NSBezierPath strokeRect:keyWindow];
 		
-		// Use a partially transparent color for shapes that overlap.
-		[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.1]];
-		[theShadow set];
-		/*
-		NSDictionary *colorsAndPaths = [[NSDictionary alloc] init];
-					  colorsAndPaths = [model smoothedPaths];
-		
-		NSArray	*paths = [[NSArray alloc] init];
-				 paths = [[model smoothedPaths] allKeys];
-		*/
-		
+		[NSBezierPath setDefaultLineWidth:1];
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
 		for (id pathModel in smoothedPaths){
 			[[pathModel	color] set];
-			[[(PathModel *)pathModel path]  stroke];
+			[[(PathModel *)pathModel path] stroke];
 		}
 		
 		
@@ -144,8 +144,7 @@
 			[theColor release];
 		}
 		
-		[NSGraphicsContext restoreGraphicsState];
-		[theShadow release];
+		
 	}
 }
 
@@ -184,6 +183,13 @@
 - (BOOL)canBecomeKeyWindow
 {
 	return YES;
+}
+
+- (void)invertKeyWindowBoundsYAxis
+{
+	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
+	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+	return;
 }
 
 - (void)dealloc
