@@ -12,6 +12,7 @@
 #import "MainWindow.h"
 #import "SketchView.h"
 #import "WindowModel.h"
+#import "ScreenShotController.h"
 
 @class SketchModel;
 @class MainWindow;

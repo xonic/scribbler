@@ -44,12 +44,30 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
-	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask)
+	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
 										   handler:^(NSEvent *incomingEvent) {
 											   
 											   // Check whether the pen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
+											   }
+											   
+											   // If the user clicks the right mouse button, save a screen shot
+											   if([incomingEvent type] == NSRightMouseDown){
+												   if ([mainWindow isVisible]) {
+													   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
+													   [screenGrabber grabScreenShot];
+													   [screenGrabber release];
+													   return;
+												   } else {
+													   [mainWindow showGlassPane:YES];
+													   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
+													   [screenGrabber grabScreenShot];
+													   [screenGrabber release];
+													   [mainWindow showGlassPane:NO];
+													   return;
+												   }
+
 											   }
 											   
 											   // key Events
@@ -200,7 +218,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// Start watching local events to figure out when to hide the pane	
 	[NSEvent addLocalMonitorForEventsMatchingMask:
-	 (NSMouseMovedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask)// | NSTabletPointMask)
+	 (NSRightMouseDownMask | NSMouseMovedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask)// | NSTabletPointMask)
 										  handler:^(NSEvent *incomingEvent) {
 											  
 											  NSEvent *result = incomingEvent;
@@ -210,7 +228,24 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  penIsNearTablet = [incomingEvent isEnteringProximity];
 											  }											  
 											  												
-
+											  // If the user clicks the right mouse button, save a screen shot
+											  if([incomingEvent type] == NSRightMouseDown){
+												  if ([mainWindow isVisible]) {
+													  ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
+													  [screenGrabber grabScreenShot];
+													  [screenGrabber release];
+													  return result;
+												  } else {
+													  [mainWindow showGlassPane:YES];
+													  ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
+													  [screenGrabber grabScreenShot];
+													  [screenGrabber release];
+													  [mainWindow showGlassPane:NO];
+													  return result;
+												  }
+												  
+											  }
+											  
 											  // key Events
 											  if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp){
 												  // The user pressed cmd+shift+f7 or the according tablet button
