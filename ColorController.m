@@ -37,7 +37,7 @@
 
 - (NSColor *)getColorFromPalette
 {
-	returnColorIndex += 1;
+	returnColorIndex += 3;
 	returnColorIndex = returnColorIndex % 12;
 	
 	return [colorPalette objectAtIndex:returnColorIndex];

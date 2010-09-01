@@ -5,8 +5,8 @@
 //  Created by Thomas Nägele on 26.07.10.
 //  Copyright 2010 xonic. All rights reserved.
 //
-
 #import "TabletModel.h"
+
 
 
 @implementation TabletModel
@@ -32,8 +32,9 @@
 	if([penColors objectForKey:[uniqueID stringValue]] != nil)
 		return;
 	
+	float tmp = [penColors count];
 	// every new pen will have 20% less brighntess than it's predecessor
-	CGFloat brightnessReduction = [penColors count] / 5;
+	CGFloat brightnessReduction = tmp / 5.0;
 	
 	// set the color
 	NSColor *newShade = [NSColor colorWithDeviceHue:[tabletColor hueComponent] 

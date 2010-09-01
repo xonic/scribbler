@@ -126,11 +126,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   // Ignore the rest if pointing device exited proximity
 												   if([incomingEvent isEnteringProximity]){
 													   
-													   NSLog(@"the tablet id is: %d", [incomingEvent tabletID]);
-													   NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
 													   
 													   // check for tablet and pen id
-													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent tabletID]];
+													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
 													   NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
 													   
 													   // this is a new tablet, create an object for it
@@ -210,11 +210,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  // Ignore the rest if pointing device exited proximity
 												  if([incomingEvent isEnteringProximity]){
 													  
-													  NSLog(@"the tablet id is: %d", [incomingEvent tabletID]);
-													  NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													  NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													  //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
 													  
 													  // check for tablet and pen id
-													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent tabletID]];
+													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
 													  NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
 													  
 													  // this is a new tablet, create an object for it
