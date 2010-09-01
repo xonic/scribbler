@@ -18,6 +18,8 @@
 		C61C783F11A54A8000183CC7 /* SketchController.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C783E11A54A8000183CC7 /* SketchController.m */; };
 		C670DA9511F1A70D004F4912 /* PathModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C670DA9411F1A70D004F4912 /* PathModel.m */; };
 		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
+		C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089911FDF98600C463A2 /* TabletModel.m */; };
+		C68D08A011FE038100C463A2 /* ColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089F11FE038100C463A2 /* ColorController.m */; };
 		C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FD011F245A8008BF787 /* WindowModel.m */; };
 		C6CF3FE311F25186008BF787 /* TabModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FE211F25186008BF787 /* TabModel.m */; };
 		C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D9994912291D0F002E0C7E /* ScreenShotController.m */; };
@@ -48,6 +50,10 @@
 		C670DA9411F1A70D004F4912 /* PathModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathModel.m; sourceTree = "<group>"; };
 		C68BFDCF1196D3FD0040D32C /* PointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointModel.h; sourceTree = "<group>"; };
 		C68BFDD01196D3FD0040D32C /* PointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointModel.m; sourceTree = "<group>"; };
+		C68D089811FDF98600C463A2 /* TabletModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabletModel.h; sourceTree = "<group>"; };
+		C68D089911FDF98600C463A2 /* TabletModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabletModel.m; sourceTree = "<group>"; };
+		C68D089E11FE038100C463A2 /* ColorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorController.h; sourceTree = "<group>"; };
+		C68D089F11FE038100C463A2 /* ColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorController.m; sourceTree = "<group>"; };
 		C6CF3FCF11F245A8008BF787 /* WindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowModel.h; sourceTree = "<group>"; };
 		C6CF3FD011F245A8008BF787 /* WindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowModel.m; sourceTree = "<group>"; };
 		C6CF3FE111F25186008BF787 /* TabModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabModel.h; sourceTree = "<group>"; };
@@ -91,6 +97,10 @@
 				C670DA9411F1A70D004F4912 /* PathModel.m */,
 				C68BFDCF1196D3FD0040D32C /* PointModel.h */,
 				C68BFDD01196D3FD0040D32C /* PointModel.m */,
+				C68D089811FDF98600C463A2 /* TabletModel.h */,
+				C68D089911FDF98600C463A2 /* TabletModel.m */,
+				C68D089E11FE038100C463A2 /* ColorController.h */,
+				C68D089F11FE038100C463A2 /* ColorController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -227,6 +237,8 @@
 				C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */,
 				C6CF3FE311F25186008BF787 /* TabModel.m in Sources */,
 				C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */,
+				C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */,
+				C68D08A011FE038100C463A2 /* ColorController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

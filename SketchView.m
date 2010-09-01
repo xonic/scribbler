@@ -88,7 +88,6 @@
 		if(!clickThrough) {
 			NSRect bounds = [self bounds];
 			[[[NSColor grayColor] colorWithAlphaComponent:0.05] set];
-			//[[NSColor colorWithCalibratedWhite:1.0 alpha:0.05] set];
 			[NSBezierPath fillRect:bounds];
 		}
 		else {
@@ -99,11 +98,10 @@
 		
 		[NSBezierPath setDefaultLineWidth:5];
 		[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
-		
 		[[NSColor colorWithCalibratedRed:0.56 green:0.74 blue:0.90 alpha:1.0] set];
-		[NSBezierPath strokeRect:keyWindow];
-		
+		[NSBezierPath strokeRect:keyWindow];		
 		[NSBezierPath setDefaultLineWidth:1];
+
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
 		for (id pathModel in smoothedPaths){
@@ -141,10 +139,7 @@
 			
 			// Bye stuff
 			[path release];
-			[theColor release];
 		}
-		
-		
 	}
 }
 

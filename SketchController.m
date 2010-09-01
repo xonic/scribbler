@@ -27,15 +27,21 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		
 	mainWindow = [theMainWindow retain];
 	
+	// setup our color palette
+	colorPalette = [[ColorController alloc] init];
+	
+	// setup our known tablets list
+	tablets = [[NSMutableDictionary alloc] init];
+	
 	// Set the default Color to red
-	selectedColor = [NSColor redColor];
+	selectedColor = [NSColor colorWithDeviceHue:0 saturation:1 brightness:1 alpha:1];
 	
 	// initialize array for list of windows
 	windowModelList = [[NSMutableDictionary alloc] init];
 	
 	// initialize point variables for capture dragging
 	startDragPoint = [[PointModel alloc] initWithDoubleX:-1 andDoubleY:-1];
-	endDragPoint	= [[PointModel alloc] initWithDoubleX:-1 andDoubleY:-1];
+	endDragPoint   = [[PointModel alloc] initWithDoubleX:-1 andDoubleY:-1];
 	
 	erase = NO;
 	
@@ -184,6 +190,29 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   // Ignore the rest if pointing device exited proximity
 												   if([incomingEvent isEnteringProximity]){
 													   
+													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													   
+													   // check for tablet and pen id
+													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+													   NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
+													   
+													   // this is a new tablet, create an object for it
+													   if([tablets objectForKey:[theTabletID stringValue]] == nil)
+													   {
+														   TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
+														   [tablets setObject:newTablet forKey:[theTabletID stringValue]];
+														   
+														   [newTablet release];
+													   }
+													   
+													   // the pen is new to the tablet, register it
+													   if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
+														   [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
+													   
+													   // finally get the color for the pen
+													   selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
+													   
 													   // Check whether the user is drawing or erasing
 													   if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
 														   NSLog(@"Found Eraser");
@@ -314,6 +343,27 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  // Ignore the rest if pointing device exited proximity
 												  if([incomingEvent isEnteringProximity]){
 													  
+													  NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													  //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													  
+													  // check for tablet and pen id
+													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+													  NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
+													  
+													  // this is a new tablet, create an object for it
+													  if([tablets objectForKey:[theTabletID stringValue]] == nil)
+													  {
+														  TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
+														  [tablets setObject:newTablet forKey:[theTabletID stringValue]];
+													  }
+													  
+													  // the pen is new to the tablet, register it
+													  if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
+														  [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
+													  
+													  // finally get the color for the pen
+													  selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
+													  
 													  // Check whether the user is drawing or erasing
 													  if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
 														  //NSLog(@"Found Eraser");
@@ -351,7 +401,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	// Drawing or Erasing?
 	if (!erase){
 		// Create a new Path
-		[[sender sketchModel] createNewPathAt:inputPoint withColor:(NSColor *)selectedColor];
+		[[sender sketchModel] createNewPathAt:inputPoint withColor:selectedColor];
 	} else {
 		// Remove intersecting Path
 		[[sender sketchModel] removePathIntersectingWith:inputPoint];

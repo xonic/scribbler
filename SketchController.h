@@ -13,14 +13,18 @@
 #import "SketchView.h"
 #import "WindowModel.h"
 #import "ScreenShotController.h"
+#import "TabletModel.h"
+#import "ColorController.h"
 
 @class SketchModel;
 @class MainWindow;
 @class SketchView;
 @class PointModel;
+@class ColorController;
 
 @interface SketchController : NSObject {
-//	NSMutableDictionary			*	keyWindowViews;
+	NSMutableDictionary			*	tablets;
+	ColorController				*	colorPalette;
 	NSMutableDictionary			*	windowModelList;
 	SketchView					*	activeSketchView;
 	MainWindow					*	mainWindow;
