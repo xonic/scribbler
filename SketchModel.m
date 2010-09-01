@@ -50,7 +50,7 @@
 	[currentPath addObject:[[PointModel alloc] initWithNSPoint:inputPoint]];
 }
 
-- (void) saveCurrentPath
+- (void) saveCurrentPathWithOwner:(int)tabletID
 {
 	[self smoothCurrentPath];
 
@@ -69,8 +69,9 @@
 	
 	PathModel *newPathModel = [[PathModel alloc] initWithPath:newPath andColor:[currentPath objectAtIndex:0]];
 	[newPathModel setCreationDate:[NSDate date]];
+	[newPathModel setOwner:tabletID];
 	
-	NSLog(@"saved path at %@", [newPathModel creationDate]);
+	NSLog(@"saved path at %@ - owner: %d", [newPathModel creationDate], [newPathModel owner]);
 	
 	[self insertPathModelIntoArray:newPathModel];
 }

@@ -30,7 +30,7 @@
 // Basic adding and removing of paths and points
 - (void) createNewPathAt:(NSPoint)inputPoint withColor:(NSColor *)theColor;
 - (void) addPointToCurrentPath:(NSPoint)inputPoint;
-- (void) saveCurrentPath;
+- (void) saveCurrentPathWithOwner:(int)tabletID;
 - (void) removePathIntersectingWith:(NSPoint)inputPoint;
 
 // Methods for adding and removing Paths to the array

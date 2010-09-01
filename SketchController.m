@@ -12,7 +12,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 @implementation SketchController
 
-@synthesize activeSketchView, selectedColor, mainWindow;
+@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -48,6 +48,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	mouseMode = NO;
 	penIsNearTablet = NO;
 	
+	activeTabletID = -1;
+	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
@@ -56,6 +58,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   // Check whether the pen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
+												   activeTabletID = [incomingEvent systemTabletID];
 											   }
 											   
 											   // If the user clicks the right mouse button, save a screen shot
@@ -260,6 +263,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  // Check whether the pen is near the tablet
 											  if ([incomingEvent type] == NSTabletProximity) {
 												  penIsNearTablet = [incomingEvent isEnteringProximity];
+												  activeTabletID = [incomingEvent systemTabletID];
 											  }											  
 											  												
 											  // If the user clicks the right mouse button, save a screen shot
@@ -428,7 +432,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	if (!erase){
 		// Conclude Path and save it
 		[[sender sketchModel] addPointToCurrentPath:inputPoint];
-		[[sender sketchModel] saveCurrentPath];
+		[[sender sketchModel] saveCurrentPathWithOwner:activeTabletID];
 	} else {
 		// Remove intersecting Path
 		[[sender sketchModel] removePathIntersectingWith:inputPoint];

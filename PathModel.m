@@ -11,7 +11,7 @@
 
 @implementation PathModel
 
-@synthesize path, color, isAffectedByScrollingAndResizing, creationDate, undoDate, redoDate;
+@synthesize path, color, isAffectedByScrollingAndResizing, creationDate, undoDate, redoDate, owner;
 
 - (id)initWithPath:(NSBezierPath *)thePath andColor:(NSColor *)theColor
 {
