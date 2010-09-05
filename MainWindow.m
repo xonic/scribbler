@@ -15,9 +15,10 @@
     if (![super initWithContentRect:[[NSScreen mainScreen] frame] styleMask:NSBorderlessWindowMask backing:bufferingType defer:flag])
 		return nil;
 	
-	[self setLevel:CGShieldingWindowLevel()];//NSFloatingWindowLevel];
+	[self setLevel:/*CGShieldingWindowLevel()];*/NSFloatingWindowLevel];
 	[self setBackgroundColor:[NSColor clearColor]];
 	[self setOpaque:NO];
+
 	// uncomment next line to overrule OS menubars
 	//[self setLevel:NSMainMenuWindowLevel + 1];
 	

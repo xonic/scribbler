@@ -26,7 +26,7 @@
 	// Get date and time and format them
 	NSDate *now = [NSDate date];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setDateFormat:@"YYYY-mm-dd 'um' HH.mm.SS"];
+	[formatter setDateFormat:@"YYYY-MM-dd 'um' HH 'Uhr' mm 'und' ss 'Sekunden'"];
 	NSString *dateString = [formatter stringFromDate:now];
 	
 	// Define the file name e.g. "Scribbler 2010-08-27 12.30.45.png"

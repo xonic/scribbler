@@ -27,12 +27,13 @@
 	BOOL					clickThrough;
 	BOOL					isDrawing;
 	BOOL					erase;
+	BOOL					drawWindowBounds;
 	
 	NSRect					keyWindow;
 }
 
 @property (retain) SketchModel *sketchModel;
-@property BOOL draw, clickThrough, isDrawing, erase;
+@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds;
 @property (readwrite) NSRect keyWindow;
 
 - (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(TabModel *)theTabModel;

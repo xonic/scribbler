@@ -10,33 +10,36 @@
 #import "PointModel.h"
 #import "MainWindow.h"
 #import "PathModel.h"
+#import "UndoManager.h"
 
 @class MainWindow;
 @class PointModel;
 @class SketchController;
+@class UndoManager;
 
 @interface SketchModel : NSObject {
 	NSMutableArray			*		smoothedPaths;
 	NSMutableArray			*		currentPath;
 	MainWindow				*		window;
 	SketchController		*		controller;
+	NSMutableDictionary		*		undoManagers;
 }
 
 @property (retain) NSMutableArray		*currentPath;
 @property (retain) NSMutableArray		*smoothedPaths;
+@property (retain) NSMutableDictionary  *undoManagers;
 
 - (id) initWithController:(SketchController *)theController andWindow:(MainWindow *)theWindow;
 
 // Basic adding and removing of paths and points
 - (void) createNewPathAt:(NSPoint)inputPoint withColor:(NSColor *)theColor;
 - (void) addPointToCurrentPath:(NSPoint)inputPoint;
-- (void) saveCurrentPathWithOwner:(int)tabletID;
-- (void) removePathIntersectingWith:(NSPoint)inputPoint;
+- (void) saveCurrentPathWithOwner:(NSNumber *)tabletID;
+- (void) removePathIntersectingWith:(NSPoint)inputPoint forTablet:(NSNumber *)activeTabletID;
 
-// Methods for adding and removing Paths to the array
-// Needed for proper undo/redo implementation
-- (void) insertPathModelIntoArray:(PathModel *)thePath;
-- (void) removePathModelFromArray:(PathModel *)thePath;
+// undo/redo
+- (void) undoForTablet:(NSNumber *)tabletID;
+- (void) redoForTablet:(NSNumber *)tabletID;
 
 // Smoothing path curves
 - (void) smoothCurrentPath;

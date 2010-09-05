@@ -36,12 +36,12 @@
 	BOOL							mouseMode;
 	BOOL							mainWindowWasVisible;
 	BOOL							penIsNearTablet;
-	int								activeTabletID;
+	NSNumber					*	activeTabletID;
 }
 @property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;
 @property (retain) MainWindow *mainWindow;
-@property (assign) int activeTabletID;
+@property (retain) NSNumber *activeTabletID;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;
 

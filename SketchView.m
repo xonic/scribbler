@@ -11,7 +11,7 @@
 
 @implementation SketchView
 
-@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds;
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
@@ -37,12 +37,15 @@
 	
 	NSMutableDictionary *windowInfos = [controller getCurrentKeyWindowInfos];
 	keyWindow = [controller getKeyWindowBounds:windowInfos];
-	keyWindow.origin.y *= -1;
 	
-	draw		 = YES;
-	clickThrough = YES;
-	isDrawing	 =  NO;
-	erase		 =  NO;
+	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
+	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+	
+	draw			 = YES;
+	clickThrough	 = YES;
+	isDrawing		 =  NO;
+	erase			 =  NO;
+	drawWindowBounds =  NO;	
 		
     return self;
 }
@@ -74,10 +77,11 @@
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
 	
 	NSLog(@"origin.x = %f origin.y = %f width = %f height = %f sketchview init", keyWindow.origin.x, keyWindow.origin.y, keyWindow.size.width, keyWindow.size.height);
-	draw		 = YES;
-	clickThrough = YES;
-	isDrawing	 =  NO;
-	erase		 =  NO;
+	draw			 = YES;
+	clickThrough	 = YES;
+	isDrawing		 =  NO;
+	erase			 =  NO;
+	drawWindowBounds =  NO;
 	
     return self;
 }
@@ -96,12 +100,14 @@
 			[NSBezierPath fillRect:bounds];
 		}
 		
-		[NSBezierPath setDefaultLineWidth:5];
-		[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
-		[[NSColor colorWithCalibratedRed:0.56 green:0.74 blue:0.90 alpha:1.0] set];
-		[NSBezierPath strokeRect:keyWindow];		
-		[NSBezierPath setDefaultLineWidth:1];
-
+		if(NO){
+			[NSBezierPath setDefaultLineWidth:5];
+			[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
+			[[NSColor colorWithCalibratedRed:0.56 green:0.74 blue:0.90 alpha:1.0] set];
+			[NSBezierPath strokeRect:keyWindow];		
+			[NSBezierPath setDefaultLineWidth:1];
+		}
+		
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
 		for (id pathModel in smoothedPaths){

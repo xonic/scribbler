@@ -11,7 +11,7 @@
 
 @implementation SketchModel
 
-@synthesize currentPath, smoothedPaths;
+@synthesize currentPath, smoothedPaths, undoManagers;
 
 - (id) initWithController:(SketchController *)theController andWindow:(MainWindow *)theWindow
 {	
@@ -29,6 +29,8 @@
 	
 	smoothedPaths = [[NSMutableArray alloc] init];
 	currentPath   = [[NSMutableArray alloc] init];
+	
+	undoManagers   = [[NSMutableDictionary alloc] init];
 	
 	return self;
 }
@@ -50,7 +52,7 @@
 	[currentPath addObject:[[PointModel alloc] initWithNSPoint:inputPoint]];
 }
 
-- (void) saveCurrentPathWithOwner:(int)tabletID
+- (void) saveCurrentPathWithOwner:(NSNumber *)tabletID
 {
 	[self smoothCurrentPath];
 
@@ -73,44 +75,86 @@
 	
 	NSLog(@"saved path at %@ - owner: %d", [newPathModel creationDate], [newPathModel owner]);
 	
-	[self insertPathModelIntoArray:newPathModel];
-}
-
-- (void) insertPathModelIntoArray:(PathModel *)thePath
-{
-	[[[window undoManager] prepareWithInvocationTarget:self] removePathModelFromArray:thePath];
-	
-	if(![[window undoManager] isRedoing])
-		[[window undoManager] setActionName:@"Save PathModel"];
-	else {
-		[thePath setUndoDate:[NSDate date]];
-		NSLog(@"redone path at %@", [thePath undoDate]);
+	// Check if an undoManager exists for this tablet
+	if([undoManagers objectForKey:[tabletID stringValue]])
+	{
+		// Register the new path for undo operation
+		[[undoManagers objectForKey:[tabletID stringValue]] registerDrawingForUndo:newPathModel];
+	}
+	else // create a new undoManager
+	{
+		UndoManager *newUndoManager = [[UndoManager alloc] initWithSketchModel:self andTabletID:tabletID];
+		
+		// Register the new path for undo operation
+		[newUndoManager registerDrawingForUndo:newPathModel];
+		
+		// Save it into our dictionary
+		[undoManagers setObject:newUndoManager forKey:[tabletID stringValue]];
+		
+		// bye
+		[newUndoManager release];
 	}
 	
-	[smoothedPaths addObject:thePath];
-}
-
-- (void) removePathModelFromArray:(PathModel *)thePath
-{
-	[[[window undoManager] prepareWithInvocationTarget:self] insertPathModelIntoArray:thePath];
+	[smoothedPaths addObject:newPathModel];
 	
-	if(![[window undoManager] isUndoing])
-		[[window undoManager] setActionName:@"Delete PathModel"];
-	else {
-		[thePath setRedoDate:[NSDate date]];
-		NSLog(@"undone path at %@", [thePath redoDate]);
-	}
-	[smoothedPaths removeObject:thePath];
-
+	[newPathModel release];
 }
 
 #pragma mark Remove
 
-- (void) removePathIntersectingWith:(NSPoint)inputPoint
+- (void) removePathIntersectingWith:(NSPoint)inputPoint forTablet:(NSNumber *)activeTabletID
 {	
 	for(id obj in smoothedPaths){
-		if([[(PathModel *)obj path] containsPoint:inputPoint])
-			[self removePathModelFromArray:obj];
+		if([[(PathModel *)obj path] containsPoint:inputPoint]){
+			
+			// Check if an undoManager exists
+			if([undoManagers objectForKey:[activeTabletID stringValue]])
+			{
+				// Register the erasing operation for undo
+				[[undoManagers objectForKey:[activeTabletID stringValue]] registerErasingForUndo:(PathModel *)obj];
+			}
+			else // create a new undoManager
+			{
+				UndoManager *newUndoManager = [[UndoManager alloc] initWithSketchModel:self andTabletID:activeTabletID];
+				
+				// Register the erasing operation for undo
+				[newUndoManager registerErasingForUndo:(PathModel *)obj];
+				
+				// Save it to our dictionary
+				[undoManagers setObject:newUndoManager forKey:[activeTabletID stringValue]];
+				
+				// bye
+				[newUndoManager release];
+			}
+			
+			[smoothedPaths removeObject:(PathModel *)obj];
+		}
+	}
+}
+
+#pragma mark Undo/Redo 
+
+- (void)undoForTablet:(NSNumber *)tabletID
+{
+	if([undoManagers objectForKey:[tabletID stringValue]])
+	{
+		[[undoManagers objectForKey:[tabletID stringValue]] undo];
+	}
+	else 
+	{
+		NSLog(@"No undoManager found");
+	}
+}
+
+- (void)redoForTablet:(NSNumber *)tabletID
+{
+	if([undoManagers objectForKey:[tabletID stringValue]])
+	{
+		[[undoManagers objectForKey:[tabletID stringValue]] redo];
+	}
+	else 
+	{
+		NSLog(@"No undoManager found");
 	}
 }
 
@@ -316,9 +360,9 @@
 
 - (void) dealloc 
 {
-//	[curvedPaths release];
 	[currentPath release];
 	[controller release];
+	[undoManagers release];
 	[window release];
 	[super dealloc];
 }

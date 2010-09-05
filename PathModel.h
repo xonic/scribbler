@@ -16,14 +16,14 @@
 	NSDate			*	undoDate;
 	NSDate			*	redoDate;
 	BOOL				isAffectedByScrollingAndResizing;
-	int					owner; // systemTabletID
+	NSNumber		*	owner; // systemTabletID
 }
 
 @property (retain) NSBezierPath *path;
 @property (retain) NSColor		*color;
 @property (retain) NSDate		*creationDate, *undoDate, *redoDate;
 @property (assign) BOOL			 isAffectedByScrollingAndResizing;
-@property (assign) int			 owner;
+@property (retain) NSNumber		*owner;
 
 - (id)initWithPath:(NSBezierPath *)thePath andColor:(NSColor *)theColor;
 
