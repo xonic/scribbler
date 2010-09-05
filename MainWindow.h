@@ -21,6 +21,7 @@
 	SketchController			*	controller;
 	
 	BOOL							isVisible;
+	PointModel					*	startDragPoint, *endDragPoint;
 }
 
 - (void) showHide:(id)sender;

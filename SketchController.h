@@ -21,11 +21,13 @@
 @class SketchView;
 @class PointModel;
 @class ColorController;
+@class WindowModel;
 
 @interface SketchController : NSObject {
 	NSMutableDictionary			*	tablets;
 	ColorController				*	colorPalette;
 	NSMutableDictionary			*	windowModelList;
+	WindowModel					*	activeWindow;
 	SketchView					*	activeSketchView;
 	MainWindow					*	mainWindow;
 	PointModel					*   startDragPoint;
