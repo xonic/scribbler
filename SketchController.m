@@ -243,37 +243,33 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   
 												   // check whether there are paths to reposition
 												   if([[[activeSketchView sketchModel] smoothedPaths] count] > 0){
+
+													   // renew scrollPositions
+													   [activeWindow initScrollPositionsOfWindow];
+													   
 													   // save current windowposition
 													   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 													   
 													   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
 													   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
-
-												   // renew scrollPositions
-												   [activeWindow initScrollPositionsOfWindow];
-												   
-												   // save current windowposition
-												   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
-												   
-												   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
-												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
-												   
-												   // look if window was repositioned
-												   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
-
-													   // call function to reposition all paths with delta
-													   [[activeSketchView sketchModel] repositionPaths:delta];
-
-													   // reset startpoint
-													   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
-
-													   // repaint sketchView
-													   [activeSketchView setNeedsDisplay:YES];
 													   
-													   // tell activeWindow that window was repositioned
-													   [activeWindow windowWasRepositioned: YES];
-													}
-											   }											   
+													   // look if window was repositioned
+													   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
+
+														   // call function to reposition all paths with delta
+														   [[activeSketchView sketchModel] repositionPaths:delta];
+
+														   // reset startpoint
+														   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+
+														   // repaint sketchView
+														   [activeSketchView setNeedsDisplay:YES];
+														   
+														   // tell activeWindow that window was repositioned
+														   [activeWindow windowWasRepositioned: YES];
+														}
+												   }		
+											   }
 											   
 										   }]; 
 	

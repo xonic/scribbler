@@ -21,13 +21,13 @@
 		C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089911FDF98600C463A2 /* TabletModel.m */; };
 		C68D08A011FE038100C463A2 /* ColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089F11FE038100C463A2 /* ColorController.m */; };
 		C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FD011F245A8008BF787 /* WindowModel.m */; };
-		C6CF3FE311F25186008BF787 /* TabModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FE211F25186008BF787 /* TabModel.m */; };
 		C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D9994912291D0F002E0C7E /* ScreenShotController.m */; };
 		C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
 		C6EF329E1233B05600069837 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
 		C6EF333A1233D35700069837 /* UndoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C6EF33381233D35700069837 /* UndoManager.h */; };
 		C6EF333B1233D35700069837 /* UndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C6EF33391233D35700069837 /* UndoManager.m */; };
-		C6CF3FE311F25186008BF787 /* SubWindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FE211F25186008BF787 /* SubWindowModel.m */; };
+		C6EF348D123412E600069837 /* SubWindowModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6EF348B123412E600069837 /* SubWindowModel.h */; };
+		C6EF348E123412E600069837 /* SubWindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6EF348C123412E600069837 /* SubWindowModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -74,15 +74,13 @@
 		C68D089F11FE038100C463A2 /* ColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorController.m; sourceTree = "<group>"; };
 		C6CF3FCF11F245A8008BF787 /* WindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowModel.h; sourceTree = "<group>"; };
 		C6CF3FD011F245A8008BF787 /* WindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowModel.m; sourceTree = "<group>"; };
-		C6CF3FE111F25186008BF787 /* TabModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabModel.h; sourceTree = "<group>"; };
-		C6CF3FE211F25186008BF787 /* TabModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabModel.m; sourceTree = "<group>"; };
 		C6D9994812291D0F002E0C7E /* ScreenShotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenShotController.h; sourceTree = "<group>"; };
 		C6D9994912291D0F002E0C7E /* ScreenShotController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenShotController.m; sourceTree = "<group>"; };
 		C6EF327D1233AF8E00069837 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		C6EF33381233D35700069837 /* UndoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoManager.h; sourceTree = "<group>"; };
 		C6EF33391233D35700069837 /* UndoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UndoManager.m; sourceTree = "<group>"; };
-		C6CF3FE111F25186008BF787 /* SubWindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubWindowModel.h; sourceTree = "<group>"; };
-		C6CF3FE211F25186008BF787 /* SubWindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubWindowModel.m; sourceTree = "<group>"; };
+		C6EF348B123412E600069837 /* SubWindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubWindowModel.h; sourceTree = "<group>"; };
+		C6EF348C123412E600069837 /* SubWindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubWindowModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,12 +99,10 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C6EF348B123412E600069837 /* SubWindowModel.h */,
+				C6EF348C123412E600069837 /* SubWindowModel.m */,
 				C6D9994812291D0F002E0C7E /* ScreenShotController.h */,
 				C6D9994912291D0F002E0C7E /* ScreenShotController.m */,
-				C6CF3FE111F25186008BF787 /* TabModel.h */,
-				C6CF3FE211F25186008BF787 /* TabModel.m */,
-				C6CF3FE111F25186008BF787 /* SubWindowModel.h */,
-				C6CF3FE211F25186008BF787 /* SubWindowModel.m */,
 				C6CF3FCF11F245A8008BF787 /* WindowModel.h */,
 				C6CF3FD011F245A8008BF787 /* WindowModel.m */,
 				C6EF33381233D35700069837 /* UndoManager.h */,
@@ -208,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6EF333A1233D35700069837 /* UndoManager.h in Headers */,
+				C6EF348D123412E600069837 /* SubWindowModel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,7 +238,6 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Scribbler" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -284,12 +280,11 @@
 				C61C783F11A54A8000183CC7 /* SketchController.m in Sources */,
 				C670DA9511F1A70D004F4912 /* PathModel.m in Sources */,
 				C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */,
-				C6CF3FE311F25186008BF787 /* TabModel.m in Sources */,
 				C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */,
 				C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */,
 				C68D08A011FE038100C463A2 /* ColorController.m in Sources */,
 				C6EF333B1233D35700069837 /* UndoManager.m in Sources */,
-				C6CF3FE311F25186008BF787 /* SubWindowModel.m in Sources */,
+				C6EF348E123412E600069837 /* SubWindowModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
