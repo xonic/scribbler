@@ -178,6 +178,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   [self keyWindowHandler];
 												   }
 												   
+												   // Special case: if pen acts like mouse we would miss the above if-block
+												   if (mouseMode) {
+													   [self keyWindowHandler];
+												   }
+												   
 												   // save windowposition in case of dragging
 												   [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 												   
@@ -283,6 +288,14 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   // save current windowposition
 													   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 													   
+													   if(endDragPoint.x <=0){
+														   NSLog(@"endDragPoint FAIL");
+														   return;
+													   }
+													   
+													   NSLog(@"endDragPoint.x = %f endDragPoint.y = %f", endDragPoint.x, endDragPoint.y);
+													   
+													   
 													   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
 													   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
 													   // call function to reposition all paths with delta
@@ -321,11 +334,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  [activeSketchView setDrawWindowBounds:penIsNearTablet];
 												  activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
 											  }		
-											  
-											  if([incomingEvent type] == NSLeftMouseDown){
-												  // save windowposition in case of dragging
-												  [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
-											  }
 											  
 											  // ------------------------------------------------------------------------------- //
 											  // LOCAL - UNDO
