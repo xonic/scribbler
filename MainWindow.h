@@ -19,6 +19,7 @@
 @interface MainWindow : NSWindow {
 	IBOutlet SketchView			*	screenView;
 	SketchController			*	controller;
+	PointModel					*	startDragPoint, *endDragPoint;
 }
 
 - (void) showHide:(id)sender;

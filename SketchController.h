@@ -17,10 +17,12 @@
 @class MainWindow;
 @class SketchView;
 @class PointModel;
+@class WindowModel;
 
 @interface SketchController : NSObject {
 //	NSMutableDictionary			*	keyWindowViews;
 	NSMutableDictionary			*	windowModelList;
+	WindowModel					*	activeWindow;
 	SketchView					*	activeSketchView;
 	MainWindow					*	mainWindow;
 	PointModel					*   startDragPoint;

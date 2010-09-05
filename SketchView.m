@@ -15,7 +15,7 @@
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
-			 andTabModel:(TabModel *)theTabModel
+			 andTabModel:(SubWindowModel *)theTabModel
 {
     if (![super initWithFrame:[[NSScreen mainScreen] frame]])
         return nil;
@@ -43,7 +43,7 @@
     return self;
 }
 
-- (id)initWithController:(SketchController *)theController andTabModel:(TabModel *)theTabModel
+- (id)initWithController:(SketchController *)theController andTabModel:(SubWindowModel *)theTabModel
 {
 	if (![super initWithFrame:[[NSScreen mainScreen] frame]])
         return nil;

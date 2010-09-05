@@ -7,26 +7,75 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "TabModel.h"
+#import "SubWindowModel.h"
 #import "SketchView.h"
 #import "SketchController.h"
+#import "PathModel.h"
 
 @class SketchController;
-@class TabModel;
+@class SubWindowModel;
 @class SketchView;
+
+typedef enum _SRWindowChange {
+	SRWindowChangeWasNotSignificant	= 0,
+	SRWindowWasScrolled				= 1,
+	SRWindowWasResized				= 2,
+	SRWindowAddedSubWindow			= 3,
+	SRWindowChangedSubWindow		= 4
+} SRWindowChange;
+
+typedef enum _SRUIElementType {
+	SRUIElementHasNoRelevance		= 0,
+	SRUIElementIsPartOfAScrollbar	= 1,
+	SRUIElementIsScrollArea			= 2,
+	SRUIElementIsTextArea			= 3,
+	SRUIElementIsWebArea			= 4
+} SRUIElementType;
 
 @interface WindowModel : NSObject {
 	
-	NSMutableArray						*tabs;
-	TabModel							*activeTab;
+	NSMutableArray						*subWindows;
+	SubWindowModel						*activeSubWindow;
 	SketchController					*controller;
+	
+	AXUIElementRef	_systemWideElement;
+	AXUIElementRef	_focusedApp;
+	CFTypeRef		_focusedWindow;
+	
+	SRWindowChange	lastWindowChange;
+	NSPoint			lastMovingDiff;
+	
+	BOOL			windowWasRepositioned;
 }
 
-@property (retain) NSMutableArray		*tabs;
-@property (retain) TabModel				*activeTab;
+@property (retain) NSMutableArray		*subWindows;
+@property (retain) SubWindowModel		*activeSubWindow;
 @property (retain) SketchController		*controller;
 
-- (id)initWithController:(SketchController *)theController;
-//- (id)initWithView:(SketchView *)theView;
+- (id) initWithController:(SketchController *)theController;
+//- (id) initWithView:(SketchView *)theView;
+- (void) initScrollPositionsOfWindow;
+
+- (BOOL) loadAccessibilityData;
+- (CGPoint) carbonScreenPointFromCocoaScreenPoint:(NSPoint)cocoaPoint;
+- (NSArray *) attributeNamesOfUIElement:(AXUIElementRef)element;
+- (id) valueOfAttribute:(NSString *)attribute ofUIElement:(AXUIElementRef)element;
+- (NSString *) getUIDofScrollArea:(AXUIElementRef)scrollArea;
+- (void) windowWasRepositioned: (BOOL) flag;
+
+- (void) getUIElementInfo;
+- (id) getUIElementUnderMouse;
+- (id) getParentOfUIElement:(AXUIElementRef)element;
+- (NSArray *) findScrollAreasInUIElement:(AXUIElementRef)uiElement;
+- (id) getMemberFromScrollArea:(AXUIElementRef)scrollArea;
+- (NSString *) getTitleOfUIElement:(AXUIElementRef)element;
+- (NSRect) getBoundsOfUIElement:(AXUIElementRef)element;
+- (SRUIElementType) getTypeOfUIElement:(AXUIElementRef)element;
+
+- (NSRect) getWindowBounds;
+- (NSRect) getClippingAreaFromPath:(PathModel *)clippedPath withOriginalPath:(PathModel *)originalPath;
+- (int) whatHasChanged;
+- (NSPoint) getMovingDelta;
+- (SketchView *)getRelatedView;
 
 @end

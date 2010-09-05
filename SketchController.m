@@ -68,48 +68,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   
 												   // save windowposition in case of dragging
 												   [startDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
-												   
-												   // TODO Accessibility testen
-												   NSLog(@"mouseDown");
-												   
-												   AXUIElementRef _systemWideElement;
-												   AXUIElementRef _focusedApp;
-												   CFTypeRef _focusedWindow;
-												   CFTypeRef _position;
-												   CFTypeRef _size;												   
-												   
-												   _systemWideElement = AXUIElementCreateSystemWide();
-
-												   //Get the app that has the focus
-												   AXUIElementCopyAttributeValue(_systemWideElement,
-																				 (CFStringRef)kAXFocusedApplicationAttribute,
-																				 (CFTypeRef*)&_focusedApp);
-												   
-												   //Get the window that has the focus
-												   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedApp,
-																					(CFStringRef)NSAccessibilityFocusedWindowAttribute,
-																					(CFTypeRef*)&_focusedWindow) == kAXErrorSuccess) {
-													   
-													   if(CFGetTypeID(_focusedWindow) == AXUIElementGetTypeID()) {
-														   //Get the Window's Current Position
-														   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedWindow,
-																							(CFStringRef)NSAccessibilityPositionAttribute,
-																							(CFTypeRef*)&_position) != kAXErrorSuccess) {
-															   NSLog(@"Can't Retrieve Window Position");
-														   }
-														   //Get the Window's Current Size
-														   if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedWindow,
-																							(CFStringRef)NSAccessibilitySizeAttribute,
-																							(CFTypeRef*)&_size) != kAXErrorSuccess) {
-															   NSLog(@"Can't Retrieve Window Size");
-														   }
-													   }
-												   }else {
-													   NSLog(@"Problem with App");
-												   }
-												   
-												   //NSLog(@"position=%@ size=%@",_position, _size);
-												   
 											   }
 											   
 											   // if tabletpen is near the tablet
@@ -134,22 +92,56 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   }
 											   
 											   if ([incomingEvent type] == NSLeftMouseDragged) {
+												   // renew scrollPositions
+												   [activeWindow initScrollPositionsOfWindow];
+												   
 												   // save current windowposition
 												   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 												   
 												   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
 												   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
-												   // call function to reposition all paths with delta
-												   [[activeSketchView sketchModel] repositionPaths:delta];
+												   
+												   // look if window was repositioned
+												   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
+													   // call function to reposition all paths with delta
+													   [[activeSketchView sketchModel] repositionPaths:delta];
 
-												   // reset startpoint
-												   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
-												   // repaint sketchView
-												   [activeSketchView setNeedsDisplay:YES];
-											   }
-											   
+													   // reset startpoint
+													   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+													   // repaint sketchView
+													   [activeSketchView setNeedsDisplay:YES];
+													   
+													   // tell activeWindow that window was repositioned
+													   [activeWindow windowWasRepositioned: YES];
+													}
+											   }											   
 											   
 										   }]; 
+	
+	// watch out for scrolling events and handle them 
+	[NSEvent addGlobalMonitorForEventsMatchingMask: 
+	 (NSLeftMouseDraggedMask | NSScrollWheelMask | NSLeftMouseUpMask) handler:^(NSEvent *incomingEvent) {
+				 
+		 // check after each mouseUp if in the window was a scrolling event 
+		 // + check for scrollWheel activity
+		 if ([incomingEvent type] == NSLeftMouseUp || [incomingEvent type] == NSScrollWheel || [incomingEvent type] == NSLeftMouseDragged) {
+			 
+			 // if window was scrolled
+			 if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
+				 // get the movingChange
+				 NSPoint change = [activeWindow getMovingDelta];
+				 NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
+				 
+				 // generate the delta
+				 PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
+				 // call function to reposition all paths with delta
+				 [[activeSketchView sketchModel] repositionPaths:delta];
+				  // repaint sketchView
+				 [activeSketchView setNeedsDisplay:YES];
+			 }
+		 }
+		 
+	 }];
 	
 	// Start watching local events to figure out when to hide the pane	
 	[NSEvent addLocalMonitorForEventsMatchingMask:
@@ -329,7 +321,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	CGRect rect;
 	CFDictionaryRef ref = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
 	CGRectMakeWithDictionaryRepresentation(ref, &rect);
-	return (NSRect)rect;
+	return *(NSRect *)&rect;
 }
 
 - (void) keyWindowHandler
@@ -356,10 +348,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		
 		// the view is being created by the TabModel itself
 		// so we just query the view from the model
-		SketchView  *newView   = [[[newWindow activeTab] view] retain];
+		SketchView  *newView   = [[[newWindow activeSubWindow] view] retain];
 		
 		// add to our list
 		[windowModelList setObject:newWindow forKey:keyID];
+		activeWindow = newWindow;
 		
 		NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
 		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
@@ -379,9 +372,10 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	else {
 		// switch to other view
 
-		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeTab] view]) {
-			activeSketchView = [[[windowModelList objectForKey:keyID] activeTab] view];
+		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeSubWindow] view]) {
+			activeSketchView = [[[windowModelList objectForKey:keyID] activeSubWindow] view];
 			[mainWindow setContentView:activeSketchView];
+			activeWindow = [windowModelList objectForKey:keyID];
 			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
 			//[keyID release];
 		}
@@ -423,6 +417,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 static void callback (AXObserverRef observer, AXUIElementRef element, CFStringRef notification, void *refcon)
 {
 	[refToSelf anAppWasActivated:[NSNotification notificationWithName:@"NSWorkspaceDidActivateApplicationNotification" 
-														  object:refToSelf 
-														userInfo:nil]];
+															   object:refToSelf 
+															 userInfo:nil]];
 }

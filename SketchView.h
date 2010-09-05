@@ -9,18 +9,18 @@
 #import <Cocoa/Cocoa.h>
 #import "SketchModel.h"
 #import "PathModel.h"
-#import "TabModel.h"
+#import "SubWindowModel.h"
 
 
 @class MainWindow;
 @class SketchModel;
 @class SketchController;
-@class TabModel;
+@class SubWindowModel;
 
 @interface SketchView : NSView {	
 	//MainWindow			*	mainWindow;
 	SketchModel			*	sketchModel;
-	TabModel			*	tabModel;
+	SubWindowModel			*	tabModel;
 	SketchController	*   controller;
 
 	BOOL					draw;
@@ -32,7 +32,7 @@
 @property (retain) SketchModel *sketchModel;
 @property BOOL draw, clickThrough, isDrawing, erase;
 
-- (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(TabModel *)theTabModel;
-- (id)initWithController:(SketchController *)theController andTabModel:(TabModel *)theTabModel;
+- (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(SubWindowModel *)theTabModel;
+- (id)initWithController:(SketchController *)theController andTabModel:(SubWindowModel *)theTabModel;
 
 @end
