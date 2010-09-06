@@ -34,6 +34,12 @@
 	[controller showHide];
 }
 
+- (void)toggleSticky:(id)sender {
+	
+	[controller setIsSticky:![controller isSticky]];
+		
+}
+
 - (void) openFinder:(id)sender {
 	[[NSWorkspace sharedWorkspace] launchApplication:@"Finder"];
 }

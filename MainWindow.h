@@ -29,6 +29,7 @@
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
 
+- (void) toggleSticky:(id)sender;
 - (void) setPenColor:(id)sender;
 
 @property (readwrite, assign) PointModel *startDragPoint, *endDragPoint;

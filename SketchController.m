@@ -12,7 +12,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 @implementation SketchController
 
-@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID;
+@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID, isSticky;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -47,6 +47,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	mouseMode = NO;
 	penIsNearTablet = NO;
+	
+	isSticky = YES;
 	
 	activeTabletID = [[NSNumber alloc] init];
 	
@@ -257,7 +259,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   // GLOBAL - MOVING KEY WINDOW
 											   // ------------------------------------------------------------------------------- //
 											   
-											   if ([incomingEvent type] == NSLeftMouseDragged) {
+											   if ([incomingEvent type] == NSLeftMouseDragged && isSticky) {
 												   
 												   // check whether there are paths to reposition
 												   if([[[activeSketchView sketchModel] smoothedPaths] count] > 0){
@@ -346,7 +348,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 									 lastMovingDiff.x-=kumMovingDelta.x;
 									 lastMovingDiff.y-=kumMovingDelta.y;
 									 
-									 if (lastMovingDiff.x>0 || lastMovingDiff.x<0 || lastMovingDiff.y>0 || lastMovingDiff.y<0) {
+									 if ((lastMovingDiff.x>0 || lastMovingDiff.x<0 || lastMovingDiff.y>0 || lastMovingDiff.y<0) && isSticky) {
 										 
 										 // generate the delta
 										 PointModel *delta = [[PointModel alloc] initWithDoubleX:lastMovingDiff.x andDoubleY:lastMovingDiff.y];

@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="564"/>
-			<integer value="29"/>
 			<integer value="371"/>
+			<integer value="536"/>
+			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1362,8 +1362,17 @@
 						<reference key="NSOnImage" ref="35465992"/>
 						<reference key="NSMixedImage" ref="502551668"/>
 					</object>
+					<object class="NSMenuItem" id="553244528">
+						<reference key="NSMenu" ref="694430913"/>
+						<string key="NSTitle">Enable/Disable Sticky Mode</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="35465992"/>
+						<reference key="NSMixedImage" ref="502551668"/>
+					</object>
 					<object class="NSMenuItem" id="211288318">
 						<reference key="NSMenu" ref="694430913"/>
+						<bool key="NSIsDisabled">YES</bool>
 						<string key="NSTitle">Select Color</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -1419,6 +1428,7 @@
 					</object>
 					<object class="NSMenuItem" id="995031503">
 						<reference key="NSMenu" ref="694430913"/>
+						<bool key="NSIsDisabled">YES</bool>
 						<string key="NSTitle">Open Finder</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -2206,6 +2216,14 @@
 						<reference key="destination" ref="438512322"/>
 					</object>
 					<int key="connectionID">574</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleSticky:</string>
+						<reference key="source" ref="972006081"/>
+						<reference key="destination" ref="553244528"/>
+					</object>
+					<int key="connectionID">576</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3266,6 +3284,7 @@
 							<reference ref="995031503"/>
 							<reference ref="146710726"/>
 							<reference ref="211288318"/>
+							<reference ref="553244528"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -3330,6 +3349,11 @@
 						<int key="objectID">569</int>
 						<reference key="object" ref="438512322"/>
 						<reference key="parent" ref="428058997"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">575</int>
+						<reference key="object" ref="553244528"/>
+						<reference key="parent" ref="694430913"/>
 					</object>
 				</object>
 			</object>
@@ -3573,6 +3597,7 @@
 					<string>57.IBPluginDependency</string>
 					<string>57.ImportedFromIB2</string>
 					<string>57.editorWindowContentRectSynchronizationRect</string>
+					<string>575.IBPluginDependency</string>
 					<string>58.IBPluginDependency</string>
 					<string>58.ImportedFromIB2</string>
 					<string>72.IBPluginDependency</string>
@@ -3821,7 +3846,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{639, 773}, {136, 83}}</string>
+					<string>{{639, 753}, {240, 103}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3829,7 +3854,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{775, 733}, {93, 103}}</string>
+					<string>{{827, 713}, {93, 103}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3840,6 +3865,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{23, 794}, {245, 183}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3886,7 +3912,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">574</int>
+			<int key="maxID">576</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3902,9 +3928,11 @@
 							<string>openFinder:</string>
 							<string>setPenColor:</string>
 							<string>showHide:</string>
+							<string>toggleSticky:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3919,6 +3947,7 @@
 							<string>openFinder:</string>
 							<string>setPenColor:</string>
 							<string>showHide:</string>
+							<string>toggleSticky:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3936,6 +3965,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">showHide:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleSticky:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>

@@ -34,6 +34,7 @@
 	PointModel					*	endDragPoint;
 	NSColor						*	selectedColor;
 	
+	BOOL							isSticky;
 	BOOL							erase;
 	BOOL							mouseMode;
 	BOOL							mainWindowWasVisible;
@@ -47,6 +48,7 @@
 @property (retain) SketchView *activeSketchView;
 @property (retain) MainWindow *mainWindow;
 @property (retain) NSNumber *activeTabletID;
+@property (readwrite) BOOL isSticky;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;
 
