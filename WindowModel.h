@@ -61,7 +61,7 @@ typedef enum _SRUIElementType {
 - (NSArray *) attributeNamesOfUIElement:(AXUIElementRef)element;
 - (id) valueOfAttribute:(NSString *)attribute ofUIElement:(AXUIElementRef)element;
 - (NSString *) getUIDofScrollArea:(AXUIElementRef)scrollArea;
-- (void) windowWasRepositioned: (BOOL) flag;
+- (void) setWindowWasRepositioned: (BOOL) flag;
 
 - (void) getUIElementInfo;
 - (id) getUIElementUnderMouse;
@@ -71,6 +71,7 @@ typedef enum _SRUIElementType {
 - (NSString *) getTitleOfUIElement:(AXUIElementRef)element;
 - (NSRect) getBoundsOfUIElement:(AXUIElementRef)element;
 - (SRUIElementType) getTypeOfUIElement:(AXUIElementRef)element;
+- (NSDictionary *) getScrollingInfosOfCurrentWindow;
 
 - (NSRect) getWindowBounds;
 - (NSRect) getClippingAreaFromPath:(PathModel *)clippedPath withOriginalPath:(PathModel *)originalPath;

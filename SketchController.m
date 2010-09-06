@@ -24,7 +24,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		[self release];
 		return nil;
 	}
-		
+	
 	mainWindow = [theMainWindow retain];
 	
 	// setup our color palette
@@ -74,7 +74,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   // ------------------------------------------------------------------------------- //
 											   // GLOBAL - KEY EVENTS
 											   // ------------------------------------------------------------------------------- //
-
+											   
 											   if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp){
 												   
 												   // ------------------------------------------------------------------------------- //
@@ -84,25 +84,27 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   // Enter mouse mode
 												   if((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 														 ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
-														 ([incomingEvent keyCode] == 10)) &&
-													     ([incomingEvent type] == NSKeyUp)) && !mouseMode){
+														([incomingEvent keyCode] == 10)) &&
+													   ([incomingEvent type] == NSKeyUp)) && !mouseMode){
 													   
 													   if ([mainWindow isVisible]) {
 														   [mainWindow showGlassPane:NO];
 													   }
 													   mouseMode = YES;
+
 													   [activeSketchView updateKeyWindowBounds];
 													   [activeSketchView setDrawWindowBounds:NO];
 													   [activeSketchView setNeedsDisplay:YES];
 													   NSLog(@"MouseMode ON");
+
 													   return;
 												   } 
 												   
 												   // Exit mouse mode
 												   if((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 														 ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
-														 ([incomingEvent keyCode] == 10)) &&
-													     ([incomingEvent type] == NSKeyUp)) && mouseMode){
+														([incomingEvent keyCode] == 10)) &&
+													   ([incomingEvent type] == NSKeyUp)) && mouseMode){
 													   
 													   if (penIsNearTablet) {
 														   NSLog(@"penIsNearTablet == YES");
@@ -128,8 +130,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														([incomingEvent modifierFlags] & NSShiftKeyMask) && 
 														([incomingEvent modifierFlags] & NSControlKeyMask) &&
 														([incomingEvent modifierFlags] & NSAlternateKeyMask) &&
-													    ([incomingEvent keyCode] == 1)) &&
-													    ([incomingEvent type] == NSKeyUp))){
+													    ([incomingEvent keyCode] == 16)) &&
+													   ([incomingEvent type] == NSKeyUp))){
 													   
 													   if ([mainWindow isVisible]) {
 														   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
@@ -160,26 +162,26 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   }
 											   
 											   /*
-											   NSLog(@"----------------------- GLOBAL");
-											   NSLog(@"the event type is %d", [incomingEvent type]);
-											   if([incomingEvent type] == NSLeftMouseDown)
-												   NSLog(@"clickCount = %d", [incomingEvent clickCount]);
-											   if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp)
-												   NSLog(@"modifierFlags: %d, keycode: %d", [incomingEvent modifierFlags], [incomingEvent keyCode]);
-											   if(mouseMode)
-												   NSLog(@"mouseMode = YES");
-											   else  
-												   NSLog(@"mouseMode = NO");
-											   if ([incomingEvent modifierFlags] & NSCommandKeyMask)
-												   NSLog(@"Command Key pressed");
-											   if ([incomingEvent modifierFlags] & NSAlternateKeyMask)
-												   NSLog(@"Alt Key pressed");
-											   if ([incomingEvent modifierFlags] & NSControlKeyMask)
-												   NSLog(@"Control Key pressed");
-											   if ([incomingEvent modifierFlags] & NSShiftKeyMask)
-												   NSLog(@"Shift Key pressed");
-											   NSLog(@"------------------------------");
-											   NSLog(@"");
+												NSLog(@"----------------------- GLOBAL");
+												NSLog(@"the event type is %d", [incomingEvent type]);
+												if([incomingEvent type] == NSLeftMouseDown)
+												NSLog(@"clickCount = %d", [incomingEvent clickCount]);
+												if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp)
+												NSLog(@"modifierFlags: %d, keycode: %d", [incomingEvent modifierFlags], [incomingEvent keyCode]);
+												if(mouseMode)
+												NSLog(@"mouseMode = YES");
+												else  
+												NSLog(@"mouseMode = NO");
+												if ([incomingEvent modifierFlags] & NSCommandKeyMask)
+												NSLog(@"Command Key pressed");
+												if ([incomingEvent modifierFlags] & NSAlternateKeyMask)
+												NSLog(@"Alt Key pressed");
+												if ([incomingEvent modifierFlags] & NSControlKeyMask)
+												NSLog(@"Control Key pressed");
+												if ([incomingEvent modifierFlags] & NSShiftKeyMask)
+												NSLog(@"Shift Key pressed");
+												NSLog(@"------------------------------");
+												NSLog(@"");
 												*/
 											   
 											   // ------------------------------------------------------------------------------- //
@@ -257,7 +259,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   
 												   // check whether there are paths to reposition
 												   if([[[activeSketchView sketchModel] smoothedPaths] count] > 0){
-
+													   
 													   // renew scrollPositions
 													   [activeWindow initScrollPositionsOfWindow];
 													   
@@ -269,20 +271,20 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   
 													   // look if window was repositioned
 													   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
-
+														   
 														   // call function to reposition all paths with delta
 														   [[activeSketchView sketchModel] repositionPaths:delta];
-
+														   
 														   // reset startpoint
 														   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
-
+														   
 														   // repaint sketchView
 														   [activeSketchView updateKeyWindowBounds];
 														   [activeSketchView setNeedsDisplay:YES];
 														   
 														   // tell activeWindow that window was repositioned
-														   [activeWindow windowWasRepositioned:YES];
-														}
+														   [activeWindow setWindowWasRepositioned: YES];
+													   }
 												   }		
 											   }
 											   
@@ -291,7 +293,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	// watch out for scrolling events and handle them 
 	[NSEvent addGlobalMonitorForEventsMatchingMask: 
 	 (NSLeftMouseDraggedMask | NSScrollWheelMask | NSLeftMouseUpMask) handler:^(NSEvent *incomingEvent) {
-				 
+		 
 		 // check after each mouseUp if in the window was a scrolling event 
 		 // + check for scrollWheel activity
 		 if ([incomingEvent type] == NSLeftMouseUp || [incomingEvent type] == NSScrollWheel || [incomingEvent type] == NSLeftMouseDragged) {
@@ -300,17 +302,94 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 			 if ([activeWindow loadAccessibilityData]) {
 				 
 				 // if window was scrolled
-				 if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
+				 //if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
+					 
+					 // get scrollArea
+					 AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
+					 AXUIElementRef parentOfUIElement = (AXUIElementRef)[activeWindow getParentOfUIElement:focusedUIElement];
+					 AXUIElementRef scrollArea;
+					 BOOL wasScrolled = NO;
+					 
+					 SRUIElementType type = [activeWindow getTypeOfUIElement:parentOfUIElement];
+					 
+					 if (type == SRUIElementIsPartOfAScrollbar || type == SRUIElementIsScrollArea) {
+						 
+						 // get corresponding scrollaea
+						 if (type == SRUIElementIsPartOfAScrollbar)
+							 scrollArea = (AXUIElementRef)[activeWindow getParentOfUIElement:parentOfUIElement];
+						 else if (type == SRUIElementIsScrollArea)
+							 scrollArea = parentOfUIElement;
+						 
+						 // ensure that we've got the scrollArea
+						 type = [activeWindow getTypeOfUIElement:scrollArea];
+						 if (type == SRUIElementIsScrollArea) {
+							 // find the member of the scrollArea in order to get the current scrollPosition
+							 AXUIElementRef member = (AXUIElementRef)[activeWindow getMemberFromScrollArea:scrollArea];
+							 // ensure that we've got a member
+							 if (member != nil) {
+								 NSString *currentUID = [activeWindow getUIDofScrollArea:scrollArea];
+								 NSValue *boundsBeforeValue = [lastScrollBounds objectForKey:currentUID];
+								 
+								 if (boundsBeforeValue) {
+									 NSRect boundsBefore = [boundsBeforeValue rectValue];
+									 NSRect boundsNow = [activeWindow getBoundsOfUIElement:member];
+									 NSLog(@"positionBefore=(%f,%f)",boundsBefore.origin.x,boundsBefore.origin.y);
+									 NSLog(@"positionNow   =(%f,%f)",boundsNow.origin.x,boundsNow.origin.y);
+									 NSPoint lastMovingDiff;
+									 // calc the movingChange
+									 lastMovingDiff.x = boundsNow.origin.x-boundsBefore.origin.x;
+									 lastMovingDiff.y = boundsNow.origin.y-boundsBefore.origin.y;
+									 NSLog(@"lastMovingDiff=(%f,%f)",lastMovingDiff.x,lastMovingDiff.y);
+									 
+									 lastMovingDiff.x-=kumMovingDelta.x;
+									 lastMovingDiff.y-=kumMovingDelta.y;
+									 
+									 if (lastMovingDiff.x>0 || lastMovingDiff.x<0 || lastMovingDiff.y>0 || lastMovingDiff.y<0) {
+										 
+										 // generate the delta
+										 PointModel *delta = [[PointModel alloc] initWithDoubleX:lastMovingDiff.x andDoubleY:lastMovingDiff.y];
+										 NSLog(@"         delta=(%f,%f)",[delta x],[delta y]);
+										 // call function to reposition all paths with delta
+										 [[activeSketchView sketchModel] repositionPaths:delta];
+										 // repaint sketchView
+										 [activeSketchView setNeedsDisplay:YES];
+										 
+										 // save lastMovingDiff
+										 kumMovingDelta.x+=lastMovingDiff.x;
+										 kumMovingDelta.y+=lastMovingDiff.y;
+										 NSLog(@"kumMovingDelta=(%f,%f)",kumMovingDelta.x,kumMovingDelta.y);
+										 
+										 wasScrolled = YES;
+									 }
+								 }
+							 }
+						 }
+					 }
+					 
 					 // get the movingChange
-					 NSPoint change = [activeWindow getMovingDelta];
-					 NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
+					 //NSPoint change = [activeWindow getMovingDelta];
+					 //NSRect boundsOfScrollMember = [activeWindow getBoundsOfUIElement:[activeWindow getMemberFromScrollArea:[activeWindow getUIElementUnderMouse]]];
+					 //NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
 					 
 					 // generate the delta
-					 PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
+					 //PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
 					 // call function to reposition all paths with delta
-					 [[activeSketchView sketchModel] repositionPaths:delta];
+					 //[[activeSketchView sketchModel] repositionPaths:delta];
 					 // repaint sketchView
-					 [activeSketchView setNeedsDisplay:YES];
+					 //[activeSketchView setNeedsDisplay:YES];
+				 /*}
+				 else {
+					 if ([incomingEvent type] == NSLeftMouseUp) {
+						 NSLog(@"save all window scrollBounds");
+						 lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
+						 kumMovingDelta = NSZeroPoint;
+					 }
+				 }*/
+				 if(!wasScrolled && [incomingEvent type] == NSLeftMouseUp) {
+					 NSLog(@"save all window scrollBounds");
+					 [activeWindow initScrollPositionsOfWindow];
+					 lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
+					 kumMovingDelta = NSZeroPoint;
 				 }
 			 }
 		 }
@@ -367,12 +446,12 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  // ------------------------------------------------------------------------------- //
 												  // LOCAL - MOUSE MODE
 												  // ------------------------------------------------------------------------------- //
-
+												  
 												  // Enter mouse mode
 												  if((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 													    ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
-													    ([incomingEvent keyCode] == 10)) &&
-													    ([incomingEvent type] == NSKeyUp)) && !mouseMode){
+													   ([incomingEvent keyCode] == 10)) &&
+													  ([incomingEvent type] == NSKeyUp)) && !mouseMode){
 													  
 													  if ([mainWindow isVisible]) {
 														  [mainWindow showGlassPane:NO];
@@ -382,15 +461,16 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													  [activeSketchView setDrawWindowBounds:NO];
 													  [activeSketchView setNeedsDisplay:YES];
 													  NSLog(@"MouseMode ON");
+
 													  return result;
 												  } 
 												  
 												  // Exit mouse mode
 												  if((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 													    ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
-													    ([incomingEvent keyCode] == 10)) &&
-													    ([incomingEvent type] == NSKeyUp)) && mouseMode){
-														
+													   ([incomingEvent keyCode] == 10)) &&
+													  ([incomingEvent type] == NSKeyUp)) && mouseMode){
+													  
 													  if (penIsNearTablet) {
 														  NSLog(@"penIsNearTablet == YES");
 														  [activeSketchView updateKeyWindowBounds];
@@ -403,6 +483,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 													  mouseMode = NO; 
 													  NSLog(@"MouseMode OFF");
+
 													  return result;
 												  }
 												  
@@ -414,9 +495,9 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  if(((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 														 ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
 														 ([incomingEvent modifierFlags] & NSControlKeyMask)) &&
-														 ([incomingEvent modifierFlags] & NSAlternateKeyMask)) &&
-														 ([incomingEvent keyCode] == 1)) &&
-														 ([incomingEvent type] == NSKeyUp)){
+													   	 ([incomingEvent modifierFlags] & NSAlternateKeyMask)) &&
+													  	 ([incomingEvent keyCode] == 16)) &&
+													 	 ([incomingEvent type] == NSKeyUp)){
 													  
 													  if ([mainWindow isVisible]) {
 														  ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
@@ -468,6 +549,28 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  NSLog(@"------------------------------");
 											  NSLog(@"");
 											  */
+											  /*
+											   NSLog(@"------------------------ LOCAL");
+											   NSLog(@"the event type is %d", [incomingEvent type]);
+											   if([incomingEvent type] == NSLeftMouseDown)
+											   NSLog(@"clickCount = %d", [incomingEvent clickCount]);
+											   if([incomingEvent type] == NSKeyDown || [incomingEvent type] == NSKeyUp)
+											   NSLog(@"modifierFlags: %d, keycode: %d", [incomingEvent modifierFlags], [incomingEvent keyCode]);
+											   if(mouseMode)
+											   NSLog(@"mouseMode = YES");
+											   else  
+											   NSLog(@"mouseMode = NO");
+											   if ([incomingEvent modifierFlags] & NSCommandKeyMask)
+											   NSLog(@"Command Key pressed");
+											   if ([incomingEvent modifierFlags] & NSAlternateKeyMask)
+											   NSLog(@"Alt Key pressed");
+											   if ([incomingEvent modifierFlags] & NSControlKeyMask)
+											   NSLog(@"Control Key pressed");
+											   if ([incomingEvent modifierFlags] & NSShiftKeyMask)
+											   NSLog(@"Shift Key pressed");
+											   NSLog(@"------------------------------");
+											   NSLog(@"");
+											   */
 											  
 											  // ------------------------------------------------------------------------------- //
 											  // LOCAL - DRAWING
@@ -521,10 +624,10 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// start the notificationCenter to catch windowActivation Events
 	[[[NSWorkspace sharedWorkspace]
-	 notificationCenter] addObserver:self	 
-							selector:@selector(anAppWasActivated:)
-								name:nil 
-							  object:nil];
+	  notificationCenter] addObserver:self	 
+	 selector:@selector(anAppWasActivated:)
+	 name:nil 
+	 object:nil];
 	
 	// save reference from self
 	refToSelf = self;
@@ -591,7 +694,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		[activeSketchView setDraw:YES];
 		[activeSketchView setNeedsDisplay:YES];
 	}
-
+	
 }
 
 #pragma mark KeyWindow Functions
@@ -650,7 +753,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	CGRect rect;
 	CFDictionaryRef ref = (CFDictionaryRef)[windowInfos objectForKey:(id)kCGWindowBounds];
 	CGRectMakeWithDictionaryRepresentation(ref, &rect);
-
+	
 	return *(NSRect *)&rect;
 }
 
@@ -673,7 +776,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// lookup if there is an arrayEntry for this ID
 	if ([windowModelList objectForKey:keyID] == nil) {
-	
+		
 		// create the new classes for the window
 		SketchModel *newModel  = [[SketchModel alloc] initWithController:self andWindow:mainWindow];
 		WindowModel *newWindow = [[WindowModel alloc] initWithController:self];
@@ -686,7 +789,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		[windowModelList setObject:newWindow forKey:keyID];
 		activeWindow = newWindow;
 		
-		NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
+		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
 		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
 		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
 		
@@ -704,14 +807,14 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	}
 	else {
 		// switch to other view
-
+		
 		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeSubWindow] view]) {
 			activeSketchView = [[[windowModelList objectForKey:keyID] activeSubWindow] view];
 			[mainWindow setContentView:activeSketchView];
-
+			
 			activeWindow = [windowModelList objectForKey:keyID];
 			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
-
+			
 			//[keyID release];
 		}
 		

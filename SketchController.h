@@ -39,6 +39,9 @@
 	BOOL							mainWindowWasVisible;
 	BOOL							penIsNearTablet;
 	NSNumber					*	activeTabletID;
+	
+	NSDictionary				*	lastScrollBounds;
+	NSPoint							kumMovingDelta;
 }
 @property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;
