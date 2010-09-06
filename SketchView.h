@@ -22,20 +22,22 @@
 	SketchModel			*	sketchModel;
 	SubWindowModel			*	tabModel;
 	SketchController	*   controller;
+	NSCursor			*	customCursor;
+	NSCursor			*	theNormalCursor;
 
 	BOOL					draw;
 	BOOL					clickThrough;
 	BOOL					isDrawing;
 	BOOL					erase;
 	BOOL					drawWindowBounds;
-	BOOL					flushScreen;
 	
 	NSRect					keyWindow;
 }
 
 @property (retain) SketchModel *sketchModel;
-@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds, flushScreen;
+@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds;
 @property (readwrite) NSRect keyWindow;
+@property (retain) NSCursor *customCursor;
 
 
 - (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(SubWindowModel *)theTabModel;

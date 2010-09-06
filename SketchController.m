@@ -12,7 +12,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 @implementation SketchController
 
-@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID, isSticky;
+@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID, isSticky, activeWindow, penIsNearTablet, mouseMode;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -51,7 +51,10 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	isSticky = YES;
 	
 	activeTabletID = [[NSNumber alloc] init];
-	
+	/*
+	NSCursor *myCursor = [NSCursor crosshairCursor];
+	[myCursor set];
+	*/
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
@@ -59,12 +62,18 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   
 											   NSLog(@"GLOBAL EVENT--------------------------------------------------------GLOBAL EVENT");
 											   
+											   if ([activeSketchView clickThrough]) {
+												   [activeSketchView updateKeyWindowBounds];
+												   [activeSketchView setNeedsDisplay:YES];
+											   }
+											   
 											   // Check whether the pen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
 												   activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
 												   
 												   if([incomingEvent isEnteringProximity]){
+													   
 													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
 													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
 													   
@@ -87,7 +96,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   
 													   // finally get the color for the pen
 													   selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];												   
-												   }
+												   } 
+
 											   }
 											   
 											   if (penIsNearTablet) {

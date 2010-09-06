@@ -11,7 +11,7 @@
 
 @implementation SketchView
 
-@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds, flushScreen;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds, customCursor;
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
@@ -35,17 +35,17 @@
 	// Setup the Controller
 	controller   = [theController  retain];
 	
-	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
+	// Get the key window bounds for our fabulous glow
+	[self updateKeyWindowBounds];
 	
-	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
-	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+	customCursor = [NSCursor crosshairCursor];
+	theNormalCursor = [NSCursor arrowCursor];
 	
 	draw			 = YES;
 	clickThrough	 = YES;
 	isDrawing		 =  NO;
 	erase			 =  NO;
 	drawWindowBounds =  NO;	
-	flushScreen		 =  NO;
 		
     return self;
 }
@@ -70,10 +70,11 @@
 	// Setup the Controller
 	controller   = [theController  retain];
 	
-	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
+	// Get the key window bounds for our fabulous glow
+	[self updateKeyWindowBounds];
 	
-	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
-	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+	customCursor = [NSCursor crosshairCursor];
+	theNormalCursor = [NSCursor arrowCursor];
 	
 	NSLog(@"origin.x = %f origin.y = %f width = %f height = %f sketchview init", keyWindow.origin.x, keyWindow.origin.y, keyWindow.size.width, keyWindow.size.height);
 	draw			 = YES;
@@ -81,21 +82,19 @@
 	isDrawing		 =  NO;
 	erase			 =  NO;
 	drawWindowBounds =  NO;
-	flushScreen		 =  NO;
 	
     return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-   	
+	
+	if([controller penIsNearTablet] && ![controller mouseMode])
+		[customCursor set];
+	else 
+		[theNormalCursor set];
+	
 	if(draw) {
 		
-		if (flushScreen) {
-			NSRect bounds = [self bounds];
-			[[NSColor clearColor] set];
-			[NSBezierPath fillRect:bounds];
-			return;
-		}
 		if(!clickThrough) {
 			NSRect bounds = [self bounds];
 			[[[NSColor grayColor] colorWithAlphaComponent:0.05] set];
@@ -195,11 +194,18 @@
 
 - (void)updateKeyWindowBounds
 {
-	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
-	
+	if([[controller activeWindow] loadAccessibilityData])
+	{
+		keyWindow = [[controller activeWindow] getWindowBounds];
+		NSLog(@"keyWindow = accessibility");
+	}
+	else 
+	{
+		keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
+		NSLog(@"the man your man could smell like");
+	}
 	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
-	return;
 }
 
 - (void)dealloc

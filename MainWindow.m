@@ -52,6 +52,7 @@
 	isVisible = flag;
 	[controller setClickThrough: !flag];
 	if(flag) {
+		[NSApp activateIgnoringOtherApps:YES];
 		[self makeKeyAndOrderFront:nil];
 	}
 }

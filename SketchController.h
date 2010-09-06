@@ -48,7 +48,8 @@
 @property (retain) SketchView *activeSketchView;
 @property (retain) MainWindow *mainWindow;
 @property (retain) NSNumber *activeTabletID;
-@property (readwrite) BOOL isSticky;
+@property (readwrite) BOOL isSticky, penIsNearTablet, mouseMode;
+@property (retain) WindowModel *activeWindow;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;
 
