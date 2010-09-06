@@ -41,6 +41,7 @@
 	[data writeToFile:desktopPath atomically:NO]; 
 	
 	NSLog(@"Saved PNG to Desktop");
+	NSLog(@"wtf");
 	
 	// get the hell out of here!
 	[bitmapRep release];

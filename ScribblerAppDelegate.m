@@ -24,7 +24,7 @@
 	[statusItem setHighlightMode:YES];
 	[statusItem setToolTip:@"Scribbler"];
 	
-	// Initialize Growl delegate
+	/* Initialize Growl delegate
 	[GrowlApplicationBridge setGrowlDelegate:self]; 
 	
 	[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
@@ -33,7 +33,7 @@
 								   iconData:nil
 								   priority:1
 								   isSticky:NO
-							   clickContext:nil]; 
+							   clickContext:nil]; */
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {

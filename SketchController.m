@@ -7,8 +7,6 @@
 //
 
 #import "SketchController.h"
-#import "Growl/Growl.h"
-#import "Growl/GrowlApplicationBridge.h"
 
 id refToSelf; // declaration of a reference to self - to access class functions in outter c methods
 
@@ -57,12 +55,26 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
 										   handler:^(NSEvent *incomingEvent) {
 											   
+											   [mainWindow setHasShadow:NO];
+											   [activeSketchView setShadow:NO];
+											   
 											   // Check whether the pen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
-												   
-												   [activeSketchView setDrawWindowBounds:penIsNearTablet];
 												   activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+												   if ([mainWindow hasShadow]) {
+													   NSLog(@"[mainWindow hasShadow] == YES");
+												   } else {
+													   NSLog(@"[mainWindow hasShadow] == NO");
+												   }
+											   }
+											   
+											   if (penIsNearTablet) {
+												   [activeSketchView setDrawWindowBounds:YES];
+												   [activeSketchView setNeedsDisplay:YES];
+											   } else {
+												   [activeSketchView setDrawWindowBounds:NO];
+												   [activeSketchView setNeedsDisplay:YES];
 											   }
 
 											   // ------------------------------------------------------------------------------- //
@@ -85,14 +97,14 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   [mainWindow showGlassPane:NO];
 													   }
 													   mouseMode = YES;
-													   
-													   [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
+													   NSLog(@"MouseMode ON");
+													   /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
 																				   description:@"Switched to Mouse Mode" 
 																			  notificationName:@"Mouse Mode"
 																					  iconData:nil
 																					  priority:1
 																					  isSticky:NO
-																				  clickContext:nil]; 
+																				  clickContext:nil]; */
 													   return;
 												   } 
 												   
@@ -106,14 +118,14 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   [mainWindow showGlassPane:YES];
 													   }
 													   mouseMode = NO; 
-													   
-													   [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
+													   NSLog(@"MouseMode OFF");
+													   /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
 																				   description:@"Switched to Pen Mode" 
 																			  notificationName:@"Pen Mode"
 																					  iconData:nil
 																					  priority:1
 																					  isSticky:NO
-																				  clickContext:nil];
+																				  clickContext:nil];*/
 													   return;
 												   }
 												   
@@ -143,6 +155,18 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   return;
 													   }
 												   }
+											   }
+											   
+											   // ------------------------------------------------------------------------------- //
+											   // GLOBAL - VISIBILITY OF WINDOW BOUNDS
+											   // ------------------------------------------------------------------------------- //
+											   
+											   if (penIsNearTablet && !mouseMode) {
+												   [activeSketchView setDrawWindowBounds:YES];
+												   [activeSketchView setNeedsDisplay:YES];
+											   } else {
+												   [activeSketchView setDrawWindowBounds:NO];
+												   [activeSketchView setNeedsDisplay:YES];
 											   }
 											   
 											   /*
@@ -193,7 +217,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   
 											   // if tabletpen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity && !mouseMode) {
-
+												   
 												   [mainWindow showGlassPane:[incomingEvent isEnteringProximity]];
 												   
 												   // Ignore the rest if pointing device exited proximity
@@ -263,10 +287,11 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
 
 														   // repaint sketchView
+														   [activeSketchView updateKeyWindowBounds];
 														   [activeSketchView setNeedsDisplay:YES];
 														   
 														   // tell activeWindow that window was repositioned
-														   [activeWindow windowWasRepositioned: YES];
+														   [activeWindow windowWasRepositioned:YES];
 														}
 												   }		
 											   }
@@ -281,18 +306,22 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		 // + check for scrollWheel activity
 		 if ([incomingEvent type] == NSLeftMouseUp || [incomingEvent type] == NSScrollWheel || [incomingEvent type] == NSLeftMouseDragged) {
 			 
-			 // if window was scrolled
-			 if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
-				 // get the movingChange
-				 NSPoint change = [activeWindow getMovingDelta];
-				 NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
+			 // if we can load AXData
+			 if ([activeWindow loadAccessibilityData]) {
 				 
-				 // generate the delta
-				 PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
-				 // call function to reposition all paths with delta
-				 [[activeSketchView sketchModel] repositionPaths:delta];
-				  // repaint sketchView
-				 [activeSketchView setNeedsDisplay:YES];
+				 // if window was scrolled
+				 if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
+					 // get the movingChange
+					 NSPoint change = [activeWindow getMovingDelta];
+					 NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
+					 
+					 // generate the delta
+					 PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
+					 // call function to reposition all paths with delta
+					 [[activeSketchView sketchModel] repositionPaths:delta];
+					 // repaint sketchView
+					 [activeSketchView setNeedsDisplay:YES];
+				 }
 			 }
 		 }
 		 
@@ -312,9 +341,13 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  // Check whether the pen is near the tablet
 											  if ([incomingEvent type] == NSTabletProximity) {
 												  penIsNearTablet = [incomingEvent isEnteringProximity];
-												  
-												  [activeSketchView setDrawWindowBounds:penIsNearTablet];
 												  activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+												  if ([mainWindow hasShadow]) {
+													  NSLog(@"[mainWindow hasShadow] == YES");
+												  } else {
+													  NSLog(@"[mainWindow hasShadow] == NO");
+												  }
+
 											  }		
 											  
 											  // ------------------------------------------------------------------------------- //
@@ -359,14 +392,15 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  [mainWindow showGlassPane:NO];
 													  }
 													  mouseMode = YES;
+													  NSLog(@"MouseMode ON");
 													  
-													  [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
+													  /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
 																				  description:@"Switched to Mouse Mode" 
 																			 notificationName:@"Mouse Mode"
 																					 iconData:nil
 																					 priority:1
 																					 isSticky:NO
-																				 clickContext:nil]; 
+																				 clickContext:nil]; */
 													  return result;
 												  } 
 												  
@@ -380,14 +414,15 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  [mainWindow showGlassPane:YES];
 													  }
 													  mouseMode = NO; 
+													  NSLog(@"MouseMode OFF");
 													  
-													  [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
+													 /* [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
 																				  description:@"Switched to Pen Mode" 
 																			 notificationName:@"Pen Mode"
 																					 iconData:nil
 																					 priority:1
 																					 isSticky:NO
-																				 clickContext:nil]; 
+																				 clickContext:nil]; */
 													  return result;
 												  }
 												  
@@ -417,6 +452,18 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  return result;
 													  }
 												  }
+											  }
+											  
+											  // ------------------------------------------------------------------------------- //
+											  // LOCAL - VISIBILITY OF WINDOW BOUNDS
+											  // ------------------------------------------------------------------------------- //
+											  
+											  if (penIsNearTablet && !mouseMode) {
+												  [activeSketchView setDrawWindowBounds:YES];
+												  [activeSketchView setNeedsDisplay:YES];
+											  } else {
+												  [activeSketchView setDrawWindowBounds:NO];
+												  [activeSketchView setNeedsDisplay:YES];
 											  }
 											  
 											/*
@@ -635,6 +682,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	NSMutableDictionary* currentInfos = [self getCurrentKeyWindowInfos];
 	// get keyWindowID
 	NSNumber* keyID = [self getKeyWindowID:currentInfos];
+	// get keyWindow App Name
+	NSString* appName = [self getKeyWindowsApplicationName:currentInfos];
 	// get processID
 	int pid = [self getProcessID:currentInfos];
 	
@@ -659,6 +708,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		
 		NSLog(@"added window %@ with id %@ to array",[windowModelList objectForKey:keyID],keyID);
 		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
+		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
 		
 		// set as active
 		activeSketchView = [newView retain];

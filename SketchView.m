@@ -11,7 +11,7 @@
 
 @implementation SketchView
 
-@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds, flushScreen;
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
@@ -35,8 +35,7 @@
 	// Setup the Controller
 	controller   = [theController  retain];
 	
-	NSMutableDictionary *windowInfos = [controller getCurrentKeyWindowInfos];
-	keyWindow = [controller getKeyWindowBounds:windowInfos];
+	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
 	
 	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
@@ -46,6 +45,7 @@
 	isDrawing		 =  NO;
 	erase			 =  NO;
 	drawWindowBounds =  NO;	
+	flushScreen		 =  NO;
 		
     return self;
 }
@@ -70,8 +70,7 @@
 	// Setup the Controller
 	controller   = [theController  retain];
 	
-	NSMutableDictionary *windowInfos = [controller getCurrentKeyWindowInfos];
-	keyWindow = [controller getKeyWindowBounds:windowInfos];
+	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
 	
 	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
@@ -82,6 +81,7 @@
 	isDrawing		 =  NO;
 	erase			 =  NO;
 	drawWindowBounds =  NO;
+	flushScreen		 =  NO;
 	
     return self;
 }
@@ -89,6 +89,13 @@
 - (void)drawRect:(NSRect)dirtyRect {
    	
 	if(draw) {
+		
+		if (flushScreen) {
+			NSRect bounds = [self bounds];
+			[[NSColor clearColor] set];
+			[NSBezierPath fillRect:bounds];
+			return;
+		}
 		if(!clickThrough) {
 			NSRect bounds = [self bounds];
 			[[[NSColor grayColor] colorWithAlphaComponent:0.05] set];
@@ -100,14 +107,14 @@
 			[NSBezierPath fillRect:bounds];
 		}
 		
-		if(NO){
+		if(drawWindowBounds){
 			[NSBezierPath setDefaultLineWidth:5];
 			[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
-			[[NSColor colorWithCalibratedRed:0.56 green:0.74 blue:0.90 alpha:1.0] set];
+			[[NSColor colorWithCalibratedRed:0.17 green:0.44 blue:0.96 alpha:1.0] set];
 			[NSBezierPath strokeRect:keyWindow];		
-			[NSBezierPath setDefaultLineWidth:1];
-		}
-		
+			//[NSBezierPath setDefaultLineWidth:1];
+		} 
+		[NSBezierPath setDefaultLineWidth:2.5];
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
 		for (id pathModel in smoothedPaths){
@@ -186,8 +193,10 @@
 	return YES;
 }
 
-- (void)invertKeyWindowBoundsYAxis
+- (void)updateKeyWindowBounds
 {
+	keyWindow = [controller getKeyWindowBounds:[controller getCurrentKeyWindowInfos]];
+	
 	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
 	return;

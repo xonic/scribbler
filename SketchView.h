@@ -28,17 +28,19 @@
 	BOOL					isDrawing;
 	BOOL					erase;
 	BOOL					drawWindowBounds;
+	BOOL					flushScreen;
 	
 	NSRect					keyWindow;
 }
 
 @property (retain) SketchModel *sketchModel;
-@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds;
+@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds, flushScreen;
 @property (readwrite) NSRect keyWindow;
 
 
 - (id)initWithController:(SketchController *)theController andSketchModel:(SketchModel *)theSketchModel andTabModel:(SubWindowModel *)theTabModel;
 - (id)initWithController:(SketchController *)theController andTabModel:(SubWindowModel *)theTabModel;
 
+- (void)updateKeyWindowBounds;
 
 @end
