@@ -214,8 +214,9 @@
 	return uid;
 }
 
-- (void) windowWasRepositioned: (BOOL) flag {
+- (void) setWindowWasRepositioned: (BOOL) flag {
 	windowWasRepositioned = flag;
+	[self initScrollPositionsOfWindow];
 }
 
 - (void) getUIElementInfo {
@@ -274,7 +275,7 @@
 	if (windowWasRepositioned) {
 		lastWindowChange = SRWindowChangeWasNotSignificant;
 		lastMovingDiff = NSZeroPoint;
-		[self windowWasRepositioned:NO];
+		[self setWindowWasRepositioned:NO];
 	}
 }
 
@@ -407,6 +408,10 @@
 	}
 	
 	return SRUIElementHasNoRelevance;
+}
+
+- (NSDictionary *) getScrollingInfosOfCurrentWindow {
+	return [activeSubWindow scrollInfos];
 }
 
 - (NSRect) getWindowBounds {
