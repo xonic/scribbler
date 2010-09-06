@@ -61,6 +61,31 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
 												   activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+												   
+												   if([incomingEvent isEnteringProximity]){
+													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													   
+													   // check for tablet and pen id
+													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+													   NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
+													   
+													   // this is a new tablet, create an object for it
+													   if([tablets objectForKey:[theTabletID stringValue]] == nil)
+													   {
+														   TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
+														   [tablets setObject:newTablet forKey:[theTabletID stringValue]];
+														   
+														   [newTablet release];
+													   }
+													   
+													   // the pen is new to the tablet, register it
+													   if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
+														   [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
+													   
+													   // finally get the color for the pen
+													   selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];												   
+												   }
 											   }
 											   
 											   if (penIsNearTablet) {
@@ -214,29 +239,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   
 												   // Ignore the rest if pointing device exited proximity
 												   if([incomingEvent isEnteringProximity]){
-													   
-													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
-													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
-													   
-													   // check for tablet and pen id
-													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
-													   NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
-													   
-													   // this is a new tablet, create an object for it
-													   if([tablets objectForKey:[theTabletID stringValue]] == nil)
-													   {
-														   TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
-														   [tablets setObject:newTablet forKey:[theTabletID stringValue]];
-														   
-														   [newTablet release];
-													   }
-													   
-													   // the pen is new to the tablet, register it
-													   if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
-														   [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
-													   
-													   // finally get the color for the pen
-													   selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
 													   
 													   // Check whether the user is drawing or erasing
 													   if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
@@ -413,6 +415,29 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  if ([incomingEvent type] == NSTabletProximity) {
 												  penIsNearTablet = [incomingEvent isEnteringProximity];
 												  activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+												  
+												  if([incomingEvent isEnteringProximity]){
+													  //NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
+													  //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													  
+													  // check for tablet and pen id
+													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
+													  NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
+													  
+													  // this is a new tablet, create an object for it
+													  if([tablets objectForKey:[theTabletID stringValue]] == nil)
+													  {
+														  TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
+														  [tablets setObject:newTablet forKey:[theTabletID stringValue]];
+													  }
+													  
+													  // the pen is new to the tablet, register it
+													  if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
+														  [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
+													  
+													  // finally get the color for the pen
+													  selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
+												  }												  
 											  }		
 											  
 											  // ------------------------------------------------------------------------------- //
@@ -583,28 +608,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												  
 												  // Ignore the rest if pointing device exited proximity
 												  if([incomingEvent isEnteringProximity]){
-													  
-													  //NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
-													  //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
-													  
-													  // check for tablet and pen id
-													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
-													  NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
-													  
-													  // this is a new tablet, create an object for it
-													  if([tablets objectForKey:[theTabletID stringValue]] == nil)
-													  {
-														  TabletModel *newTablet = [[TabletModel alloc] initWithTabletID:theTabletID andColor:[colorPalette getColorFromPalette]];
-														  [tablets setObject:newTablet forKey:[theTabletID stringValue]];
-													  }
-													  
-													  // the pen is new to the tablet, register it
-													  if (![[tablets objectForKey:[theTabletID stringValue]] isPenRegistered:thePenID]) 
-														  [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
-													  
-													  // finally get the color for the pen
-													  selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
-													  
+
 													  // Check whether the user is drawing or erasing
 													  if([incomingEvent pointingDeviceType] == NSEraserPointingDevice){
 														  //NSLog(@"Found Eraser");
@@ -789,7 +793,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		[windowModelList setObject:newWindow forKey:keyID];
 		activeWindow = newWindow;
 		
-		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
+		//NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
 		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
 		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
 		
