@@ -55,18 +55,12 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
 										   handler:^(NSEvent *incomingEvent) {
 											   
-											   [mainWindow setHasShadow:NO];
-											   [activeSketchView setShadow:NO];
+											   NSLog(@"GLOBAL EVENT--------------------------------------------------------GLOBAL EVENT");
 											   
 											   // Check whether the pen is near the tablet
 											   if ([incomingEvent type] == NSTabletProximity) {
 												   penIsNearTablet = [incomingEvent isEnteringProximity];
 												   activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
-												   if ([mainWindow hasShadow]) {
-													   NSLog(@"[mainWindow hasShadow] == YES");
-												   } else {
-													   NSLog(@"[mainWindow hasShadow] == NO");
-												   }
 											   }
 											   
 											   if (penIsNearTablet) {
@@ -97,14 +91,10 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   [mainWindow showGlassPane:NO];
 													   }
 													   mouseMode = YES;
+													   [activeSketchView updateKeyWindowBounds];
+													   [activeSketchView setDrawWindowBounds:NO];
+													   [activeSketchView setNeedsDisplay:YES];
 													   NSLog(@"MouseMode ON");
-													   /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
-																				   description:@"Switched to Mouse Mode" 
-																			  notificationName:@"Mouse Mode"
-																					  iconData:nil
-																					  priority:1
-																					  isSticky:NO
-																				  clickContext:nil]; */
 													   return;
 												   } 
 												   
@@ -115,17 +105,17 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													     ([incomingEvent type] == NSKeyUp)) && mouseMode){
 													   
 													   if (penIsNearTablet) {
+														   NSLog(@"penIsNearTablet == YES");
+														   [activeSketchView updateKeyWindowBounds];
+														   [activeSketchView setDrawWindowBounds:YES];
+														   [activeSketchView setNeedsDisplay:YES];
 														   [mainWindow showGlassPane:YES];
+													   } else {
+														    NSLog(@"penIsNearTablet == NO");
 													   }
+
 													   mouseMode = NO; 
 													   NSLog(@"MouseMode OFF");
-													   /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
-																				   description:@"Switched to Pen Mode" 
-																			  notificationName:@"Pen Mode"
-																					  iconData:nil
-																					  priority:1
-																					  isSticky:NO
-																				  clickContext:nil];*/
 													   return;
 												   }
 												   
@@ -334,6 +324,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  
 											  NSEvent *result = incomingEvent;
 											  
+											  NSLog(@"LOCAL EVENT----------------------------------------------------------LOCAL EVENT");
+											  
 											  // ------------------------------------------------------------------------------- //
 											  // LOCAL - PROXIMITY EVENT
 											  // ------------------------------------------------------------------------------- //
@@ -342,12 +334,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											  if ([incomingEvent type] == NSTabletProximity) {
 												  penIsNearTablet = [incomingEvent isEnteringProximity];
 												  activeTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
-												  if ([mainWindow hasShadow]) {
-													  NSLog(@"[mainWindow hasShadow] == YES");
-												  } else {
-													  NSLog(@"[mainWindow hasShadow] == NO");
-												  }
-
 											  }		
 											  
 											  // ------------------------------------------------------------------------------- //
@@ -392,15 +378,10 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  [mainWindow showGlassPane:NO];
 													  }
 													  mouseMode = YES;
+													  [activeSketchView updateKeyWindowBounds];
+													  [activeSketchView setDrawWindowBounds:NO];
+													  [activeSketchView setNeedsDisplay:YES];
 													  NSLog(@"MouseMode ON");
-													  
-													  /*[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
-																				  description:@"Switched to Mouse Mode" 
-																			 notificationName:@"Mouse Mode"
-																					 iconData:nil
-																					 priority:1
-																					 isSticky:NO
-																				 clickContext:nil]; */
 													  return result;
 												  } 
 												  
@@ -411,18 +392,17 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													    ([incomingEvent type] == NSKeyUp)) && mouseMode){
 														
 													  if (penIsNearTablet) {
+														  NSLog(@"penIsNearTablet == YES");
+														  [activeSketchView updateKeyWindowBounds];
+														  [activeSketchView setDrawWindowBounds:YES];
+														  [activeSketchView setNeedsDisplay:YES];
 														  [mainWindow showGlassPane:YES];
+													  }else {
+														  NSLog(@"penIsNearTablet == NO");
 													  }
+
 													  mouseMode = NO; 
 													  NSLog(@"MouseMode OFF");
-													  
-													 /* [GrowlApplicationBridge notifyWithTitle:@"Scribbler"
-																				  description:@"Switched to Pen Mode" 
-																			 notificationName:@"Pen Mode"
-																					 iconData:nil
-																					 priority:1
-																					 isSticky:NO
-																				 clickContext:nil]; */
 													  return result;
 												  }
 												  
