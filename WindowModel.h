@@ -29,7 +29,9 @@ typedef enum _SRUIElementType {
 	SRUIElementIsPartOfAScrollbar	= 1,
 	SRUIElementIsScrollArea			= 2,
 	SRUIElementIsTextArea			= 3,
-	SRUIElementIsWebArea			= 4
+	SRUIElementIsWebArea			= 4,
+	SRUIElementIsWindow				= 5,
+	SRUIElementIsMenuBar			= 6
 } SRUIElementType;
 
 @interface WindowModel : NSObject {
@@ -51,6 +53,7 @@ typedef enum _SRUIElementType {
 @property (retain) NSMutableArray		*subWindows;
 @property (retain) SubWindowModel		*activeSubWindow;
 @property (retain) SketchController		*controller;
+@property (readwrite) BOOL				windowWasRepositioned;
 
 - (id) initWithController:(SketchController *)theController;
 //- (id) initWithView:(SketchView *)theView;
@@ -61,14 +64,18 @@ typedef enum _SRUIElementType {
 - (NSArray *) attributeNamesOfUIElement:(AXUIElementRef)element;
 - (id) valueOfAttribute:(NSString *)attribute ofUIElement:(AXUIElementRef)element;
 - (NSString *) getUIDofScrollArea:(AXUIElementRef)scrollArea;
-- (void) setWindowWasRepositioned: (BOOL) flag;
+//- (void) setWindowWasRepositioned: (BOOL) flag;
 
 - (void) getUIElementInfo;
 - (id) getUIElementUnderMouse;
 - (id) getParentOfUIElement:(AXUIElementRef)element;
 - (NSArray *) findScrollAreasInUIElement:(AXUIElementRef)uiElement;
+- (id) getScrollAreaFromWhichUIElementIsChildOf:(AXUIElementRef) uiElement;
+- (BOOL) isUIElementChildOfMenuBar:(AXUIElementRef) uiElement;
+- (BOOL) isUIElementChildOfWindow:(AXUIElementRef) uiElement;
 - (id) getMemberFromScrollArea:(AXUIElementRef)scrollArea;
 - (NSString *) getTitleOfUIElement:(AXUIElementRef)element;
+- (NSString *) getTitleOfFocusedWindow;
 - (NSRect) getBoundsOfUIElement:(AXUIElementRef)element;
 - (SRUIElementType) getTypeOfUIElement:(AXUIElementRef)element;
 - (NSDictionary *) getScrollingInfosOfCurrentWindow;

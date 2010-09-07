@@ -43,6 +43,7 @@
 	
 	NSDictionary				*	lastScrollBounds;
 	NSPoint							kumMovingDelta;
+	id								activeScrollArea;
 }
 @property (retain) NSColor *selectedColor;
 @property (retain) SketchView *activeSketchView;
@@ -67,6 +68,7 @@
 - (NSRect) getKeyWindowBounds: (NSMutableDictionary*) windowInfos;
 - (void) keyWindowHandler;
 - (void) registerForAccessibilityEvents:(int)pid;
+- (void) refreshScrollingInfos;
 
 static void callback (AXObserverRef observer, AXUIElementRef element, CFStringRef notification, void *refcon);
 

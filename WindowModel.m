@@ -11,7 +11,7 @@
 
 @implementation WindowModel
 
-@synthesize subWindows, activeSubWindow, controller;
+@synthesize subWindows, activeSubWindow, controller, windowWasRepositioned;
 
 - (id)initWithController:(SketchController *)theController
 {
@@ -124,6 +124,13 @@
 								  (CFStringRef)kAXFocusedApplicationAttribute,
 								  (CFTypeRef*)&_focusedApp);
 	
+	NSLog(@"focusedApp=%@",[self getTitleOfUIElement:_focusedApp]);
+	if ([[self getTitleOfUIElement:_focusedApp] isEqualToString:@"Scribbler"]) {
+		// scribbler was accidently taken for loading AX-Data
+		// thus we don't override the last focusedWindow and return YES
+		return YES;
+	}
+	
 	//Get the window that has the focus
 	if(AXUIElementCopyAttributeValue((AXUIElementRef)_focusedApp,
 									 (CFStringRef)NSAccessibilityFocusedWindowAttribute,
@@ -214,10 +221,10 @@
 	return uid;
 }
 
-- (void) setWindowWasRepositioned: (BOOL) flag {
+/*- (void) setWindowWasRepositioned: (BOOL) flag {
 	windowWasRepositioned = flag;
 	[self initScrollPositionsOfWindow];
-}
+}*/
 
 - (void) getUIElementInfo {
 	[self loadAccessibilityData];
@@ -334,6 +341,35 @@
 	return scrollAreaRefs;
 }
 
+- (id) getScrollAreaFromWhichUIElementIsChildOf:(AXUIElementRef) uiElement {
+	AXUIElementRef scrollArea = uiElement;
+	
+	while (scrollArea!=NULL && [self getTypeOfUIElement:scrollArea]!=SRUIElementIsScrollArea)
+		scrollArea = (AXUIElementRef)[self getParentOfUIElement:scrollArea];
+	
+	return (id)scrollArea;
+}
+
+- (BOOL) isUIElementChildOfMenuBar:(AXUIElementRef) uiElement {
+	
+	while (uiElement!=NULL && [self getTypeOfUIElement:uiElement]!=SRUIElementIsMenuBar)
+		uiElement = (AXUIElementRef)[self getParentOfUIElement:uiElement];
+	
+	if(uiElement==NULL) return NO;
+	
+	return YES;
+}
+
+- (BOOL) isUIElementChildOfWindow:(AXUIElementRef) uiElement {
+	
+	while (uiElement!=NULL && [self getTypeOfUIElement:uiElement]!=SRUIElementIsWindow)
+		uiElement = (AXUIElementRef)[self getParentOfUIElement:uiElement];
+	
+	if(uiElement==NULL) return NO;
+	
+	return YES;
+}
+
 - (id) getMemberFromScrollArea:(AXUIElementRef)scrollArea {
 	
 	if ([self getTypeOfUIElement:scrollArea] == SRUIElementIsScrollArea) {
@@ -357,6 +393,13 @@
 		uiElementTitle = [self valueOfAttribute:NSAccessibilityTitleAttribute ofUIElement:(AXUIElementRef)element];
 	
 	return uiElementTitle;
+}
+
+- (NSString *) getTitleOfFocusedWindow {
+	if (_focusedWindow != NULL)
+		return [self getTitleOfUIElement:_focusedWindow];
+	else 
+		return @"";
 }
 
 - (NSRect) getBoundsOfUIElement:(AXUIElementRef)element {
@@ -405,6 +448,12 @@
 	}
 	else if ([elementRoleAttribute isEqualToString:@"AXWebArea"]) {
 		return SRUIElementIsWebArea;
+	}
+	else if ([elementRoleAttribute isEqualToString:@"AXWindow"]) {
+		return SRUIElementIsWindow;
+	}
+	else if ([elementRoleAttribute isEqualToString:@"AXMenuBar"]) {
+		return SRUIElementIsMenuBar;
 	}
 	
 	return SRUIElementHasNoRelevance;

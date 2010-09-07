@@ -51,6 +51,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	isSticky = YES;
 	
 	activeTabletID = [[NSNumber alloc] init];
+	
+	activeScrollArea = NULL;
 	/*
 	NSCursor *myCursor = [NSCursor crosshairCursor];
 	[myCursor set];
@@ -227,6 +229,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   
 											   // if change of keyWindow happens (this could only happen with a mouseDown event)
 											   if ([incomingEvent type] == NSLeftMouseDown) {
+												   NSLog(@"== MouseDown ==");
 												   if ([incomingEvent subtype] != NSTabletPointEventSubtype && [incomingEvent subtype] != NSTabletProximityEventSubtype) {
 													   [self keyWindowHandler];
 												   }
@@ -270,36 +273,48 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   // ------------------------------------------------------------------------------- //
 											   
 											   if ([incomingEvent type] == NSLeftMouseDragged && isSticky) {
-												   
-												   // check whether there are paths to reposition
-												   if([[[activeSketchView sketchModel] smoothedPaths] count] > 0){
+												   												   
+												   // check if we aren't accidentely on the scribbler window - if so don't handle dragging!
+												   // (this can happen if the user's pen diverges too fast from tablet and comes close again immediately)
+												   if (![[self getKeyWindowsApplicationName:[self getCurrentKeyWindowInfos]] isEqualToString:@"Scribbler"]) {
 													   
-													   // renew scrollPositions
-													   [activeWindow initScrollPositionsOfWindow];
+													   // check whether there are paths to reposition
+													   if([[[activeSketchView sketchModel] smoothedPaths] count] > 0){
 													   
-													   // save current windowposition
-													   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
+														   // renew scrollPositions
+														   [activeWindow initScrollPositionsOfWindow];
 													   
-													   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
-													   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
+														   // save current windowposition
+														   [endDragPoint initWithNSPoint:[self getKeyWindowBounds:[self getCurrentKeyWindowInfos]].origin];
 													   
-													   // look if window was repositioned
-													   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
+														   // calculate delta offset from startdragpoint (=window position @mouseDown) to enddragpoint (=current windowposition)
+														   PointModel *delta = [[PointModel alloc] initWithDoubleX:[endDragPoint x]-[startDragPoint x] andDoubleY:[endDragPoint y]-[startDragPoint y]];
+													   
+														   // look if window was repositioned
+														   if ([delta x]>0 || [delta x]<0 || [delta y]>0 || [delta y]<0) {
 														   
-														   // call function to reposition all paths with delta
-														   [[activeSketchView sketchModel] repositionPaths:delta];
+															   // call function to reposition all paths with delta
+															   [[activeSketchView sketchModel] repositionPaths:delta];
 														   
-														   // reset startpoint
-														   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
+															   // reset startpoint
+															   [startDragPoint initWithNSPoint:[endDragPoint myNSPoint]];
 														   
-														   // repaint sketchView
-														   [activeSketchView updateKeyWindowBounds];
-														   [activeSketchView setNeedsDisplay:YES];
+															   // repaint sketchView
+															   [activeSketchView updateKeyWindowBounds];
+															   [activeSketchView setNeedsDisplay:YES];
 														   
-														   // tell activeWindow that window was repositioned
-														   [activeWindow setWindowWasRepositioned: YES];
-													   }
-												   }		
+															   // tell activeWindow that window was repositioned
+															   [activeWindow setWindowWasRepositioned: YES];
+															   NSLog(@"setWindowWasRepositioned: YES");
+															   NSLog(@"currentAppName=%@",[self getKeyWindowsApplicationName:[self getCurrentKeyWindowInfos]]);
+														   }
+														   else {
+															   // tell activeWindow that window was repositioned
+															   [activeWindow setWindowWasRepositioned: NO];
+															   NSLog(@"setWindowWasRepositioned: NO");
+														   }
+													   }	
+												   }
 											   }
 											   
 										   }]; 
@@ -310,32 +325,48 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 		 
 		 // check after each mouseUp if in the window was a scrolling event 
 		 // + check for scrollWheel activity
-		 if ([incomingEvent type] == NSLeftMouseUp || [incomingEvent type] == NSScrollWheel || [incomingEvent type] == NSLeftMouseDragged) {
+		 NSEventType eventType = [incomingEvent type];
+		 
+		 if (eventType == NSLeftMouseUp || eventType == NSScrollWheel || eventType == NSLeftMouseDragged) {
 			 
 			 // if we can load AXData
 			 if ([activeWindow loadAccessibilityData]) {
 				 
+				 BOOL wasScrolled = NO;
+				 if ([activeWindow windowWasRepositioned]) {
+					 NSLog(@"windowWasRepositioned:YES");
+				 }
+				 
 				 // if window was scrolled
-				 //if ([activeWindow whatHasChanged] == SRWindowWasScrolled) {
-					 
+				 if (![activeWindow windowWasRepositioned]) {
+					 NSLog(@"windowWasRepositioned:NO");					 
 					 // get scrollArea
+					 //NSLog(@"we're scrolling for app:%@",[activeWindow getTitleOfFocusedWindow]);
 					 AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
 					 AXUIElementRef parentOfUIElement = (AXUIElementRef)[activeWindow getParentOfUIElement:focusedUIElement];
-					 AXUIElementRef scrollArea;
-					 BOOL wasScrolled = NO;
+					 //NSLog(@"searching scrollArea up from uiElement=%@",[activeWindow getTitleOfUIElement:focusedUIElement]);
+					 AXUIElementRef scrollArea = (AXUIElementRef)[activeWindow getScrollAreaFromWhichUIElementIsChildOf:focusedUIElement];					 
+					 SRUIElementType parentType = [activeWindow getTypeOfUIElement:parentOfUIElement];
+					 SRUIElementType type = [activeWindow getTypeOfUIElement:scrollArea];
 					 
-					 SRUIElementType type = [activeWindow getTypeOfUIElement:parentOfUIElement];
-					 
-					 if (type == SRUIElementIsPartOfAScrollbar || type == SRUIElementIsScrollArea) {
+					 // in case of the leftMouseUp or leftMouseDragged event check if click was on a scrollBar
+					 // + in case of the scrollWheel event check if corresponding scrollArea was found
+					 // + in case of a 
+					 if ((parentType == SRUIElementIsPartOfAScrollbar && eventType == NSLeftMouseUp) || 
+						 (type == SRUIElementIsScrollArea && eventType == NSScrollWheel) ||
+						 (type == SRUIElementIsScrollArea && eventType == NSLeftMouseDragged) /*|| 
+						 (parentType == SRUIElementHasNoRelevance && eventType == NSLeftMouseDragged)*/) {
 						 
-						 // get corresponding scrollaea
-						 if (type == SRUIElementIsPartOfAScrollbar)
-							 scrollArea = (AXUIElementRef)[activeWindow getParentOfUIElement:parentOfUIElement];
-						 else if (type == SRUIElementIsScrollArea)
-							 scrollArea = parentOfUIElement;
+						 /*NSLog(@"== type:%d ==",type);
+						 
+						 if (parentType == SRUIElementHasNoRelevance && activeScrollArea != NULL) {
+							 scrollArea = (AXUIElementRef)activeScrollArea;
+							 NSLog(@"== scrollArea changed ==");
+						 }*/
 						 
 						 // ensure that we've got the scrollArea
 						 type = [activeWindow getTypeOfUIElement:scrollArea];
+						 
 						 if (type == SRUIElementIsScrollArea) {
 							 // find the member of the scrollArea in order to get the current scrollPosition
 							 AXUIElementRef member = (AXUIElementRef)[activeWindow getMemberFromScrollArea:scrollArea];
@@ -374,40 +405,38 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 										 NSLog(@"kumMovingDelta=(%f,%f)",kumMovingDelta.x,kumMovingDelta.y);
 										 
 										 wasScrolled = YES;
+										 
+										 /*if (eventType == NSLeftMouseDragged) {
+											 NSLog(@"== MouseDragged ==");
+											 activeScrollArea = (id)scrollArea;
+										 }*/
 									 }
 								 }
 							 }
 						 }
 					 }
-					 
-					 // get the movingChange
-					 //NSPoint change = [activeWindow getMovingDelta];
-					 //NSRect boundsOfScrollMember = [activeWindow getBoundsOfUIElement:[activeWindow getMemberFromScrollArea:[activeWindow getUIElementUnderMouse]]];
-					 //NSLog(@"== WINDOW SCROLLED == change was: (%f,%f)", change.x, change.y);
-					 
-					 // generate the delta
-					 //PointModel *delta = [[PointModel alloc] initWithDoubleX:change.x andDoubleY:change.y];
-					 // call function to reposition all paths with delta
-					 //[[activeSketchView sketchModel] repositionPaths:delta];
-					 // repaint sketchView
-					 //[activeSketchView setNeedsDisplay:YES];
-				 /*}
-				 else {
-					 if ([incomingEvent type] == NSLeftMouseUp) {
-						 NSLog(@"save all window scrollBounds");
-						 lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
-						 kumMovingDelta = NSZeroPoint;
-					 }
+					 /*else {
+						 NSLog(@"type=%d focusedUIElement=%@",type,[activeWindow getTitleOfUIElement:focusedUIElement]);
+					 }*/
+
+				 }	
+				 
+				 /*if (eventType == NSLeftMouseUp) {
+					 NSLog(@"== MouseUp ==");
+					 activeScrollArea = NULL;
 				 }*/
-				 if(!wasScrolled && [incomingEvent type] == NSLeftMouseUp) {
-					 NSLog(@"save all window scrollBounds");
-					 [activeWindow initScrollPositionsOfWindow];
-					 lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
-					 kumMovingDelta = NSZeroPoint;
+				
+				 if(!wasScrolled && eventType == NSLeftMouseUp) {
+					 [self refreshScrollingInfos];
 				 }
+				
 			 }
-		 }
-		 
+			 else {
+				 kumMovingDelta = NSZeroPoint;
+				 [activeWindow setWindowWasRepositioned:NO];
+			 }
+
+		 }		 
 	 }];
 	
 	// Start watching local events to figure out when to hide the pane	
@@ -787,7 +816,23 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	int pid = [self getProcessID:currentInfos];
 	
 	if (keyID == nil) {
+		NSLog(@"returned from keyWindowHandler because keyID was nil!");
 		return;
+	}
+	
+	// check if we accidentely have scribbler as key or a unTitled app, like the dock
+	if ([appName isEqualToString:@"Scribbler"] /*|| appName==NULL*/) {
+		NSLog(@"returned from keyWindowHandler because the window was scribbler or an app without window!");
+		return;
+	}
+	
+	// check if the key is on no menuBar
+	if ([activeWindow loadAccessibilityData]) {
+		AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
+		if(![activeWindow isUIElementChildOfWindow:focusedUIElement]) {
+			NSLog(@"returned from keyWindowHandler because of no window!");
+			return;
+		}
 	}
 	
 	// lookup if there is an arrayEntry for this ID
@@ -830,7 +875,6 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 			
 			activeWindow = [windowModelList objectForKey:keyID];
 			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
-			
 			//[keyID release];
 		}
 		
@@ -865,6 +909,15 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	//		 windowBounds for a second with fadeout when proximity event occurs (only first time after keyWindow has changed)
 }
 
+- (void) refreshScrollingInfos {
+	NSLog(@"save all window scrollBounds");
+	[activeWindow loadAccessibilityData];
+	[activeWindow initScrollPositionsOfWindow];
+	lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
+	kumMovingDelta = NSZeroPoint;
+	[activeWindow setWindowWasRepositioned:NO];
+}
+
 @end
 
 
@@ -872,5 +925,5 @@ static void callback (AXObserverRef observer, AXUIElementRef element, CFStringRe
 {
 	[refToSelf anAppWasActivated:[NSNotification notificationWithName:@"NSWorkspaceDidActivateApplicationNotification" 
 															   object:refToSelf 
-															 userInfo:nil]];
+															 userInfo:nil]];	
 }

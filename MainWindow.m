@@ -37,7 +37,10 @@
 - (void)toggleSticky:(id)sender {
 	
 	[controller setIsSticky:![controller isSticky]];
-		
+	
+	// if sticky is activated again refresh scrollingInfos
+	if([controller isSticky])
+		[controller refreshScrollingInfos];
 }
 
 - (void) openFinder:(id)sender {
