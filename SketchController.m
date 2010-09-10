@@ -133,6 +133,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 													   [activeSketchView updateKeyWindowBounds];
 													   [activeSketchView setDrawWindowBounds:NO];
+													   //[activeSketchView setDrawMouseModeBounds:YES];
 													   [activeSketchView setNeedsDisplay:YES];
 													   NSLog(@"MouseMode ON");
 
@@ -149,6 +150,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   NSLog(@"penIsNearTablet == YES");
 														   [activeSketchView updateKeyWindowBounds];
 														   [activeSketchView setDrawWindowBounds:YES];
+														   //[activeSketchView setDrawMouseModeBounds:NO];
 														   [activeSketchView setNeedsDisplay:YES];
 														   [mainWindow showGlassPane:YES];
 													   } else {
@@ -174,13 +176,13 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													   
 													   if ([mainWindow isVisible]) {
 														   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
-														   [screenGrabber grabScreenShot];
+														   [screenGrabber grabScreenShotFromView:activeSketchView];
 														   [screenGrabber release];
 														   return;
 													   } else {
 														   [mainWindow showGlassPane:YES];
 														   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
-														   [screenGrabber grabScreenShot];
+														   [screenGrabber grabScreenShotFromView:activeSketchView];
 														   [screenGrabber release];
 														   [mainWindow showGlassPane:NO];
 														   return;
@@ -525,6 +527,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													  mouseMode = YES;
 													  [activeSketchView updateKeyWindowBounds];
 													  [activeSketchView setDrawWindowBounds:NO];
+													  //[activeSketchView setDrawMouseModeBounds:YES];
 													  [activeSketchView setNeedsDisplay:YES];
 													  NSLog(@"MouseMode ON");
 
@@ -541,6 +544,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  NSLog(@"penIsNearTablet == YES");
 														  [activeSketchView updateKeyWindowBounds];
 														  [activeSketchView setDrawWindowBounds:YES];
+														  //[activeSketchView setDrawMouseModeBounds:NO];
 														  [activeSketchView setNeedsDisplay:YES];
 														  [mainWindow showGlassPane:YES];
 													  }else {
@@ -567,13 +571,13 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													  
 													  if ([mainWindow isVisible]) {
 														  ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
-														  [screenGrabber grabScreenShot];
+														  [screenGrabber grabScreenShotFromView:activeSketchView];
 														  [screenGrabber release];
 														  return result;
 													  } else {
 														  [mainWindow showGlassPane:YES];
 														  ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
-														  [screenGrabber grabScreenShot];
+														  [screenGrabber grabScreenShotFromView:activeSketchView];
 														  [screenGrabber release];
 														  [mainWindow showGlassPane:NO];
 														  return result;

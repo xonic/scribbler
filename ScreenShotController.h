@@ -8,11 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class SketchView;
 
 @interface ScreenShotController : NSObject {
 
+	SketchView *activeView;
 }
 
-- (void)grabScreenShot;
+- (void)grabScreenShotFromView:(SketchView *)view;
+- (void)myThreadMainMethod:(id)param;
 
 @end

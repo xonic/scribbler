@@ -18,9 +18,9 @@
 @class SubWindowModel;
 
 @interface SketchView : NSView {	
-	//MainWindow			*	mainWindow;
+	//MainWindow		*	mainWindow;
 	SketchModel			*	sketchModel;
-	SubWindowModel			*	tabModel;
+	SubWindowModel		*	tabModel;
 	SketchController	*   controller;
 	NSCursor			*	customCursor;
 	NSCursor			*	theNormalCursor;
@@ -30,12 +30,15 @@
 	BOOL					isDrawing;
 	BOOL					erase;
 	BOOL					drawWindowBounds;
+	BOOL					drawMouseModeBounds;
+	
+	double					screenShotFlashAlpha;
 	
 	NSRect					keyWindow;
 }
 
 @property (retain) SketchModel *sketchModel;
-@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds;
+@property BOOL draw, clickThrough, isDrawing, erase, drawWindowBounds, drawMouseModeBounds;
 @property (readwrite) NSRect keyWindow;
 @property (retain) NSCursor *customCursor;
 
@@ -44,5 +47,6 @@
 - (id)initWithController:(SketchController *)theController andTabModel:(SubWindowModel *)theTabModel;
 
 - (void)updateKeyWindowBounds;
+- (void)setScreenShotFlashAlpha:(double)value;
 
 @end

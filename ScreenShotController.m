@@ -11,8 +11,16 @@
 
 @implementation ScreenShotController
 
-- (void)grabScreenShot
+- (void)grabScreenShotFromView:(SketchView *)view
 {
+	activeView = view;
+		
+	NSThread* myThread = [[NSThread alloc] initWithTarget:self
+												 selector:@selector(myThreadMainMethod:)
+												   object:nil];
+	
+	[myThread start];  // Actually create the thread
+	
 	// Grab the screen with all visible windows
 	CGImageRef screenShot = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
 	// Convert into a bitmap representation
@@ -41,12 +49,40 @@
 	[data writeToFile:desktopPath atomically:NO]; 
 	
 	NSLog(@"Saved PNG to Desktop");
-	NSLog(@"wtf");
 	
 	// get the hell out of here!
 	[bitmapRep release];
 	[formatter release];
+}
 
+- (void)myThreadMainMethod:(id)param
+{
+	// create top level auto release pool, that will release objects
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	[activeView setScreenShotFlashAlpha:1.0];
+	[activeView setNeedsDisplay:YES];
+
+	// load camera sound
+	NSSound *cameraSound = [NSSound soundNamed:@"camera"];
+	
+	if (cameraSound!=nil && ![cameraSound isPlaying]) {
+		// play camera sound
+		[cameraSound play];
+    }
+	// draw camera flash
+	for(double i=1.0; i>=0.0; i-=0.075) {
+		usleep(100000);
+		//NSLog(@"in thread - set alpha to %f",i);
+		[activeView setScreenShotFlashAlpha:i];
+		[activeView setNeedsDisplay:YES];
+	}
+	
+	[activeView setScreenShotFlashAlpha:0.0];
+	[activeView setNeedsDisplay:YES];
+	
+	// release pool
+	[pool release];
 }
 
 @end

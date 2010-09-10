@@ -11,7 +11,7 @@
 
 @implementation SketchView
 
-@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds, customCursor;
+@synthesize sketchModel, draw, clickThrough, isDrawing, erase, keyWindow, drawWindowBounds, customCursor, drawMouseModeBounds;
 
 - (id)initWithController:(SketchController *)theController 
 		  andSketchModel:(SketchModel *)theSketchModel 
@@ -41,11 +41,12 @@
 	customCursor = [NSCursor crosshairCursor];
 	theNormalCursor = [NSCursor arrowCursor];
 	
-	draw			 = YES;
-	clickThrough	 = YES;
-	isDrawing		 =  NO;
-	erase			 =  NO;
-	drawWindowBounds =  NO;	
+	draw				= YES;
+	clickThrough		= YES;
+	isDrawing			=  NO;
+	erase				=  NO;
+	drawWindowBounds	=  NO;
+	drawMouseModeBounds	=  NO;	
 		
     return self;
 }
@@ -77,11 +78,12 @@
 	theNormalCursor = [NSCursor arrowCursor];
 	
 	NSLog(@"origin.x = %f origin.y = %f width = %f height = %f sketchview init", keyWindow.origin.x, keyWindow.origin.y, keyWindow.size.width, keyWindow.size.height);
-	draw			 = YES;
-	clickThrough	 = YES;
-	isDrawing		 =  NO;
-	erase			 =  NO;
-	drawWindowBounds =  NO;
+	draw				= YES;
+	clickThrough		= YES;
+	isDrawing			=  NO;
+	erase				=  NO;
+	drawWindowBounds	=  NO;
+	drawMouseModeBounds	=  NO;
 	
     return self;
 }
@@ -113,6 +115,23 @@
 			[NSBezierPath strokeRect:keyWindow];		
 			//[NSBezierPath setDefaultLineWidth:1];
 		} 
+		
+		if(drawMouseModeBounds) {
+			[NSBezierPath setDefaultLineWidth:25];
+			[NSBezierPath setDefaultLineJoinStyle:NSRoundLineJoinStyle];
+			[[NSColor colorWithCalibratedRed:0.17 green:0.44 blue:0.96 alpha:0.3] set];
+			NSRect bounds = [[NSScreen mainScreen] frame];
+			bounds.size.height-=22;
+			NSLog(@"mouseModeBounds= %f,%f",bounds.size.width, bounds.size.height);
+			[NSBezierPath strokeRect:bounds];
+		}
+		
+		if(screenShotFlashAlpha>0.0) {
+			NSRect bounds = [self bounds];
+			[[[NSColor whiteColor] colorWithAlphaComponent:screenShotFlashAlpha] set];
+			[NSBezierPath fillRect:bounds];			
+		}
+		
 		[NSBezierPath setDefaultLineWidth:2.5];
 		NSArray *smoothedPaths = [sketchModel smoothedPaths];
 		
@@ -206,6 +225,10 @@
 	}
 	NSRect mainScreenFrame = [[NSScreen mainScreen] frame];
 	keyWindow.origin.y = mainScreenFrame.size.height - (keyWindow.origin.y + keyWindow.size.height);
+}
+
+- (void)setScreenShotFlashAlpha:(double)value {
+	screenShotFlashAlpha = value;
 }
 
 - (void)dealloc
