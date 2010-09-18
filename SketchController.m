@@ -171,7 +171,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														([incomingEvent modifierFlags] & NSShiftKeyMask) && 
 														([incomingEvent modifierFlags] & NSControlKeyMask) &&
 														([incomingEvent modifierFlags] & NSAlternateKeyMask) &&
-													    ([incomingEvent keyCode] == 16)) &&
+													    ([incomingEvent keyCode] == 1)) &&
 													   ([incomingEvent type] == NSKeyUp))){
 													   
 													   if ([mainWindow isVisible]) {
@@ -566,7 +566,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														 ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
 														 ([incomingEvent modifierFlags] & NSControlKeyMask)) &&
 													   	 ([incomingEvent modifierFlags] & NSAlternateKeyMask)) &&
-													  	 ([incomingEvent keyCode] == 16)) &&
+													  	 ([incomingEvent keyCode] == 1)) &&
 													 	 ([incomingEvent type] == NSKeyUp)){
 													  
 													  if ([mainWindow isVisible]) {

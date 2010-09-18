@@ -104,7 +104,7 @@
 		}
 		else {
 			NSRect bounds = [self bounds];
-			[[NSColor clearColor] set];
+			[[[NSColor grayColor] colorWithAlphaComponent:0.049] set];
 			[NSBezierPath fillRect:bounds];
 		}
 		
