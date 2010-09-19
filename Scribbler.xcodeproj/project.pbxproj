@@ -21,6 +21,9 @@
 		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
 		C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089911FDF98600C463A2 /* TabletModel.m */; };
 		C68D08A011FE038100C463A2 /* ColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089F11FE038100C463A2 /* ColorController.m */; };
+		C6C42A1012465480008B58A3 /* PointerModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6C42A0E12465480008B58A3 /* PointerModel.h */; };
+		C6C42A1112465480008B58A3 /* PointerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6C42A0F12465480008B58A3 /* PointerModel.m */; };
+		C6C42A781246713C008B58A3 /* pointerColors.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6C42A771246713C008B58A3 /* pointerColors.xml */; };
 		C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FD011F245A8008BF787 /* WindowModel.m */; };
 		C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D9994912291D0F002E0C7E /* ScreenShotController.m */; };
 		C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
@@ -74,6 +77,9 @@
 		C68D089911FDF98600C463A2 /* TabletModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabletModel.m; sourceTree = "<group>"; };
 		C68D089E11FE038100C463A2 /* ColorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorController.h; sourceTree = "<group>"; };
 		C68D089F11FE038100C463A2 /* ColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorController.m; sourceTree = "<group>"; };
+		C6C42A0E12465480008B58A3 /* PointerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointerModel.h; sourceTree = "<group>"; };
+		C6C42A0F12465480008B58A3 /* PointerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointerModel.m; sourceTree = "<group>"; };
+		C6C42A771246713C008B58A3 /* pointerColors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pointerColors.xml; sourceTree = "<group>"; };
 		C6CF3FCF11F245A8008BF787 /* WindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowModel.h; sourceTree = "<group>"; };
 		C6CF3FD011F245A8008BF787 /* WindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowModel.m; sourceTree = "<group>"; };
 		C6D9994812291D0F002E0C7E /* ScreenShotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenShotController.h; sourceTree = "<group>"; };
@@ -127,6 +133,8 @@
 				C68D089911FDF98600C463A2 /* TabletModel.m */,
 				C68D089E11FE038100C463A2 /* ColorController.h */,
 				C68D089F11FE038100C463A2 /* ColorController.m */,
+				C6C42A0E12465480008B58A3 /* PointerModel.h */,
+				C6C42A0F12465480008B58A3 /* PointerModel.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -174,6 +182,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				C6C42A771246713C008B58A3 /* pointerColors.xml */,
 				256AC3F00F4B6AF500CF3369 /* Scribbler_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -216,6 +225,7 @@
 			files = (
 				C6EF333A1233D35700069837 /* UndoManager.h in Headers */,
 				C6EF348D123412E600069837 /* SubWindowModel.h in Headers */,
+				C6C42A1012465480008B58A3 /* PointerModel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +283,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				36C3AC59123A834E003B53DD /* camera.wav in Resources */,
+				C6C42A781246713C008B58A3 /* pointerColors.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +308,7 @@
 				C68D08A011FE038100C463A2 /* ColorController.m in Sources */,
 				C6EF333B1233D35700069837 /* UndoManager.m in Sources */,
 				C6EF348E123412E600069837 /* SubWindowModel.m in Sources */,
+				C6C42A1112465480008B58A3 /* PointerModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

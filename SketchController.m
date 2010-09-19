@@ -77,7 +77,9 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   if([incomingEvent isEnteringProximity]){
 													   
 													   NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
-													   //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													   NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
+													   
+													   selectedColor = [colorPalette getColorForPointerID:[NSNumber numberWithInt:[incomingEvent uniqueID]]];
 													   
 													   // check for tablet and pen id
 													   NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
@@ -97,7 +99,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
 													   
 													   // finally get the color for the pen
-													   selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];												   
+													   //selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];												   
 												   } 
 
 											   }
@@ -463,6 +465,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 													  //NSLog(@"the tablet id is: %d", [incomingEvent systemTabletID]);
 													  //NSLog(@"the pointer unique id is: %d", [incomingEvent uniqueID]);
 													  
+													  selectedColor = [colorPalette getColorForPointerID:[NSNumber numberWithInt:[incomingEvent uniqueID]]];
+													  
 													  // check for tablet and pen id
 													  NSNumber *theTabletID = [NSNumber numberWithInt:[incomingEvent systemTabletID]];
 													  NSNumber *thePenID	 = [NSNumber numberWithInt:[incomingEvent uniqueID]];
@@ -479,7 +483,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  [[tablets objectForKey:[theTabletID stringValue]] registerPen:thePenID];
 													  
 													  // finally get the color for the pen
-													  selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
+													  //selectedColor = [[tablets objectForKey:[theTabletID stringValue]] getColorForPen:thePenID];
 												  }												  
 											  }		
 											  
