@@ -79,14 +79,15 @@
 	if([undoManagers objectForKey:[tabletID stringValue]])
 	{
 		// Register the new path for undo operation
-		[[undoManagers objectForKey:[tabletID stringValue]] registerDrawingForUndo:newPathModel];
+		[[undoManagers objectForKey:[tabletID stringValue]] registerDrawForPath:newPathModel];
+		
 	}
 	else // create a new undoManager
 	{
 		UndoManager *newUndoManager = [[UndoManager alloc] initWithSketchModel:self andTabletID:tabletID];
 		
 		// Register the new path for undo operation
-		[newUndoManager registerDrawingForUndo:newPathModel];
+		[newUndoManager registerDrawForPath:newPathModel];
 		
 		// Save it into our dictionary
 		[undoManagers setObject:newUndoManager forKey:[tabletID stringValue]];
@@ -111,14 +112,14 @@
 			if([undoManagers objectForKey:[activeTabletID stringValue]])
 			{
 				// Register the erasing operation for undo
-				[[undoManagers objectForKey:[activeTabletID stringValue]] registerErasingForUndo:(PathModel *)obj];
+				[[undoManagers objectForKey:[activeTabletID stringValue]] registerEraseForPath:(PathModel *)obj];
 			}
 			else // create a new undoManager
 			{
 				UndoManager *newUndoManager = [[UndoManager alloc] initWithSketchModel:self andTabletID:activeTabletID];
 				
 				// Register the erasing operation for undo
-				[newUndoManager registerErasingForUndo:(PathModel *)obj];
+				[newUndoManager registerEraseForPath:(PathModel *)obj];
 				
 				// Save it to our dictionary
 				[undoManagers setObject:newUndoManager forKey:[activeTabletID stringValue]];
@@ -130,6 +131,39 @@
 			[smoothedPaths removeObject:(PathModel *)obj];
 		}
 	}
+}
+
+- (void)removeAllPathsForTablet:(NSNumber *)activeTabletID
+{
+	
+	NSMutableArray *backup = [smoothedPaths copy];
+	
+	// Check if an undoManager exists
+	if([undoManagers objectForKey:[activeTabletID stringValue]])
+	{
+		// Register the erasing operation for undo
+		[[undoManagers objectForKey:[activeTabletID stringValue]] registerEraseForAllPathModels:backup];
+	}
+	else // create a new undoManager
+	{
+		UndoManager *newUndoManager = [[UndoManager alloc] initWithSketchModel:self andTabletID:activeTabletID];
+		
+		// Register the erasing operation for undo
+		[newUndoManager registerEraseForAllPathModels:backup];
+		
+		// Save it to our dictionary
+		[undoManagers setObject:newUndoManager forKey:[activeTabletID stringValue]];
+		
+		// bye
+		[newUndoManager release];
+	}
+	[backup release];
+	[smoothedPaths removeAllObjects];
+}
+
+- (void)removeAllSmoothedPaths
+{
+	[smoothedPaths removeAllObjects];
 }
 
 #pragma mark Undo/Redo 

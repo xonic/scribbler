@@ -145,8 +145,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   // Exit mouse mode
 												   if((((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
 														 ([incomingEvent modifierFlags] & NSShiftKeyMask)) && 
-														([incomingEvent keyCode] == 10)) &&
-													   ([incomingEvent type] == NSKeyUp)) && mouseMode){
+													  	 ([incomingEvent keyCode] == 10)) &&
+														 ([incomingEvent type] == NSKeyUp)) && mouseMode){
 													   
 													   if (penIsNearTablet) {
 														   NSLog(@"penIsNearTablet == YES");
@@ -174,7 +174,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														([incomingEvent modifierFlags] & NSControlKeyMask) &&
 														([incomingEvent modifierFlags] & NSAlternateKeyMask) &&
 													    ([incomingEvent keyCode] == 1)) &&
-													   ([incomingEvent type] == NSKeyUp))){
+													    ([incomingEvent type] == NSKeyUp))){
 													   
 													   if ([mainWindow isVisible]) {
 														   ScreenShotController *screenGrabber = [[ScreenShotController alloc] init];
@@ -190,6 +190,23 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														   return;
 													   }
 												   }
+												   
+												   // ------------------------------------------------------------------------------- //
+												   // GLOBAL - DELETE ALL PATHS
+												   // ------------------------------------------------------------------------------- //
+												   
+												   // The user pressed cmd+alt+ctrl+shift+R or the according tablet button
+												   if(((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
+														([incomingEvent modifierFlags] & NSShiftKeyMask) && 
+														([incomingEvent modifierFlags] & NSControlKeyMask) &&
+														([incomingEvent modifierFlags] & NSAlternateKeyMask) &&
+													    ([incomingEvent keyCode] == 15)) &&
+													    ([incomingEvent type] == NSKeyUp))){
+													   
+													   [[activeSketchView sketchModel] removeAllPathsForTablet:activeTabletID];
+													   [activeSketchView setNeedsDisplay:YES];
+													   return;
+												   }
 											   }
 											   
 											   // ------------------------------------------------------------------------------- //
@@ -204,7 +221,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												   [activeSketchView setNeedsDisplay:YES];
 											   }
 											   
-											   /*
+											   
 												NSLog(@"----------------------- GLOBAL");
 												NSLog(@"the event type is %d", [incomingEvent type]);
 												if([incomingEvent type] == NSLeftMouseDown)
@@ -225,7 +242,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 												NSLog(@"Shift Key pressed");
 												NSLog(@"------------------------------");
 												NSLog(@"");
-												*/
+												
 											   
 											   // ------------------------------------------------------------------------------- //
 											   // GLOBAL - CHANGING KEY WINDOW
@@ -586,6 +603,23 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 														  [mainWindow showGlassPane:NO];
 														  return result;
 													  }
+												  }
+												  
+												  // ------------------------------------------------------------------------------- //
+												  // LOCAL - DELETE ALL PATHS
+												  // ------------------------------------------------------------------------------- //
+												  
+												  // The user pressed cmd+alt+ctrl+shift+R or the according tablet button
+												  if(((([incomingEvent modifierFlags] & NSCommandKeyMask) && 
+													   ([incomingEvent modifierFlags] & NSShiftKeyMask) && 
+													   ([incomingEvent modifierFlags] & NSControlKeyMask) &&
+													   ([incomingEvent modifierFlags] & NSAlternateKeyMask) &&
+													   ([incomingEvent keyCode] == 15)) &&
+													  ([incomingEvent type] == NSKeyUp))){
+													  
+													  [[activeSketchView sketchModel] removeAllPathsForTablet:activeTabletID];
+													  [activeSketchView setNeedsDisplay:YES];
+													  return result;
 												  }
 											  }
 											  

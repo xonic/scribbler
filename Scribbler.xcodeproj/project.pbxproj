@@ -15,6 +15,10 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		C605E3971248EA220069765D /* HistoryObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C605E3951248EA220069765D /* HistoryObject.h */; };
+		C605E3981248EA220069765D /* HistoryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C605E3961248EA220069765D /* HistoryObject.m */; };
+		C605E39D1248F46F0069765D /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = C605E39B1248F46F0069765D /* Constants.h */; };
+		C605E39E1248F46F0069765D /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = C605E39C1248F46F0069765D /* Constants.m */; };
 		C61C782511A5373A00183CC7 /* SketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C782411A5373A00183CC7 /* SketchModel.m */; };
 		C61C783F11A54A8000183CC7 /* SketchController.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C783E11A54A8000183CC7 /* SketchController.m */; };
 		C670DA9511F1A70D004F4912 /* PathModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C670DA9411F1A70D004F4912 /* PathModel.m */; };
@@ -65,6 +69,10 @@
 		36C3AC58123A834E003B53DD /* camera.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = camera.wav; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Scribbler-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Scribbler-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Scribbler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scribbler.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C605E3951248EA220069765D /* HistoryObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryObject.h; sourceTree = "<group>"; };
+		C605E3961248EA220069765D /* HistoryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryObject.m; sourceTree = "<group>"; };
+		C605E39B1248F46F0069765D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		C605E39C1248F46F0069765D /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		C61C782311A5373A00183CC7 /* SketchModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchModel.h; sourceTree = "<group>"; };
 		C61C782411A5373A00183CC7 /* SketchModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchModel.m; sourceTree = "<group>"; };
 		C61C783D11A54A8000183CC7 /* SketchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchController.h; sourceTree = "<group>"; };
@@ -107,6 +115,10 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C605E39B1248F46F0069765D /* Constants.h */,
+				C605E39C1248F46F0069765D /* Constants.m */,
+				C605E3951248EA220069765D /* HistoryObject.h */,
+				C605E3961248EA220069765D /* HistoryObject.m */,
 				C6EF348B123412E600069837 /* SubWindowModel.h */,
 				C6EF348C123412E600069837 /* SubWindowModel.m */,
 				C6D9994812291D0F002E0C7E /* ScreenShotController.h */,
@@ -226,6 +238,8 @@
 				C6EF333A1233D35700069837 /* UndoManager.h in Headers */,
 				C6EF348D123412E600069837 /* SubWindowModel.h in Headers */,
 				C6C42A1012465480008B58A3 /* PointerModel.h in Headers */,
+				C605E3971248EA220069765D /* HistoryObject.h in Headers */,
+				C605E39D1248F46F0069765D /* Constants.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +323,8 @@
 				C6EF333B1233D35700069837 /* UndoManager.m in Sources */,
 				C6EF348E123412E600069837 /* SubWindowModel.m in Sources */,
 				C6C42A1112465480008B58A3 /* PointerModel.m in Sources */,
+				C605E3981248EA220069765D /* HistoryObject.m in Sources */,
+				C605E39E1248F46F0069765D /* Constants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

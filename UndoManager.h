@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SketchModel.h"
+#import "HistoryObject.h"
+#import "Constants.h"
 
 @class SketchModel;
 
@@ -20,32 +22,18 @@
 	// <string:tabletID> <--> <object:UndoManager>
 	NSNumber		*	tabletID;
 	
-	// Undo and redo the drawing operation
-	NSMutableArray	*	undoDrawingStack;
-	NSMutableArray	*	redoDrawingStack;
-	
-	// Undo and redo the erasing operation
-	NSMutableArray	*	undoErasingStack;
-	NSMutableArray	*	redoErasingStack;
-	
-	// Remember the last action that came from the tablet
-	// 0 = Drawing
-	// 1 = Erasing
-	int					lastAction; 
+	NSMutableArray	*	undoStack;
+	NSMutableArray	*	redoStack;
 }
 
 // Initialization
 - (id)initWithSketchModel:(SketchModel *)theSketchModel andTabletID:(NSNumber *)theTabletID;
 
-// Manage Drawing stacks
-- (void)registerDrawingForUndo:(PathModel *)path; // Holds paths that can be undone
-- (void)resetDrawingStacks;
+- (void)registerDrawForPath:(PathModel *)thePath;
+- (void)registerEraseForPath:(PathModel *)thePath;
+- (void)registerDrawForAllPathModels:(NSMutableArray *)allPathModels;
+- (void)registerEraseForAllPathModels:(NSMutableArray *)allPathModels;
 
-// Manage Erasing stacks
-- (void)registerErasingForUndo:(PathModel *)path; // Holds erased paths, the erasing can be undone
-- (void)resetErasingStacks;
-
-// Undo/Redo
 - (void)undo;
 - (void)redo;
 

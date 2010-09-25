@@ -36,6 +36,8 @@
 - (void) addPointToCurrentPath:(NSPoint)inputPoint;
 - (void) saveCurrentPathWithOwner:(NSNumber *)tabletID;
 - (void) removePathIntersectingWith:(NSPoint)inputPoint forTablet:(NSNumber *)activeTabletID;
+- (void)removeAllPathsForTablet:(NSNumber *)activeTabletID;
+- (void)removeAllSmoothedPaths;
 
 // undo/redo
 - (void) undoForTablet:(NSNumber *)tabletID;

@@ -11,7 +11,6 @@
 
 @implementation UndoManager
 
-// Initialization
 - (id)initWithSketchModel:(SketchModel *)theSketchModel andTabletID:(NSNumber *)theTabletID
 {
 	if(![super init])
@@ -20,152 +19,133 @@
 	sketchModel = [theSketchModel retain];
 	tabletID	= [theTabletID	  retain];
 	
-	undoDrawingStack = [[NSMutableArray alloc] init];
-	redoDrawingStack = [[NSMutableArray alloc] init];
+	undoStack	= [[NSMutableArray alloc] init];
+	redoStack	= [[NSMutableArray alloc] init];
 	
-	undoErasingStack = [[NSMutableArray alloc] init];
-	redoErasingStack = [[NSMutableArray alloc] init];
-	
-	lastAction = 0;
-	
-	return self;	
+	return self;
 }
 
-// Manage Drawing stacks
-- (void)registerDrawingForUndo:(PathModel *)path
+- (void)registerDrawForPath:(PathModel *)thePath
 {
-	// Save path to undo
-	[undoDrawingStack addObject:path];
+	HistoryObject * newHistoryObj = [[HistoryObject alloc] initWithOperation:OPERATION_ADD_PATH forPathModel:thePath];
+	[undoStack addObject:newHistoryObj];
+	[newHistoryObj release];
 	
-	// Flush all other stacks
-	[undoErasingStack removeAllObjects];
-	[redoDrawingStack removeAllObjects];
-	[redoErasingStack removeAllObjects];
-	
-	// Set Drawing as the last action 
-	lastAction = 0;
+	[redoStack release];
+	redoStack = [[NSMutableArray alloc] init];
 }
 
-- (void)resetDrawingStacks
+- (void)registerEraseForPath:(PathModel *)thePath
 {
-	[undoDrawingStack removeAllObjects];
-	[redoDrawingStack removeAllObjects];
-}
-
-// Manage Erasing stacks
-- (void)registerErasingForUndo:(PathModel *)path
-{
-	// Save erase operation to undo
-	[undoErasingStack addObject:path];
+	HistoryObject * newHistoryObj = [[HistoryObject alloc] initWithOperation:OPERATION_REMOVE_PATH forPathModel:thePath];
+	[undoStack addObject:newHistoryObj];
+	[newHistoryObj release];
 	
-	// Flush all other stacks
-	[undoDrawingStack removeAllObjects];
-	[redoErasingStack removeAllObjects];
-	[redoDrawingStack removeAllObjects];
-	
-	// Set Erasing as the last action
-	lastAction = 1;
+	[redoStack release];
+	redoStack = [[NSMutableArray alloc] init];
 }
 
-- (void)resetErasingStacks
+- (void)registerDrawForAllPathModels:(NSMutableArray *)allPathModels
 {
-	[undoErasingStack removeAllObjects];
-	[redoErasingStack removeAllObjects];
+	HistoryObject * newHistoryObj = [[HistoryObject alloc] initWithOperation:OPERATION_ADD_ALL_PATHS forAllPathModels:allPathModels];
+	[undoStack addObject:newHistoryObj];
+	[newHistoryObj release];
+	
+	[redoStack release];
+	redoStack = [[NSMutableArray alloc] init];
 }
 
-// Undo/Redo
+- (void)registerEraseForAllPathModels:(NSMutableArray *)allPathModels
+{
+	HistoryObject * newHistoryObj = [[HistoryObject alloc] initWithOperation:OPERATION_REMOVE_ALL_PATHS forAllPathModels:allPathModels];
+	[undoStack addObject:newHistoryObj];
+	[newHistoryObj release];
+	
+	[redoStack release];
+	redoStack = [[NSMutableArray alloc] init];
+}
+
 - (void)undo
 {
-	// Check what the last Action was
-	if(lastAction == 0)
+	if([undoStack count] < 1)
+		return;
+	
+	// Undo draw
+	if ([[undoStack lastObject] operation] == OPERATION_ADD_PATH) 
+	{	
+		[[sketchModel smoothedPaths] removeObject:[[undoStack lastObject] thePath]];
+		[redoStack addObject:[undoStack lastObject]];
+		[undoStack removeLastObject];
+		return;
+	}
+	
+	// Undo erase
+	if ([[undoStack lastObject] operation] == OPERATION_REMOVE_PATH)
 	{
-		// Check whether there are undoable paths
-		if ([undoDrawingStack count] == 0) 
-		{
-			NSLog(@"There are no paths to undo for this UndoManager");
-			return;
-		}
-		else
-		{
-			// Pop the last undoable path from our Undo stack and push it onto the Redo stack
-			[redoDrawingStack addObject:[undoDrawingStack lastObject]];
-			
-			// Delete it from the SketchModel
-			[[sketchModel smoothedPaths] removeObject:[undoDrawingStack lastObject]];
-			
-			// And also from our Undo stack
-			[undoDrawingStack removeLastObject];
-			
-			return;
-		}
-	} else if (lastAction == 1) { // Erase was the last action
-		
-		// Check whether there are erased paths that can be undone
-		if ([undoErasingStack count] == 0) {
-			NSLog(@"There are no erased paths to undo for this UndoManager");
-			return;
-		}
-		else 
-		{
-			// Pop the last erased path from our Undo stack and push it onto the redo stack
-			[redoErasingStack addObject:[undoErasingStack lastObject]];
-			
-			// Re-add it to our SketchModel
-			[[sketchModel smoothedPaths] addObject:[undoErasingStack lastObject]];
-			
-			// Remove it from the undo stack
-			[undoErasingStack removeLastObject];
-			
-			return;
-		}
+		[[sketchModel smoothedPaths] addObject:[[undoStack lastObject] thePath]];
+		[redoStack addObject:[undoStack lastObject]];
+		[undoStack removeLastObject];
+		return;
+	}
+	
+	// Undo add all paths
+	if ([[undoStack lastObject] operation] == OPERATION_ADD_ALL_PATHS)
+	{
+		[[sketchModel smoothedPaths] removeAllObjects];
+		[redoStack addObject:[undoStack lastObject]];
+		[undoStack removeLastObject];
+		return;
+	}
+	
+	// Undo remove all paths
+	if ([[undoStack lastObject] operation] == OPERATION_REMOVE_ALL_PATHS)
+	{
+		[[sketchModel smoothedPaths] setArray:[[undoStack lastObject] allPaths]];
+		[redoStack addObject:[undoStack lastObject]];
+		[undoStack removeLastObject];
+		return;
 	}
 }
 
 - (void)redo
 {
-	// Check what the last action was
-	if(lastAction == 0)
+	if ([redoStack count] < 1)
+		return;
+	
+	// Redo draw
+	if ([[redoStack lastObject] operation] == OPERATION_ADD_PATH)
 	{
-		// Check whether there are redoable paths
-		if([redoDrawingStack count] == 0)
-		{
-			NSLog(@"There are no paths to redo for this UndoManager");
-			return;
-		}
-		else 
-		{
-			// Pop the last redoable path from our Redo stack and push it onto the Undo stack
-			[undoDrawingStack addObject:[redoDrawingStack lastObject]];
-			
-			// Re-add the path to our SketchModel
-			[[sketchModel smoothedPaths] addObject:[redoDrawingStack lastObject]];
-			
-			// Remove it from the Redo stack
-			[redoDrawingStack removeLastObject];
-			
-			return;
-		}
-	} else if (lastAction == 1) { // Erase was the last action
-		
-		// Check whether there are erase operations to redo
-		if([redoErasingStack count] == 0)
-		{
-			NSLog(@"There are no erasing operations to redo for this UndoManager");
-			return;
-		}
-		else 
-		{
-			// Pop the last redoable erasing operation from our Redo stack and push it onto the Undo stack
-			[undoErasingStack addObject:[redoErasingStack lastObject]];
-			
-			// Remove it from our SketchModel
-			[[sketchModel smoothedPaths] removeObject:[redoErasingStack lastObject]];
-			
-			// Remove it from the Redo stack
-			[redoErasingStack removeLastObject];
-			
-			return;
-		}
+		[[sketchModel smoothedPaths] addObject:[[redoStack lastObject] thePath]];
+		[undoStack addObject:[redoStack lastObject]];
+		[redoStack removeLastObject];
+		return;
+	}
+	
+	// Redo erase
+	if ([[redoStack lastObject] operation] == OPERATION_REMOVE_PATH)
+	{
+		[[sketchModel smoothedPaths] removeObject:[[redoStack lastObject] thePath]];
+		[undoStack addObject:[redoStack lastObject]];
+		[redoStack removeLastObject];
+		return;
+	}
+	
+	// Redo add all paths
+	if ([[redoStack lastObject] operation] == OPERATION_ADD_ALL_PATHS)
+	{
+		[sketchModel setSmoothedPaths:[[redoStack lastObject] allPaths]];
+		[undoStack addObject:[redoStack lastObject]];
+		[redoStack removeLastObject];
+		return;
+	}
+	
+	// Redo remove all paths
+	if ([[redoStack lastObject] operation] == OPERATION_REMOVE_ALL_PATHS)
+	{
+		[[sketchModel smoothedPaths] removeAllObjects];
+		[undoStack addObject:[redoStack lastObject]];
+		[redoStack removeLastObject];
+		return;
 	}
 }
 
@@ -174,11 +154,8 @@
 	[sketchModel	  release];
 	[tabletID		  release];
 	
-	[undoDrawingStack release];
-	[redoDrawingStack release];
-	
-	[undoErasingStack release];
-	[redoErasingStack release];
+	[undoStack		  release];
+	[redoStack		  release];
 	
 	[super			  dealloc];
 }
