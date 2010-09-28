@@ -7,10 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "Growl/Growl.h"
-#import "Growl/GrowlApplicationBridge.h"
 
-@interface ScribblerAppDelegate : NSObject <NSApplicationDelegate, GrowlApplicationBridgeDelegate> {
+@interface ScribblerAppDelegate : NSObject <NSApplicationDelegate> {
 	NSWindow *window;
 	IBOutlet NSMenu *statusMenu;
 	NSStatusItem *statusItem;

@@ -14,6 +14,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 @synthesize activeSketchView, selectedColor, mainWindow, activeTabletID, isSticky, activeWindow, penIsNearTablet, mouseMode;
 
+
+
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
 	if(![super init])
@@ -53,10 +55,9 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	activeTabletID = [[NSNumber alloc] init];
 	
 	activeScrollArea = NULL;
-	/*
-	NSCursor *myCursor = [NSCursor crosshairCursor];
-	[myCursor set];
-	*/
+	
+
+	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)

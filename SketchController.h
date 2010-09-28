@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Carbon/Carbon.h>
 #import "PointModel.h"
 #import "SketchModel.h"
 #import "MainWindow.h"

@@ -8,13 +8,15 @@
 
 #import "ScribblerAppDelegate.h"
 #import "MainWindow.h"
+#import <Carbon/Carbon.h>
 
 @implementation ScribblerAppDelegate
 
-@synthesize window;
+@synthesize window, initialSwitchToKeyWindow;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	initialSwitchToKeyWindow = YES;
+	RunApplicationEventLoop();
 }
 
 -(void)awakeFromNib{
@@ -23,17 +25,6 @@
 	[statusItem setTitle:@"☆"];
 	[statusItem setHighlightMode:YES];
 	[statusItem setToolTip:@"Scribbler"];
-	
-	/* Initialize Growl delegate
-	[GrowlApplicationBridge setGrowlDelegate:self]; 
-	
-	[GrowlApplicationBridge notifyWithTitle:@"Scribbler"
-								description:@"Initialized Growl Notifications" 
-						   notificationName:@"Pen Mode"
-								   iconData:nil
-								   priority:1
-								   isSticky:NO
-							   clickContext:nil]; */
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
@@ -45,23 +36,5 @@
 		[[(MainWindow*)window controller] keyWindowHandler];
 	}
 }
-
-- (NSDictionary*) registrationDictionaryForGrowl 
-{ 
-    NSArray* defaults = 
-    [NSArray arrayWithObjects:@"Mouse Mode", @"Pen Mode", nil]; 
-	
-    NSArray* all = 
-    [NSArray arrayWithObjects:@"Mouse Mode", @"Pen Mode", nil]; 
-	
-    NSDictionary* growlRegDict = [NSDictionary dictionaryWithObjectsAndKeys: 
-								  defaults, GROWL_NOTIFICATIONS_DEFAULT,all, 
-								  GROWL_NOTIFICATIONS_ALL, nil]; 
-	
-    return growlRegDict; 
-}
-
-
-@synthesize initialSwitchToKeyWindow;
 
 @end

@@ -10,6 +10,12 @@
 
 @implementation MainWindow
 
+pascal OSStatus getCarbonEvent (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
+{
+	NSLog(@"got the carbon Event!");
+	return noErr;
+}
+
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
     if (![super initWithContentRect:[[NSScreen mainScreen] frame] styleMask:NSBorderlessWindowMask backing:bufferingType defer:flag])
@@ -25,6 +31,21 @@
 	controller = [[SketchController alloc] initWithMainWindow:self];
 	
 	isVisible = NO;
+	
+	WindowRef theWindow;
+	theWindow = [self windowRef];
+	
+	EventTargetRef theTarget;
+	theTarget = GetWindowEventTarget(theWindow);
+	
+	EventTypeSpec eventType;
+	eventType.eventClass = kEventClassTablet;
+	eventType.eventKind  = kEventTabletProximity;
+	
+	EventHandlerUPP handlerUPP;
+	handlerUPP = NewEventHandlerUPP(getCarbonEvent);
+	
+	InstallEventHandler(theTarget, handlerUPP, 1, &eventType, NULL, NULL);
 	
     return self;
 }

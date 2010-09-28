@@ -25,13 +25,12 @@
 		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
 		C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089911FDF98600C463A2 /* TabletModel.m */; };
 		C68D08A011FE038100C463A2 /* ColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089F11FE038100C463A2 /* ColorController.m */; };
+		C6AC0DAE124E17F500F01866 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6AC0DAD124E17F500F01866 /* Carbon.framework */; };
 		C6C42A1012465480008B58A3 /* PointerModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6C42A0E12465480008B58A3 /* PointerModel.h */; };
 		C6C42A1112465480008B58A3 /* PointerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6C42A0F12465480008B58A3 /* PointerModel.m */; };
 		C6C42A781246713C008B58A3 /* pointerColors.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6C42A771246713C008B58A3 /* pointerColors.xml */; };
 		C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FD011F245A8008BF787 /* WindowModel.m */; };
 		C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D9994912291D0F002E0C7E /* ScreenShotController.m */; };
-		C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
-		C6EF329E1233B05600069837 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
 		C6EF333A1233D35700069837 /* UndoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C6EF33381233D35700069837 /* UndoManager.h */; };
 		C6EF333B1233D35700069837 /* UndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C6EF33391233D35700069837 /* UndoManager.m */; };
 		C6EF348D123412E600069837 /* SubWindowModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6EF348B123412E600069837 /* SubWindowModel.h */; };
@@ -45,7 +44,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C6EF329E1233B05600069837 /* Growl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +83,7 @@
 		C68D089911FDF98600C463A2 /* TabletModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabletModel.m; sourceTree = "<group>"; };
 		C68D089E11FE038100C463A2 /* ColorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorController.h; sourceTree = "<group>"; };
 		C68D089F11FE038100C463A2 /* ColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorController.m; sourceTree = "<group>"; };
+		C6AC0DAD124E17F500F01866 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		C6C42A0E12465480008B58A3 /* PointerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointerModel.h; sourceTree = "<group>"; };
 		C6C42A0F12465480008B58A3 /* PointerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointerModel.m; sourceTree = "<group>"; };
 		C6C42A771246713C008B58A3 /* pointerColors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pointerColors.xml; sourceTree = "<group>"; };
@@ -92,7 +91,6 @@
 		C6CF3FD011F245A8008BF787 /* WindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowModel.m; sourceTree = "<group>"; };
 		C6D9994812291D0F002E0C7E /* ScreenShotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenShotController.h; sourceTree = "<group>"; };
 		C6D9994912291D0F002E0C7E /* ScreenShotController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenShotController.m; sourceTree = "<group>"; };
-		C6EF327D1233AF8E00069837 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		C6EF33381233D35700069837 /* UndoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoManager.h; sourceTree = "<group>"; };
 		C6EF33391233D35700069837 /* UndoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UndoManager.m; sourceTree = "<group>"; };
 		C6EF348B123412E600069837 /* SubWindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubWindowModel.h; sourceTree = "<group>"; };
@@ -105,7 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */,
+				C6AC0DAE124E17F500F01866 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				C6AC0DAD124E17F500F01866 /* Carbon.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -162,7 +161,6 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C6EF327D1233AF8E00069837 /* Growl.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
