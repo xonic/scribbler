@@ -12,7 +12,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 
 @implementation SketchController
 
-@synthesize activeSketchView, selectedColor, mainWindow, activeTabletID, isSticky, activeWindow, penIsNearTablet, mouseMode;
+@synthesize activeSketchView, lastActiveSketchView, selectedColor, mainWindow, activeTabletID, isSticky, isWhiteBoardVisible, activeWindow, lastActiveWindow, penIsNearTablet, mouseMode, magicDetectorShouldStop;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow
 {
@@ -53,10 +53,18 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	activeTabletID = [[NSNumber alloc] init];
 	
 	activeScrollArea = NULL;
-	/*
-	NSCursor *myCursor = [NSCursor crosshairCursor];
-	[myCursor set];
-	*/
+	
+	// generate whiteBoard
+	whiteBoardView = [[SketchView alloc] initWithController:self andTabModel:nil];
+	
+	// create magicDetector, which keeps an eye on the magical moments and changes the systemTrayIcon
+	NSThread* magicDetector = [[NSThread alloc] initWithTarget:self
+													  selector:@selector(magicDetectorMainMethod:)
+														object:nil];
+	// start the magicDetector
+	magicDetectorShouldStop = NO;
+	[magicDetector start];
+	
 	// Start watching global events to figure out when to show the pane	
 	[NSEvent addGlobalMonitorForEventsMatchingMask:
 	 (NSLeftMouseDraggedMask | NSKeyDownMask | NSKeyUpMask | NSTabletProximityMask | NSMouseEnteredMask | NSLeftMouseDownMask | NSOtherMouseDownMask | NSRightMouseDown | NSOtherMouseDownMask)
@@ -293,7 +301,7 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 											   // GLOBAL - MOVING KEY WINDOW
 											   // ------------------------------------------------------------------------------- //
 											   
-											   if ([incomingEvent type] == NSLeftMouseDragged && isSticky) {
+											   if ([incomingEvent type] == NSLeftMouseDragged && isSticky && !isWhiteBoardVisible) {
 												   												   
 												   // check if we aren't accidentely on the scribbler window - if so don't handle dragging!
 												   // (this can happen if the user's pen diverges too fast from tablet and comes close again immediately)
@@ -328,6 +336,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 															   [activeWindow setWindowWasRepositioned: YES];
 															   NSLog(@"setWindowWasRepositioned: YES");
 															   NSLog(@"currentAppName=%@",[self getKeyWindowsApplicationName:[self getCurrentKeyWindowInfos]]);
+															   magicDetected = YES;
+															   [statusItemRef setTitle:@"★"];
 														   }
 														   else {
 															   // tell activeWindow that window was repositioned
@@ -342,18 +352,25 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 	// watch out for scrolling events and handle them 
 	[NSEvent addGlobalMonitorForEventsMatchingMask: 
-	 (NSLeftMouseDraggedMask | NSScrollWheelMask | NSLeftMouseUpMask) handler:^(NSEvent *incomingEvent) {
+	 (NSLeftMouseDraggedMask | NSScrollWheelMask | NSLeftMouseUpMask | NSLeftMouseDownMask) handler:^(NSEvent *incomingEvent) {
 		 
 		 // check after each mouseUp if in the window was a scrolling event 
 		 // + check for scrollWheel activity
 		 NSEventType eventType = [incomingEvent type];
 		 
-		 if (eventType == NSLeftMouseUp || eventType == NSScrollWheel || eventType == NSLeftMouseDragged) {
+		 if (eventType == NSLeftMouseUp || eventType == NSScrollWheel || eventType == NSLeftMouseDragged && !isWhiteBoardVisible) {
+			 
+			 BOOL weCanLoad = YES;
+			 
+			 if (activeScrollArea == nil) {
+				 weCanLoad = [activeWindow loadAccessibilityData];
+			 }
 			 
 			 // if we can load AXData
-			 if ([activeWindow loadAccessibilityData]) {
+			 if (weCanLoad) {
 				 
 				 BOOL wasScrolled = NO;
+				 
 				 if ([activeWindow windowWasRepositioned]) {
 					 NSLog(@"windowWasRepositioned:YES");
 				 }
@@ -366,7 +383,8 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 					 AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
 					 AXUIElementRef parentOfUIElement = (AXUIElementRef)[activeWindow getParentOfUIElement:focusedUIElement];
 					 //NSLog(@"searching scrollArea up from uiElement=%@",[activeWindow getTitleOfUIElement:focusedUIElement]);
-					 AXUIElementRef scrollArea = (AXUIElementRef)[activeWindow getScrollAreaFromWhichUIElementIsChildOf:focusedUIElement];					 
+					 AXUIElementRef scrollArea = (AXUIElementRef)[activeWindow getScrollAreaFromWhichUIElementIsChildOf:focusedUIElement];
+					 
 					 SRUIElementType parentType = [activeWindow getTypeOfUIElement:parentOfUIElement];
 					 SRUIElementType type = [activeWindow getTypeOfUIElement:scrollArea];
 					 
@@ -375,15 +393,18 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 					 // + in case of a 
 					 if ((parentType == SRUIElementIsPartOfAScrollbar && eventType == NSLeftMouseUp) || 
 						 (type == SRUIElementIsScrollArea && eventType == NSScrollWheel) ||
-						 (type == SRUIElementIsScrollArea && eventType == NSLeftMouseDragged) /*|| 
-						 (parentType == SRUIElementHasNoRelevance && eventType == NSLeftMouseDragged)*/) {
+						 (type == SRUIElementIsScrollArea && eventType == NSLeftMouseDragged) || 
+						 (parentType == SRUIElementHasNoRelevance && eventType == NSLeftMouseDragged)) {
 						 
-						 /*NSLog(@"== type:%d ==",type);
+						 NSLog(@"== type:%d ==",type);
 						 
-						 if (parentType == SRUIElementHasNoRelevance && activeScrollArea != NULL) {
-							 scrollArea = (AXUIElementRef)activeScrollArea;
-							 NSLog(@"== scrollArea changed ==");
-						 }*/
+						 if (/*parentType == SRUIElementHasNoRelevance &&*/ activeScrollArea != nil && ![activeWindow isUIDOfScrollArea:scrollArea equalTo:activeScrollArea]) {
+							 //scrollArea = (AXUIElementRef)&activeScrollArea;
+							 NSLog(@"== try to get the last scrollArea from UID=%@ and activeWindow=%@ ==",activeScrollArea,activeWindow);
+							 scrollArea = (AXUIElementRef)[activeWindow getScrollAreaRefWithUID:activeScrollArea];
+							 //scrollArea = activeScrollArea;
+							 NSLog(@"== scrollArea changed to activeScrollArea %d ==",activeScrollArea);
+						 }
 						 
 						 // ensure that we've got the scrollArea
 						 type = [activeWindow getTypeOfUIElement:scrollArea];
@@ -427,37 +448,39 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 										 
 										 wasScrolled = YES;
 										 
-										 /*if (eventType == NSLeftMouseDragged) {
-											 NSLog(@"== MouseDragged ==");
-											 activeScrollArea = (id)scrollArea;
-										 }*/
+										 if (eventType == NSLeftMouseDragged && activeScrollArea == nil) {
+											 // save a copy of the scrollArea
+											 activeScrollArea = [currentUID mutableCopy];
+											 NSLog(@"== saved activeScrollArea %@ ==",activeScrollArea);
+										 }
+										 
+										 magicDetected = YES;
+										 [statusItemRef setTitle:@"★"];
 									 }
 								 }
 							 }
 						 }
 					 }
 					 /*else {
-						 NSLog(@"type=%d focusedUIElement=%@",type,[activeWindow getTitleOfUIElement:focusedUIElement]);
-					 }*/
-
+					  NSLog(@"type=%d focusedUIElement=%@",type,[activeWindow getTitleOfUIElement:focusedUIElement]);
+					  }*/
+					 
 				 }	
 				 
-				 /*if (eventType == NSLeftMouseUp) {
-					 NSLog(@"== MouseUp ==");
-					 activeScrollArea = NULL;
-				 }*/
-				
+				 if (eventType == NSLeftMouseUp) {
+					 NSLog(@"== set activeScrollArea to NULL ==");
+					 activeScrollArea = nil;
+				 }
+				 
 				 if(!wasScrolled && eventType == NSLeftMouseUp) {
 					 [self refreshScrollingInfos];
 				 }
-				
 			 }
 			 else {
 				 kumMovingDelta = NSZeroPoint;
 				 [activeWindow setWindowWasRepositioned:NO];
 			 }
-
-		 }		 
+		 }		
 	 }];
 	
 	// Start watching local events to figure out when to hide the pane	
@@ -784,6 +807,36 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	
 }
 
+- (void) setWhiteBoardVisible:(BOOL)flag {
+	if(flag) {
+		NSLog(@"setWhiteBoardVisible=YES");
+		[mainWindow showGlassPane:YES];
+		[self setIsWhiteBoardVisible:YES];
+		[self keyWindowHandler];
+		[activeSketchView foldViewIn];
+	}
+	else {
+		NSLog(@"setWhiteBoardVisible=NO");
+		[activeSketchView foldViewOut];
+	}
+}
+
+- (void) setStatusItemRef:(NSStatusItem *)statusItemReference {
+	statusItemRef = statusItemReference;
+}
+
+- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag 
+{
+    //if(self.window.alphaValue == 0.00) [self close]; //detect end of fade out and close the window
+	NSString *type = [animation valueForKey:@"animationType"];
+	NSLog(@"animation stopped with anim=%@",type);
+	if ([type isEqualToString:@"foldViewOut"]) {
+		[self setIsWhiteBoardVisible:NO];
+		[self keyWindowHandler];
+		[mainWindow showGlassPane:NO];
+	}	
+}
+
 #pragma mark KeyWindow Functions
 
 - (NSMutableDictionary*)getCurrentKeyWindowInfos
@@ -848,78 +901,100 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 {
 	//NSLog(@"--- keyWindowHandler ---");
 	
-	// get current key window infos
-	NSMutableDictionary* currentInfos = [self getCurrentKeyWindowInfos];
-	// get keyWindowID
-	NSNumber* keyID = [self getKeyWindowID:currentInfos];
-	// get keyWindow App Name
-	NSString* appName = [self getKeyWindowsApplicationName:currentInfos];
-	// get processID
-	int pid = [self getProcessID:currentInfos];
-	
-	if (keyID == nil) {
-		NSLog(@"returned from keyWindowHandler because keyID was nil!");
-		return;
-	}
-	
-	// check if we accidentely have scribbler as key or a unTitled app, like the dock
-	if ([appName isEqualToString:@"Scribbler"] /*|| appName==NULL*/) {
-		NSLog(@"returned from keyWindowHandler because the window was scribbler or an app without window!");
-		return;
-	}
-	
-	// check if the key is on no menuBar
-	if ([activeWindow loadAccessibilityData]) {
-		AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
-		if(![activeWindow isUIElementChildOfWindow:focusedUIElement]) {
-			NSLog(@"returned from keyWindowHandler because of no window!");
+	// if the whiteBoard is active, we don't need to get the current keyWindowInfos
+	if (!isWhiteBoardVisible) {
+		
+		// get current key window infos
+		NSMutableDictionary* currentInfos = [self getCurrentKeyWindowInfos];
+		// get keyWindowID
+		NSNumber* keyID = [self getKeyWindowID:currentInfos];
+		// get keyWindow App Name
+		NSString* appName = [self getKeyWindowsApplicationName:currentInfos];
+		// get processID
+		int pid = [self getProcessID:currentInfos];
+		
+		if (keyID == nil) {
+			NSLog(@"returned from keyWindowHandler because keyID was nil!");
 			return;
 		}
-	}
-	
-	// lookup if there is an arrayEntry for this ID
-	if ([windowModelList objectForKey:keyID] == nil) {
 		
-		// create the new classes for the window
-		SketchModel *newModel  = [[SketchModel alloc] initWithController:self andWindow:mainWindow];
-		WindowModel *newWindow = [[WindowModel alloc] initWithController:self];
-		
-		// the view is being created by the TabModel itself
-		// so we just query the view from the model
-		SketchView  *newView   = [[[newWindow activeSubWindow] view] retain];
-		
-		// add to our list
-		[windowModelList setObject:newWindow forKey:keyID];
-		activeWindow = newWindow;
-		
-		//NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
-		NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
-		NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
-		
-		// set as active
-		activeSketchView = [newView retain];
-		[mainWindow setContentView:activeSketchView];
-		
-		// register keyWindow for accessibility notifications (to get notifications even if the user switch to another window via exposé)
-		[self registerForAccessibilityEvents:pid];
-		
-		// free your mind... uhm... memory
-		[newModel  release];
-		[newView   release];
-		[newWindow release];
-	}
-	else {
-		// switch to other view
-		
-		if (activeSketchView != [[[windowModelList objectForKey:keyID] activeSubWindow] view]) {
-			activeSketchView = [[[windowModelList objectForKey:keyID] activeSubWindow] view];
+		// check if we accidentely have scribbler as key or a unTitled app, like the dock
+		if ([appName isEqualToString:@"Scribbler"] /*|| appName==NULL*/) {
+			NSLog(@"returned from keyWindowHandler with reset to last active window because the new one was scribbler!");
+			// set the active window to the backupped reference of the last one
+			[self setActiveWindow:lastActiveWindow];
+			[self setActiveSketchView:lastActiveSketchView];
 			[mainWindow setContentView:activeSketchView];
-			
-			activeWindow = [windowModelList objectForKey:keyID];
-			NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
-			//[keyID release];
+			return;
 		}
 		
+		// check if the key is on no menuBar
+		if ([activeWindow loadAccessibilityData]) {
+			AXUIElementRef focusedUIElement = (AXUIElementRef)[activeWindow getUIElementUnderMouse];
+			if(![activeWindow isUIElementChildOfWindow:focusedUIElement]) {
+				NSLog(@"returned from keyWindowHandler because of no window!");
+				return;
+			}
+		}
+		
+		// lookup if there is an arrayEntry for this ID
+		if ([windowModelList objectForKey:keyID] == nil) {
+			
+			// create the new classes for the window
+			SketchModel *newModel  = [[SketchModel alloc] initWithController:self andWindow:mainWindow];
+			WindowModel *newWindow = [[WindowModel alloc] initWithController:self];
+			
+			// the view is being created by the SubWindowModel itself
+			// so we just query the view from the model
+			SketchView  *newView   = [[[newWindow activeSubWindow] view] retain];
+			
+			// add to our list
+			[windowModelList setObject:newWindow forKey:keyID];
+			activeWindow = newWindow;
+			
+			//NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
+			NSLog(@"we have now %d windows in our windowModelList", [windowModelList count]);
+			NSLog(@"added window %@ from app %@ with id %@ to array",[windowModelList objectForKey:keyID],appName,keyID);
+			
+			// set as active
+			activeSketchView = [newView retain];
+			[mainWindow setContentView:activeSketchView];
+			
+			// register keyWindow for accessibility notifications (to get notifications even if the user switch to another window via exposé)
+			[self registerForAccessibilityEvents:pid];
+			
+			// save a reference as backup to switch back to that window in case of an error
+			[self setLastActiveWindow:activeWindow];
+			[self setLastActiveSketchView:activeSketchView];
+			
+			// free your mind... uhm... memory
+			[newModel  release];
+			[newView   release];
+			[newWindow release];
+		}
+		else {
+			// switch to other view
+			
+			if (activeSketchView != [[[windowModelList objectForKey:keyID] activeSubWindow] view]) {
+				activeSketchView = [[[windowModelList objectForKey:keyID] activeSubWindow] view];
+				[mainWindow setContentView:activeSketchView];
+				
+				activeWindow = [windowModelList objectForKey:keyID];
+				NSLog(@"in Array: switched to window %@ with id %@", activeSketchView, keyID);
+				
+				// save a reference as backup to switch back to that window in case of an error
+				[self setLastActiveWindow:activeWindow];
+				[self setLastActiveSketchView:activeSketchView];
+			}
+			
+		}
+		
+	}
+	// just change the activeSketchView
+	else if(isWhiteBoardVisible) {
+		NSLog(@"changed activeSketchView to WHITEBOARD");
+		[self setActiveSketchView:whiteBoardView];
+		[mainWindow setContentView:activeSketchView];
 	}
 }
 
@@ -958,6 +1033,25 @@ id refToSelf; // declaration of a reference to self - to access class functions 
 	lastScrollBounds = [activeWindow getScrollingInfosOfCurrentWindow];
 	kumMovingDelta = NSZeroPoint;
 	[activeWindow setWindowWasRepositioned:NO];
+}
+
+- (void)magicDetectorMainMethod:(id)param
+{
+	// create top level auto release pool, that will release objects
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	// main loop
+	while(!magicDetectorShouldStop) {
+		usleep(50000);
+		if (!magicDetected) {
+			// if magic occured reset the systemTray 
+			[statusItemRef setTitle:@"☆"];
+		}
+		magicDetected = NO;
+	}
+	
+	// release pool
+	[pool release];
 }
 
 @end

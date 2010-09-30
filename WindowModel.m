@@ -200,6 +200,7 @@
 		AXUIElementGetPid(scrollArea, &pid);
 		// 2nd step: get the type id from the member of the scrollArea
 		CFTypeRef member = [self getMemberFromScrollArea:scrollArea];
+		if(member==nil) return uid;
 		CFTypeID typeID = CFGetTypeID(member);
 		// 3rd step: calc the relativeDiffCoords
 		// get topLevelUIElement (=window) from scrollArea
@@ -219,6 +220,32 @@
 	}
 	
 	return uid;
+}
+
+- (id) getScrollAreaRefWithUID:(NSString *)uid {
+	// search for scrollAreas in focusedWindow
+	NSArray *scrollAreas = [self findScrollAreasInUIElement:_focusedWindow];
+	// get scrollPosition of each scrollArea
+	for(int i=0; i<[scrollAreas count]; i++) {
+		// get ith scrollArea
+		AXUIElementRef scrollArea = (AXUIElementRef)[scrollAreas objectAtIndex:i];
+		// calc the uid of this scrollArea
+		NSString *cur_uid = [self getUIDofScrollArea:scrollArea];
+		// check if we've found the correct one
+		if ([uid isEqualToString:cur_uid]) {
+			//[cur_uid release];
+			return (id)scrollArea;
+		}		
+	}
+	
+	return nil;
+}
+
+- (BOOL) isUIDOfScrollArea:(AXUIElementRef)scrollArea equalTo:(NSString *)uid {
+	if (uid == nil) return NO;
+	NSString *scrollUID = [self getUIDofScrollArea:scrollArea];
+	if (scrollUID == nil) return NO;
+	return [scrollUID isEqualToString:uid];
 }
 
 /*- (void) setWindowWasRepositioned: (BOOL) flag {

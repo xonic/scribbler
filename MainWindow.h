@@ -28,6 +28,7 @@
 - (void) openFinder:(id)sender;
 - (void) actionQuit:(id)sender;
 - (void) showGlassPane:(BOOL)flag;
+- (void) toggleWhiteBoard:(id)sender;
 
 - (void) toggleSticky:(id)sender;
 - (void) setPenColor:(id)sender;

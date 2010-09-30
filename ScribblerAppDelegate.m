@@ -43,6 +43,7 @@
 		[NSApp hide:self];
 		[NSApp sendAction:@selector(firstResponder:) to:nil from:self];
 		[[(MainWindow*)window controller] keyWindowHandler];
+		[[(MainWindow*)window controller] setStatusItemRef:statusItem];
 	}
 }
 

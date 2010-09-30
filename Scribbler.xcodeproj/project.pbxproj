@@ -14,22 +14,23 @@
 		36C3AC59123A834E003B53DD /* camera.wav in Resources */ = {isa = PBXBuildFile; fileRef = 36C3AC58123A834E003B53DD /* camera.wav */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		C605E3971248EA220069765D /* HistoryObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C605E3951248EA220069765D /* HistoryObject.h */; };
-		C605E3981248EA220069765D /* HistoryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C605E3961248EA220069765D /* HistoryObject.m */; };
-		C605E39D1248F46F0069765D /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = C605E39B1248F46F0069765D /* Constants.h */; };
-		C605E39E1248F46F0069765D /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = C605E39C1248F46F0069765D /* Constants.m */; };
 		C61C782511A5373A00183CC7 /* SketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C782411A5373A00183CC7 /* SketchModel.m */; };
 		C61C783F11A54A8000183CC7 /* SketchController.m in Sources */ = {isa = PBXBuildFile; fileRef = C61C783E11A54A8000183CC7 /* SketchController.m */; };
 		C670DA9511F1A70D004F4912 /* PathModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C670DA9411F1A70D004F4912 /* PathModel.m */; };
 		C68BFDD11196D3FD0040D32C /* PointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68BFDD01196D3FD0040D32C /* PointModel.m */; };
 		C68D089A11FDF98600C463A2 /* TabletModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089911FDF98600C463A2 /* TabletModel.m */; };
 		C68D08A011FE038100C463A2 /* ColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = C68D089F11FE038100C463A2 /* ColorController.m */; };
-		C6C42A1012465480008B58A3 /* PointerModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6C42A0E12465480008B58A3 /* PointerModel.h */; };
-		C6C42A1112465480008B58A3 /* PointerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6C42A0F12465480008B58A3 /* PointerModel.m */; };
-		C6C42A781246713C008B58A3 /* pointerColors.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6C42A771246713C008B58A3 /* pointerColors.xml */; };
 		C6CF3FD111F245A8008BF787 /* WindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CF3FD011F245A8008BF787 /* WindowModel.m */; };
 		C6D9994A12291D0F002E0C7E /* ScreenShotController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D9994912291D0F002E0C7E /* ScreenShotController.m */; };
+		C6DA742E1254D1FF00E133CA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6DA742D1254D1FF00E133CA /* QuartzCore.framework */; };
+		C6DA747B1254D26600E133CA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6DA747A1254D26600E133CA /* Cocoa.framework */; };
+		C6DA748E1254D3FF00E133CA /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DA748C1254D3FF00E133CA /* Constants.h */; };
+		C6DA748F1254D3FF00E133CA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DA748D1254D3FF00E133CA /* Constants.m */; };
+		C6DA74941254D43100E133CA /* PointerModel.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DA74921254D43100E133CA /* PointerModel.h */; };
+		C6DA74951254D43100E133CA /* PointerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DA74931254D43100E133CA /* PointerModel.m */; };
+		C6DA74A11254D44F00E133CA /* HistoryObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DA749F1254D44F00E133CA /* HistoryObject.h */; };
+		C6DA74A21254D44F00E133CA /* HistoryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DA74A01254D44F00E133CA /* HistoryObject.m */; };
+		C6DA74B21254D47800E133CA /* pointerColors.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6DA74B11254D47800E133CA /* pointerColors.xml */; };
 		C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
 		C6EF329E1233B05600069837 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6EF327D1233AF8E00069837 /* Growl.framework */; };
 		C6EF333A1233D35700069837 /* UndoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C6EF33381233D35700069837 /* UndoManager.h */; };
@@ -53,7 +54,6 @@
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		256AC3D80F4B6AC300CF3369 /* ScribblerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScribblerAppDelegate.h; sourceTree = "<group>"; };
@@ -69,10 +69,6 @@
 		36C3AC58123A834E003B53DD /* camera.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = camera.wav; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Scribbler-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Scribbler-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Scribbler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scribbler.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C605E3951248EA220069765D /* HistoryObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryObject.h; sourceTree = "<group>"; };
-		C605E3961248EA220069765D /* HistoryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryObject.m; sourceTree = "<group>"; };
-		C605E39B1248F46F0069765D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		C605E39C1248F46F0069765D /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		C61C782311A5373A00183CC7 /* SketchModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchModel.h; sourceTree = "<group>"; };
 		C61C782411A5373A00183CC7 /* SketchModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SketchModel.m; sourceTree = "<group>"; };
 		C61C783D11A54A8000183CC7 /* SketchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SketchController.h; sourceTree = "<group>"; };
@@ -85,13 +81,19 @@
 		C68D089911FDF98600C463A2 /* TabletModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabletModel.m; sourceTree = "<group>"; };
 		C68D089E11FE038100C463A2 /* ColorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorController.h; sourceTree = "<group>"; };
 		C68D089F11FE038100C463A2 /* ColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorController.m; sourceTree = "<group>"; };
-		C6C42A0E12465480008B58A3 /* PointerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointerModel.h; sourceTree = "<group>"; };
-		C6C42A0F12465480008B58A3 /* PointerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointerModel.m; sourceTree = "<group>"; };
-		C6C42A771246713C008B58A3 /* pointerColors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pointerColors.xml; sourceTree = "<group>"; };
 		C6CF3FCF11F245A8008BF787 /* WindowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowModel.h; sourceTree = "<group>"; };
 		C6CF3FD011F245A8008BF787 /* WindowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowModel.m; sourceTree = "<group>"; };
 		C6D9994812291D0F002E0C7E /* ScreenShotController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenShotController.h; sourceTree = "<group>"; };
 		C6D9994912291D0F002E0C7E /* ScreenShotController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenShotController.m; sourceTree = "<group>"; };
+		C6DA742D1254D1FF00E133CA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuartzCore.framework; sourceTree = "<group>"; };
+		C6DA747A1254D26600E133CA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		C6DA748C1254D3FF00E133CA /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		C6DA748D1254D3FF00E133CA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		C6DA74921254D43100E133CA /* PointerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointerModel.h; sourceTree = "<group>"; };
+		C6DA74931254D43100E133CA /* PointerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointerModel.m; sourceTree = "<group>"; };
+		C6DA749F1254D44F00E133CA /* HistoryObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryObject.h; sourceTree = "<group>"; };
+		C6DA74A01254D44F00E133CA /* HistoryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryObject.m; sourceTree = "<group>"; };
+		C6DA74B11254D47800E133CA /* pointerColors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pointerColors.xml; sourceTree = "<group>"; };
 		C6EF327D1233AF8E00069837 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		C6EF33381233D35700069837 /* UndoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoManager.h; sourceTree = "<group>"; };
 		C6EF33391233D35700069837 /* UndoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UndoManager.m; sourceTree = "<group>"; };
@@ -104,8 +106,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				C6EF327E1233AF8E00069837 /* Growl.framework in Frameworks */,
+				C6DA742E1254D1FF00E133CA /* QuartzCore.framework in Frameworks */,
+				C6DA747B1254D26600E133CA /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,10 +118,12 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C605E39B1248F46F0069765D /* Constants.h */,
-				C605E39C1248F46F0069765D /* Constants.m */,
-				C605E3951248EA220069765D /* HistoryObject.h */,
-				C605E3961248EA220069765D /* HistoryObject.m */,
+				C6DA748C1254D3FF00E133CA /* Constants.h */,
+				C6DA748D1254D3FF00E133CA /* Constants.m */,
+				C6DA74921254D43100E133CA /* PointerModel.h */,
+				C6DA74931254D43100E133CA /* PointerModel.m */,
+				C6DA749F1254D44F00E133CA /* HistoryObject.h */,
+				C6DA74A01254D44F00E133CA /* HistoryObject.m */,
 				C6EF348B123412E600069837 /* SubWindowModel.h */,
 				C6EF348C123412E600069837 /* SubWindowModel.m */,
 				C6D9994812291D0F002E0C7E /* ScreenShotController.h */,
@@ -145,8 +150,6 @@
 				C68D089911FDF98600C463A2 /* TabletModel.m */,
 				C68D089E11FE038100C463A2 /* ColorController.h */,
 				C68D089F11FE038100C463A2 /* ColorController.m */,
-				C6C42A0E12465480008B58A3 /* PointerModel.h */,
-				C6C42A0F12465480008B58A3 /* PointerModel.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -154,7 +157,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				C6DA742D1254D1FF00E133CA /* QuartzCore.framework */,
+				C6DA747A1254D26600E133CA /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -194,7 +198,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				C6C42A771246713C008B58A3 /* pointerColors.xml */,
+				C6DA74B11254D47800E133CA /* pointerColors.xml */,
 				256AC3F00F4B6AF500CF3369 /* Scribbler_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -237,9 +241,9 @@
 			files = (
 				C6EF333A1233D35700069837 /* UndoManager.h in Headers */,
 				C6EF348D123412E600069837 /* SubWindowModel.h in Headers */,
-				C6C42A1012465480008B58A3 /* PointerModel.h in Headers */,
-				C605E3971248EA220069765D /* HistoryObject.h in Headers */,
-				C605E39D1248F46F0069765D /* Constants.h in Headers */,
+				C6DA748E1254D3FF00E133CA /* Constants.h in Headers */,
+				C6DA74941254D43100E133CA /* PointerModel.h in Headers */,
+				C6DA74A11254D44F00E133CA /* HistoryObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,7 +301,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				36C3AC59123A834E003B53DD /* camera.wav in Resources */,
-				C6C42A781246713C008B58A3 /* pointerColors.xml in Resources */,
+				C6DA74B21254D47800E133CA /* pointerColors.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,9 +326,9 @@
 				C68D08A011FE038100C463A2 /* ColorController.m in Sources */,
 				C6EF333B1233D35700069837 /* UndoManager.m in Sources */,
 				C6EF348E123412E600069837 /* SubWindowModel.m in Sources */,
-				C6C42A1112465480008B58A3 /* PointerModel.m in Sources */,
-				C605E3981248EA220069765D /* HistoryObject.m in Sources */,
-				C605E39E1248F46F0069765D /* Constants.m in Sources */,
+				C6DA748F1254D3FF00E133CA /* Constants.m in Sources */,
+				C6DA74951254D43100E133CA /* PointerModel.m in Sources */,
+				C6DA74A21254D44F00E133CA /* HistoryObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

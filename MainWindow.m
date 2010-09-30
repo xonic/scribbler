@@ -43,6 +43,10 @@
 		[controller refreshScrollingInfos];
 }
 
+- (void)toggleWhiteBoard:(id)sender {
+	[controller setWhiteBoardVisible:![controller isWhiteBoardVisible]];
+}
+
 - (void) openFinder:(id)sender {
 	[[NSWorkspace sharedWorkspace] launchApplication:@"Finder"];
 }

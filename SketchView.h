@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
 #import "SketchModel.h"
 #import "PathModel.h"
 #import "SubWindowModel.h"
@@ -24,7 +25,7 @@
 	SketchController	*   controller;
 	NSCursor			*	customCursor;
 	NSCursor			*	theNormalCursor;
-
+	
 	BOOL					draw;
 	BOOL					clickThrough;
 	BOOL					isDrawing;
@@ -48,5 +49,8 @@
 
 - (void)updateKeyWindowBounds;
 - (void)setScreenShotFlashAlpha:(double)value;
+
+- (void)foldViewIn;
+- (void)foldViewOut;
 
 @end

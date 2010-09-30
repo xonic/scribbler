@@ -27,30 +27,39 @@
 	NSMutableDictionary			*	tablets;
 	ColorController				*	colorPalette;
 	NSMutableDictionary			*	windowModelList;
-	WindowModel					*	activeWindow;
-	SketchView					*	activeSketchView;
+	WindowModel					*	activeWindow, *lastActiveWindow;
+	SketchView					*	activeSketchView, *lastActiveSketchView;
+	SketchView					*	whiteBoardView;
 	MainWindow					*	mainWindow;
 	PointModel					*   startDragPoint;
 	PointModel					*	endDragPoint;
 	NSColor						*	selectedColor;
 	
 	BOOL							isSticky;
+	BOOL							isWhiteBoardVisible;
 	BOOL							erase;
 	BOOL							mouseMode;
 	BOOL							mainWindowWasVisible;
 	BOOL							penIsNearTablet;
+	BOOL							magicDetectorShouldStop;
+	BOOL							magicDetected;
+	
 	NSNumber					*	activeTabletID;
 	
 	NSDictionary				*	lastScrollBounds;
 	NSPoint							kumMovingDelta;
 	id								activeScrollArea;
+	
+	NSStatusItem				*	statusItemRef;
+	
 }
+
 @property (retain) NSColor *selectedColor;
-@property (retain) SketchView *activeSketchView;
+@property (retain) SketchView *activeSketchView, *lastActiveSketchView;
 @property (retain) MainWindow *mainWindow;
 @property (retain) NSNumber *activeTabletID;
-@property (readwrite) BOOL isSticky, penIsNearTablet, mouseMode;
-@property (retain) WindowModel *activeWindow;
+@property (readwrite) BOOL isSticky, isWhiteBoardVisible, penIsNearTablet, mouseMode, magicDetectorShouldStop;
+@property (retain) WindowModel *activeWindow, *lastActiveWindow;
 
 - (id) initWithMainWindow:(MainWindow *)theMainWindow;
 
@@ -60,6 +69,8 @@
 
 - (void) setClickThrough:(BOOL)flag;
 - (void) showHide;
+- (void) setWhiteBoardVisible:(BOOL)flag;
+- (void) setStatusItemRef:(NSStatusItem *)statusItemReference;
 
 - (NSMutableDictionary*)getCurrentKeyWindowInfos;
 - (NSNumber*) getKeyWindowID: (NSMutableDictionary*)windowInfos;
